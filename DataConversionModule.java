@@ -381,7 +381,14 @@ public class DataConversionModule
 				 * Generate RSA signature for each line of data file and write
 				 * the output to new .unl file
 				 */
-				String[] dataFileTokens = strLine.split( "\\|" );
+				
+				//String[] dataFileTokens = strLine.split( "\\|" );
+				String[] dataFileTokens; 
+				if(strLine.contains("\\") || strLine.contains("|")) {
+					dataFileTokens = strLine.split("\\|");
+				} else {
+					dataFileTokens = strLine.split(" ");
+				}
 
 				int pos;
 				for ( int j = 0; j < dataFileTokens.length; j++ )
@@ -853,7 +860,13 @@ public class DataConversionModule
 		}
 
 		// Tokenize each line from data file
-		String[] tokens = line.split( "\\|" );
+		//String[] tokens = line.split( "\\|" );
+		String[] dataFileTokens; 
+		if(strLine.contains("\\") || strLine.contains("|")) {
+			dataFileTokens = strLine.split("\\|");
+		} else {
+			dataFileTokens = strLine.split(" ");
+		}
 
 		for ( int i = 0; i < tokens.length; i++ )
 		{
