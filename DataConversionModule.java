@@ -148,13 +148,20 @@ public class DataConversionModule
 		String inputDataFile = null;
 		String schemaFileName = null;
 
-		Scanner scan = new Scanner( System.in );
-		System.out.println( "Enter the schema file name: </folderpath/schemaFileName>" );
-		schemaFileName = "providedfiles/company/company-schema.sql";
-		System.out.println( "Enter the data file to be converted </folderpath/dataFileName>" );
-		inputDataFile = "providedfiles/company/project.unl";
-		scan.close();
-
+		if (args.length != 2)
+		{
+			Scanner scan = new Scanner( System.in );
+			System.out.println( "Enter the schema file name: </folderpath/schemaFileName>" );
+			schemaFileName = scan.nextLine();
+			System.out.println( "Enter the data file to be converted </folderpath/dataFileName>" );
+			inputDataFile = scan.next();
+		}
+		else
+		{
+			schemaFileName = args[0];
+			inputDataFile = args[1];
+		}
+		
 		if ( inputDataFile.length() < 2 )
 		{
 			System.out.println( "Enter the schema file name: </folderpath/schemaFileName>" );
