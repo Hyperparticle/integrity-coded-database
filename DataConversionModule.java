@@ -32,44 +32,31 @@ public class DataConversionModule
 {
 
 	public static String NEWLINE_DELIMITER = "\n";
-
 	public static String UNL_FILE_EXTENSION = ".unl";
-
 	public static String ICRL_FILE_EXTENSION = "_icrlFile.txt";
-
 	public static String RSA_KEY_FILE_EXTENSION = "_rsa.txt";
-
 	public static String SQL_FILE_EXTENSION = ".sql";
-
 	public static String SLASH_DELIMITER = "/";
-
+	public static String SCHEMA_FILE_EXTENSION = "-schema";
+	public static String databaseName = null;
+	
 	private static int bitSize = 1024;
-
 	private static long serialNumber;
 
 	public final static SecureRandom random = new SecureRandom();
-
+	
 	private final static BigInteger one = new BigInteger( "1" );
-
 	private static BigInteger privateKey;
-
 	private static BigInteger publicKey;
-
 	private static BigInteger modulus;
-
+	
 	public static ArrayList<String> primaryKeyList = new ArrayList<String>();
-
-	public static Map<String, String> primaryKeyListWithUnl = new HashMap<String, String>();
-
 	public static ArrayList<String> atrList = new ArrayList<String>();
-
+	
+	public static Map<String, String> primaryKeyListWithUnl = new HashMap<String, String>();
 	public static Map<String, String> keyPositionMap = new HashMap<String, String>();
-
 	public static Map<String, String> attributeMap = new HashMap<String, String>();
 
-	public static String SCHEMA_FILE_EXTENSION = "-schema";
-
-	public static String databaseName = null;
 
 	/**
 	 * @return the databaseName
@@ -161,19 +148,12 @@ public class DataConversionModule
 		String inputDataFile = null;
 		String schemaFileName = null;
 
-		if (args.length != 2)
-		{
-			Scanner scan = new Scanner( System.in );
-			System.out.println( "Enter the schema file name: </folderpath/schemaFileName>" );
-			schemaFileName = scan.nextLine();
-			System.out.println( "Enter the data file to be converted </folderpath/dataFileName>" );
-			inputDataFile = scan.next();
-		}
-		else
-		{
-			inputDataFile = args[0];
-			schemaFileName = args[1];
-		}
+		Scanner scan = new Scanner( System.in );
+		System.out.println( "Enter the schema file name: </folderpath/schemaFileName>" );
+		schemaFileName = "providedfiles/company/company-schema.sql";
+		System.out.println( "Enter the data file to be converted </folderpath/dataFileName>" );
+		inputDataFile = "providedfiles/company/project.unl";
+		scan.close();
 
 		if ( inputDataFile.length() < 2 )
 		{
@@ -382,7 +362,6 @@ public class DataConversionModule
 				 * the output to new .unl file
 				 */
 				
-				//String[] dataFileTokens = strLine.split( "\\|" );
 				String[] dataFileTokens; 
 				if(strLine.contains("\\") || strLine.contains("|")) {
 					dataFileTokens = strLine.split("\\|");
@@ -813,7 +792,7 @@ public class DataConversionModule
 									}
 								}
 								String[] attributeTokens = strLine.trim().split( "\\s+" );
-								for ( int k = 0; k < attributeTokens.length; k++ )
+								for ( int k = 0; k < attributeTokens.length;)
 								{
 									attributeMap.put( position + SLASH_DELIMITER + unlFile, attributeTokens[k] );
 									break;
@@ -860,14 +839,13 @@ public class DataConversionModule
 		}
 
 		// Tokenize each line from data file
-		//String[] tokens = line.split( "\\|" );
-		String[] dataFileTokens; 
-		if(strLine.contains("\\") || strLine.contains("|")) {
-			dataFileTokens = strLine.split("\\|");
+		String[] tokens;
+		if(line.contains("\\") || line.contains("|")) {
+			tokens = line.split("\\|");
 		} else {
-			dataFileTokens = strLine.split(" ");
+			tokens = line.split(" ");
 		}
-
+		
 		for ( int i = 0; i < tokens.length; i++ )
 		{
 			if ( primaryKeysPosition.contains( Integer.toString( i + 1 ) ) )
