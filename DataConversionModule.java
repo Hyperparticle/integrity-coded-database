@@ -58,19 +58,18 @@ public class DataConversionModule
 	private static BigInteger modulus;
 
 	public static ArrayList<String> primaryKeyList = new ArrayList<String>();
-	
+
 	public static Map<String, String> primaryKeyListWithUnl = new HashMap<String, String>();
-	
+
 	public static ArrayList<String> atrList = new ArrayList<String>();
 
 	public static Map<String, String> keyPositionMap = new HashMap<String, String>();
-	
+
 	public static Map<String, String> attributeMap = new HashMap<String, String>();
 
 	public static String SCHEMA_FILE_EXTENSION = "-schema";
-	
+
 	public static String databaseName = null;
-	
 
 	/**
 	 * @return the databaseName
@@ -81,7 +80,8 @@ public class DataConversionModule
 	}
 
 	/**
-	 * @param databaseName the databaseName to set
+	 * @param databaseName
+	 *            the databaseName to set
 	 */
 	public static void setDatabaseName ( String databaseName )
 	{
@@ -171,8 +171,8 @@ public class DataConversionModule
 		}
 		else
 		{
-			schemaFileName = args[0];
-			inputDataFile = args[1];
+			inputDataFile = args[0];
+			schemaFileName = args[1];
 		}
 
 		if ( inputDataFile.length() < 2 )
@@ -204,19 +204,26 @@ public class DataConversionModule
 				findPrimaryKeyPosition( primaryKeyList, new File( schemaFileName ) );
 
 				convertDataFile( databaseName, dataFile );
-				System.out.println( " Final Serial Number :: " +getSerialNumber());
-				
+				System.out.println( " Final Serial Number :: " + getSerialNumber() );
+
 				saveLastValidSerialNumber( dataFile.getParent() );
+			}
+			else
+			{
+				System.out.println( "DataFile doesn't exist" );
+				System.exit( 1 );
+				
 			}
 
 		}
 	}
-	
+
 	/**
 	 * Method to write the last valid serial number to file
-	 * @param folderPath  
+	 * 
+	 * @param folderPath
 	 */
-	private static void saveLastValidSerialNumber (String folderPath )
+	private static void saveLastValidSerialNumber ( String folderPath )
 	{
 		FileInputStream fstream;
 		File fPath = new File( folderPath );
@@ -304,9 +311,10 @@ public class DataConversionModule
 			}
 		}
 	}
-	
+
 	/**
 	 * Method to convert data file and generate signature for each attribute
+	 * 
 	 * @param databaseName
 	 * @param dataFile
 	 */
@@ -427,7 +435,6 @@ public class DataConversionModule
 
 	}
 
-
 	/**
 	 * Method to generate the RSA keys
 	 * 
@@ -521,7 +528,7 @@ public class DataConversionModule
 	 * Method to generate the first valid serial Number
 	 * 
 	 * @param inputDataFile
-	 * @param schemaFile 
+	 * @param schemaFile
 	 */
 	private static void generateSerialNum ( String inputDataFile, Path schemaFile )
 	{
@@ -550,7 +557,7 @@ public class DataConversionModule
 			int serialNumber = new Integer( prng.nextInt( Integer.MAX_VALUE ) );
 			setSerialNumber( serialNumber );
 			icrlFileOutput = new BufferedWriter( new FileWriter( icrlFile ) );
-			
+
 			if ( icrlFileOutput != null )
 			{
 				icrlFileOutput.write( "First Valid Serial Number: " );
@@ -612,6 +619,7 @@ public class DataConversionModule
 		Path dFile = Paths.get( dataFile );
 		FileInputStream fStream;
 		String unlFile = dFile.getFileName().toString();
+		boolean dataFileMatched = false;
 
 		if ( unlFile.endsWith( UNL_FILE_EXTENSION ) )
 		{
@@ -630,30 +638,44 @@ public class DataConversionModule
 				{
 					strLine = strLine.toUpperCase();
 
-					if ( strLine.trim().contains( "PRIMARY KEY" ) || strLine.trim().contains( "primary key" )
-					        || strLine.trim().contains( "Primary key" ) )
+					if ( strLine.trim().startsWith( "CREATE" ) )
 					{
-						String tmp = strLine;
-						String[] tokens = tmp.split( "\\(" );
+						String[] tmp = strLine.split( "\\s+" );
 
-						if ( !tokens[1].endsWith( "," ) )
+						if ( tmp[2].equalsIgnoreCase( unlFile ) )
 						{
-							key = tokens[1].substring( 0, tokens[1].length() - 1 );
-						}
-						else
-						{
-							key = tokens[1].substring( 0, tokens[1].length() - 2 );
+							dataFileMatched = true;
 						}
 
-						if ( key.contains( "," ) )
-						{
-							key = key.replace( ",", SLASH_DELIMITER );
-							key = key.replace( "/ ", SLASH_DELIMITER );
-						}
+					}
 
-						primaryKeyList.add( key );
-						primaryKeyListWithUnl.put( unlFile.toUpperCase(), key );
-						break;
+					if ( dataFileMatched )
+					{
+						if ( strLine.trim().contains( "PRIMARY KEY" ) || strLine.trim().contains( "primary key" )
+						        || strLine.trim().contains( "Primary key" ) )
+						{
+							String tmp = strLine;
+							String[] tokens = tmp.split( "\\(" );
+
+							if ( !tokens[1].endsWith( "," ) )
+							{
+								key = tokens[1].substring( 0, tokens[1].length() - 1 );
+							}
+							else
+							{
+								key = tokens[1].substring( 0, tokens[1].length() - 2 );
+							}
+
+							if ( key.contains( "," ) )
+							{
+								key = key.replace( ",", SLASH_DELIMITER );
+								key = key.replace( "/ ", SLASH_DELIMITER );
+							}
+
+							primaryKeyList.add( key );
+							primaryKeyListWithUnl.put( unlFile.toUpperCase(), key );
+							break;
+						}
 					}
 				}
 				br.close();
@@ -835,7 +857,7 @@ public class DataConversionModule
 
 		for ( int i = 0; i < tokens.length; i++ )
 		{
-			if ( primaryKeysPosition.equals( Integer.toString( i + 1 ) ) )
+			if ( primaryKeysPosition.contains( Integer.toString( i + 1 ) ) )
 			{
 				if ( primaryKeys.length() == 0 )
 				{
