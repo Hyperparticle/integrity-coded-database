@@ -629,7 +629,7 @@ public class DataConversionModule
 
 				while ( ( strLine = br.readLine() ) != null )
 				{
-					strLine = strLine.toUpperCase();
+					strLine = strLine.toUpperCase().trim();
 
 					if ( strLine.trim().startsWith( "CREATE" ) )
 					{
