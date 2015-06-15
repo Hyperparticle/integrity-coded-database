@@ -629,7 +629,7 @@ public class DataConversionModule
 
 				while ( ( strLine = br.readLine() ) != null )
 				{
-					strLine = strLine.toUpperCase().trim();
+					strLine = strLine.toUpperCase().trim().replace("`", "");
 
 					if ( strLine.trim().startsWith( "CREATE" ) )
 					{
@@ -715,9 +715,9 @@ public class DataConversionModule
 
 				while ( ( strLine = br.readLine() ) != null )
 				{
-					if ( !strLine.equals( "" ) )
+					if ( !strLine.equals( "" ) && !strLine.startsWith("/*"))
 					{
-						strLine = strLine.trim().toUpperCase();
+						strLine = strLine.trim().toUpperCase().replace("`", "");
 
 						// Filter all the lines except data types
 						if ( strLine.trim().startsWith( "DROP SCHEMA IF EXISTS" ) || strLine.trim().startsWith( "CREATE SCHEMA" )

@@ -26,6 +26,7 @@ public class SchemaConversionModule {
 
 	private static String modifiedSchemaFileName = null;
 	private static File modifiedSchemaFile;
+	private static String databaseName = null;
 
 	public static final String TAB_DELIMITER = "\t";
 
@@ -94,7 +95,7 @@ public class SchemaConversionModule {
 	 * @return
 	 */
 	private static String convertSchemaFile(String schemaFileName,
-			File modifiedSchemaFile) {
+		File modifiedSchemaFile) {
 		FileInputStream fstream;
 		Writer output = null;
 		String inputLine;
@@ -110,6 +111,9 @@ public class SchemaConversionModule {
 
 			File outputFile = modifiedSchemaFile;
 			output = new BufferedWriter(new FileWriter(outputFile));
+			
+			databaseName = outputFile.getName();
+			databaseName = databaseName.substring(0, databaseName.indexOf('-'));
 
 			/* Read File Line By Line */
 			while ((strLine = br.readLine()) != null) {
@@ -206,6 +210,10 @@ public class SchemaConversionModule {
 				inputBuffer.append(strLine);
 			}
 
+			// Append ICDB to database name
+			if (strLine.contains(databaseName))
+				strLine = strLine.replace(databaseName, databaseName + "_ICDB");
+			
 			if (strLine.startsWith("create schema")
 					|| strLine.startsWith("Create Schema")
 					|| strLine.startsWith("CREATE SCHEMA")) {
@@ -248,6 +256,10 @@ public class SchemaConversionModule {
 
 			if (strLine.startsWith("alter") || strLine.startsWith("Alter")
 					|| strLine.startsWith("ALTER")) {
+				inputBuffer.append(strLine);
+			}
+			
+			if (strLine.startsWith(")")) {
 				inputBuffer.append(strLine);
 			}
 		} else if (strLine.endsWith("(")) {
@@ -372,7 +384,7 @@ public class SchemaConversionModule {
 	private static String addIntegrityCode_SVC(String strLine) {
 		String tmpStr = null;
 		StringBuffer tmpBuffer = new StringBuffer();
-		StringTokenizer tokens = new StringTokenizer(strLine.trim());
+		StringTokenizer tokens = new StringTokenizer(strLine.trim().replace("`", ""));
 
 		while (tokens.hasMoreElements()) {
 			tmpStr = tokens.nextToken();
@@ -429,6 +441,10 @@ public class SchemaConversionModule {
 				tmpStr = "TEXT" + "";
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
+			} else if (tmpStr.startsWith("INT(")) {
+				tmpStr = "TEXT" + "";
+				tmpBuffer.append(tmpStr);
+				tmpBuffer.append(SPACE_DELIMITER);
 			} else if (tmpStr.equalsIgnoreCase("INT")) {
 				tmpStr = "TEXT" + "";
 				tmpBuffer.append(tmpStr);
@@ -438,7 +454,7 @@ public class SchemaConversionModule {
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
 			} else {
-				tmpStr = TAB_DELIMITER + tmpStr + "_SVC";
+				tmpStr = TAB_DELIMITER + "`" + tmpStr + "_SVC`";
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
 			}
