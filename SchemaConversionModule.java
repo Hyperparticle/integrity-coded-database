@@ -46,7 +46,13 @@ public class SchemaConversionModule {
 
 	public static String SQL_FILE_EXTENSION = ".sql";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
+		execute(args);
+	}
+	
+	public static void execute(String[] args)
+	{
 		String selectedFileName = null;
 
 		if (args.length != 1)
@@ -273,6 +279,7 @@ public class SchemaConversionModule {
 
 			while (tokens.hasNextLine()) {
 				tmp = tokens.nextLine();
+				
 				if (tmp.endsWith("NOT NULL,")) {
 					if (tmp.contains("VARCHAR")) {
 						tmp = addIntegrityCode_SVC(strLine);
@@ -385,78 +392,43 @@ public class SchemaConversionModule {
 		String tmpStr = null;
 		StringBuffer tmpBuffer = new StringBuffer();
 		StringTokenizer tokens = new StringTokenizer(strLine.trim().replace("`", ""));
+		
+		String text = "TEXT";
+		String textComma = "TEXT,";
+		
+		boolean first = true;
 
 		while (tokens.hasMoreElements()) {
 			tmpStr = tokens.nextToken();
 
-			if (tmpStr.equalsIgnoreCase("NOT")) {
-				tmpStr = tmpStr + "";
+			if (tmpStr.equalsIgnoreCase("NOT") || tmpStr.equalsIgnoreCase("NULL")) {
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
 			} else if (tmpStr.equalsIgnoreCase("NULL,")) {
-				tmpStr = tmpStr + "";
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("CHAR,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
+			} else if (tmpStr.equalsIgnoreCase("CHAR,") || tmpStr.equalsIgnoreCase("INT,") 
+					|| tmpStr.equalsIgnoreCase("TINYINT,") || tmpStr.equalsIgnoreCase("SMALLINT,")
+					|| tmpStr.equalsIgnoreCase("MEDIUMINT,") || tmpStr.equalsIgnoreCase("BIGINT,")
+					|| tmpStr.equalsIgnoreCase("DATE,")) {
+				tmpBuffer.append(textComma);
 				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("INT,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
+			} else if (tmpStr.endsWith(" ),") || tmpStr.startsWith("VARCHAR(")
+					|| tmpStr.startsWith("CHAR(") || tmpStr.startsWith("DECIMAL(")
+					|| tmpStr.startsWith("INT(") || tmpStr.startsWith("TINYINT(")
+					|| tmpStr.startsWith("SMALLINT(") || tmpStr.startsWith("MEDIUMINT(") 
+					|| tmpStr.startsWith("BIGINT(") || tmpStr.equalsIgnoreCase("INT")
+					|| tmpStr.equalsIgnoreCase("CHAR") || tmpStr.equalsIgnoreCase("TINYINT")
+					|| tmpStr.equalsIgnoreCase("TIMESTAMP") || tmpStr.equalsIgnoreCase("DATETIME")) {
+				tmpBuffer.append(text);
 				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("TINYINT,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("SMALLINT,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("MEDIUMINT,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("BIGINT,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("DATE,")) {
-				tmpStr = "TEXT," + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.endsWith(" ),")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.startsWith("VARCHAR(")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.startsWith("CHAR(")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.startsWith("DECIMAL(")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.startsWith("INT(")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("INT")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("CHAR")) {
-				tmpStr = "TEXT" + "";
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else {
+			} else if (first) {
+				first = false;
 				tmpStr = TAB_DELIMITER + "`" + tmpStr + "_SVC`";
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
+			} else if (tmpStr.contains(",")) {
+				tmpBuffer.append(",");
 			}
 		}
 		return tmpBuffer.toString();

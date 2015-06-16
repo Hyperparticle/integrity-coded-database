@@ -145,6 +145,11 @@ public class DataConversionModule
 
 	public static void main ( String[] args )
 	{
+		execute(args);
+	}
+	
+	public static void execute(String[] args)
+	{
 		String inputDataFile = null;
 		String schemaFileName = null;
 
