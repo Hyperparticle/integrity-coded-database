@@ -188,7 +188,7 @@ public class DataConversionModule
 				System.out.println( " Serial Number generated.." + getSerialNumber() );
 
 				/* Generate RSA keys */
-				generateRSASignature( bitSize, databaseName );
+				generateRSASignature( bitSize, databaseName, schemaFile );
 				System.out.println( "RSA keys generated.. " );
 
 				// Find the Primary Key
@@ -439,10 +439,10 @@ public class DataConversionModule
 	 * @param N
 	 * @param databaseName
 	 */
-	private static void generateRSASignature ( int N, String databaseName )
+	private static void generateRSASignature ( int N, String databaseName, Path schemaFile )
 	{
 		// Write public and private key to file
-		File rsaKeyFile = new File( databaseName + RSA_KEY_FILE_EXTENSION );
+		File rsaKeyFile = new File( schemaFile.getParent() + SLASH_DELIMITER + databaseName + SCHEMA_FILE_EXTENSION + RSA_KEY_FILE_EXTENSION );
 
 		BigInteger p = BigInteger.probablePrime( N, random );
 		BigInteger q = BigInteger.probablePrime( N, random );
