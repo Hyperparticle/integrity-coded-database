@@ -652,8 +652,7 @@ public class DataConversionModule
 
 					if ( dataFileMatched )
 					{
-						if ( strLine.trim().contains( "PRIMARY KEY" ) || strLine.trim().contains( "primary key" )
-						        || strLine.trim().contains( "Primary key" ) )
+						if ( strLine.trim().contains( "PRIMARY KEY" ))
 						{
 							String tmp = strLine;
 							String[] tokens = tmp.split( "\\(" );
@@ -728,12 +727,12 @@ public class DataConversionModule
 						strLine = strLine.trim().toUpperCase().replace("`", "");
 
 						// Filter all the lines except data types
-						if ( strLine.trim().startsWith( "DROP SCHEMA IF EXISTS" ) || strLine.trim().startsWith( "CREATE SCHEMA" )
-						        || strLine.trim().startsWith( "USE" ) || strLine.trim().startsWith( "CREATE TABLE" )
-						        || strLine.trim().startsWith( "CONSTRAINT" ) || strLine.trim().startsWith( "ALTER" ) || strLine.trim().equals( "" )
-						        || strLine.trim().equals( ");" ) )
+						if ( strLine.startsWith( "DROP SCHEMA IF EXISTS" ) || strLine.startsWith( "CREATE SCHEMA" )
+						        || strLine.startsWith( "USE" ) || strLine.startsWith( "CREATE TABLE" )
+						        || strLine.startsWith( "CONSTRAINT" ) || strLine.startsWith( "ALTER" ) || strLine.equals( "" )
+						        || strLine.equals( ");" ) )
 						{
-							if ( strLine.trim().startsWith( "CREATE TABLE" ) || strLine.trim().startsWith( "Create Table" ) )
+							if ( strLine.startsWith( "CREATE TABLE" ))
 							{
 								String[] str = strLine.replaceAll( "(^\\s+|\\s+$)", "" ).split( "\\s+" );
 								if ( str[str.length - 1].equals( "(" ) )
@@ -755,8 +754,7 @@ public class DataConversionModule
 						{
 							// Include more data types and also handle case
 							// sensitive
-							if ( strLine.contains( "CHAR" ) || strLine.contains( "INT" ) || strLine.contains( "VARCHAR" )
-							        || strLine.contains( "DECIMAL" ) || strLine.contains( "DATE" ) )
+							if ( strLine.contains( "CHAR" ) || strLine.contains( "INT" ) || strLine.contains( "DECIMAL" ) || strLine.contains( "DATE" ) )
 							{
 								String[] lineTkns = strLine.trim().split( "\\s+" );
 								pKey = lineTkns[0].trim();
@@ -879,9 +877,7 @@ public class DataConversionModule
 				}
 			}
 		}
-
 		return primaryKeys;
-
 	}
 
 	/**
