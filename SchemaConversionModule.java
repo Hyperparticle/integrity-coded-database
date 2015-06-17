@@ -285,7 +285,7 @@ public class SchemaConversionModule {
 			while (tokens.hasNextLine()) {
 				tmp = tokens.nextLine();
 				
-				if (tmp.endsWith("NOT NULL,")) {
+				if (tmp.endsWith("NOT NULL,") || tmp.endsWith("DEFAULT NULL,")) {
 					if (tmp.contains("VARCHAR")) {
 						tmp = addIntegrityCode_SVC(strLine);
 						inputBuffer.append(tmp);
@@ -406,7 +406,7 @@ public class SchemaConversionModule {
 		while (tokens.hasMoreElements()) {
 			tmpStr = tokens.nextToken();
 
-			if (tmpStr.equalsIgnoreCase("NOT") || tmpStr.equalsIgnoreCase("NULL")) {
+			if (tmpStr.equalsIgnoreCase("NOT") || tmpStr.equalsIgnoreCase("NULL") || tmpStr.equalsIgnoreCase("DEFAULT")) {
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
 			} else if (tmpStr.equalsIgnoreCase("NULL,")) {

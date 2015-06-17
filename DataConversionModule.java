@@ -408,7 +408,9 @@ public class DataConversionModule
 							output.write( encrypt.toString( 16 ) + SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
 							System.out.println( " Final data file value :: " + encrypt.toString( 16 ) + SLASH_DELIMITER
 							        + Long.toString( getSerialNumber() ) );
-							output.write( "|" );
+							
+							if (j != dataFileTokens.length-1)
+								output.write( "|" );
 						}
 
 						setSerialNumber( getIncrementedSerialNum() );
