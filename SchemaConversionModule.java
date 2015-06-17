@@ -424,7 +424,8 @@ public class SchemaConversionModule {
 					|| tmpStr.startsWith("SMALLINT(") || tmpStr.startsWith("MEDIUMINT(") 
 					|| tmpStr.startsWith("BIGINT(") || tmpStr.equalsIgnoreCase("INT")
 					|| tmpStr.equalsIgnoreCase("CHAR") || tmpStr.equalsIgnoreCase("TINYINT")
-					|| tmpStr.equalsIgnoreCase("TIMESTAMP") || tmpStr.equalsIgnoreCase("DATETIME")) {
+					|| tmpStr.equalsIgnoreCase("TIMESTAMP") || tmpStr.equalsIgnoreCase("DATETIME")
+					|| tmpStr.equalsIgnoreCase("DATE")) {
 				tmpBuffer.append(text);
 				tmpBuffer.append(SPACE_DELIMITER);
 			} else if (first) {
