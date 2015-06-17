@@ -26,7 +26,6 @@ public class SchemaConversionModule {
 
 	private static String modifiedSchemaFileName = null;
 	private static File modifiedSchemaFile;
-	private static String databaseName = null;
 
 	public static final String TAB_DELIMITER = "\t";
 
@@ -122,9 +121,6 @@ public class SchemaConversionModule {
 
 			File outputFile = modifiedSchemaFile;
 			output = new BufferedWriter(new FileWriter(outputFile));
-			
-			databaseName = outputFile.getName();
-			databaseName = databaseName.substring(0, databaseName.indexOf('-'));
 
 			/* Read File Line By Line */
 			while ((strLine = br.readLine()) != null) {
@@ -220,10 +216,6 @@ public class SchemaConversionModule {
 					|| strLine.startsWith("Drop")) {
 				inputBuffer.append(strLine);
 			}
-
-			// Append ICDB to database name
-			if (strLine.contains(databaseName))
-				strLine = strLine.replace(databaseName, databaseName + "_ICDB");
 			
 			if (strLine.startsWith("create schema")
 					|| strLine.startsWith("Create Schema")
@@ -285,7 +277,7 @@ public class SchemaConversionModule {
 			while (tokens.hasNextLine()) {
 				tmp = tokens.nextLine();
 				
-				if (tmp.endsWith("NOT NULL,") || tmp.endsWith("DEFAULT NULL,")) {
+				if (tmp.endsWith("NOT NULL,") || tmp.endsWith("DEFAULT NULL,") || tmp.endsWith("AUTO_INCREMENT,")) {
 					if (tmp.contains("VARCHAR")) {
 						tmp = addIntegrityCode_SVC(strLine);
 						inputBuffer.append(tmp);
@@ -443,7 +435,7 @@ public class SchemaConversionModule {
 	/**
 	 * Method to create a file containing attributes and primary key for a table
 	 * 
-	 * @param fileName2
+	 * @param fileName
 	 */
 	private static void createAttrKeyFile ( String fileName )
 	{
