@@ -64,6 +64,7 @@ public class SchemaConversionModule {
 			System.out
 					.println("Enter the schema file to be converted </folderpath/schemaFileName>");
 			selectedFileName = scan.nextLine();
+			scan.close();
 		}
 		else
 		{

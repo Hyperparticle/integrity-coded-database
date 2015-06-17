@@ -202,7 +202,7 @@ public class QueryConversionModule
 					}
 					else
 					{
-						System.out.println( "QUery file doesnt exist" );
+						System.out.println( "Query file doesnt exist" );
 						System.exit( 1 );
 					}
 
@@ -485,7 +485,7 @@ public class QueryConversionModule
 								}
 								else
 								{
-									File fPath = new File( folderPath );
+									File fPath = new File( folderPath ).getParentFile();
 									String pkFile = databaseName + SCHEMA_FILE_EXTENSION + PRIMARY_KEY_FILE_EXTENSION;
 									for ( File file : fPath.listFiles() )
 									{
