@@ -160,6 +160,7 @@ public class DataConversionModule
 			schemaFileName = scan.nextLine();
 			System.out.println( "Enter the data file to be converted </folderpath/dataFileName>" );
 			inputDataFile = scan.next();
+			scan.close();
 		}
 		else
 		{
@@ -866,7 +867,11 @@ public class DataConversionModule
 			{
 				if ( primaryKeys.length() == 0 )
 				{
-					primaryKeys = tokens[i + 1];
+					if((i + 1) < tokens.length) {
+						primaryKeys = tokens[i + 1];
+					} else {
+						primaryKeys = tokens[i];
+					}
 				}
 				else
 				{

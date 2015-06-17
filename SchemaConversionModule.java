@@ -182,8 +182,7 @@ public class SchemaConversionModule {
 		StringTokenizer token = new StringTokenizer(schemaFileName, ".");
 		if (token.hasMoreTokens()) {
 			modifiedSchemaFileName.append(token.nextToken());
-			modifiedSchemaFileName.append("_ICDB");
-			modifiedSchemaFileName.append(".sql");
+			modifiedSchemaFileName.append("_ICDB.sql");
 		}
 
 		return modifiedSchemaFileName.toString();
