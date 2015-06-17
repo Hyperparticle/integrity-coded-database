@@ -30,29 +30,19 @@ public class QueryConversionModule
 	private final static Logger log = Logger.getLogger( QueryConversionModule.class.getName() );
 
 	public static String SPACE_DELIMITER = " ";
-
 	public static String NEWLINE_DELIMITER = "\n";
-
 	public static String SLASH_DELIMITER = "/";
-
 	public static String COMMA_DELIMITER_WITH_SPACE = ", ";
-
 	public static String COMMA_DELIMITER_WITHOUT_SPACE = ",";
 
 	public static final Object STAR = "*";
 
 	public static String ICRL_FILE_EXTENSION = "_icrlFile.txt";
-
 	public static String PRIMARY_KEY_FILE_EXTENSION = "_pk.txt";
-
 	public static String RSA_KEY_FILE_EXTENSION = "_rsa.txt";
-
 	public static String UNL_FILE_EXTENSION = ".unl";
-
 	public static String SQL_FILE_EXTENSION = ".sql";
-
 	public static String SVC_SUFFIX = "_SVC";
-
 	public static String SCHEMA_FILE_EXTENSION = "-schema";
 
 	public static String SEMI_COLON = ";";
@@ -68,46 +58,40 @@ public class QueryConversionModule
 
 	public static ArrayList<String> primaryKeyList = new ArrayList<String>();
 
+	//Getters and Setters
 	public static boolean isUpdateQ ()
 	{
 		return updateQ;
 	}
-
 	public static void setUpdateQ ( boolean updateQ )
 	{
 		QueryConversionModule.updateQ = updateQ;
 	}
-
 	public static boolean isDeleteQ ()
 	{
 		return deleteQ;
 	}
-
 	public static void setDeleteQ ( boolean deleteQ )
 	{
 		QueryConversionModule.deleteQ = deleteQ;
 	}
-
 	public static boolean isSelectQ ()
 	{
 		return selectQ;
 	}
-
 	public static void setSelectQ ( boolean selectQ )
 	{
 		QueryConversionModule.selectQ = selectQ;
 	}
-
 	public static boolean isInsertQ ()
 	{
 		return insertQ;
 	}
-
 	public static void setInsertQ ( boolean insertQ )
 	{
 		QueryConversionModule.insertQ = insertQ;
 	}
-
+	
 	/**
 	 * @return the databaseName
 	 */
@@ -115,7 +99,6 @@ public class QueryConversionModule
 	{
 		return databaseName;
 	}
-
 	/**
 	 * @param databaseName
 	 *            the databaseName to set
@@ -124,7 +107,6 @@ public class QueryConversionModule
 	{
 		QueryConversionModule.databaseName = databaseName;
 	}
-
 	/**
 	 * Getter method for serial number
 	 * 
@@ -134,7 +116,6 @@ public class QueryConversionModule
 	{
 		return serialNum;
 	}
-
 	/**
 	 * Setter method for serial number
 	 * 
@@ -144,7 +125,6 @@ public class QueryConversionModule
 	{
 		serialNum = serialNumber;
 	}
-
 	/**
 	 * Get incremented serial number
 	 * 
@@ -215,6 +195,7 @@ public class QueryConversionModule
 				System.exit( 1 );
 			}
 		}
+		scan.close();
 	}
 
 	/**
@@ -267,12 +248,12 @@ public class QueryConversionModule
 				{
 					if ( queryLines[i].length() > 0 )
 					{
-						if ( queryLines[i].startsWith( "use" ) || queryLines[i].startsWith( "USE" ) || queryLines[i].startsWith( "Use" ) )
+						if ( queryLines[i].toLowerCase().startsWith( "use" ))
 						{
 							databaseName = convertUseStatement( convertedQ, queryLines[i] );
 
 						}
-						else if ( queryLines[i].startsWith( "Select" ) || queryLines[i].startsWith( "select" ) || queryLines[i].startsWith( "SELECT" ) )
+						else if (queryLines[i].toLowerCase().startsWith( "select" ))
 						{
 							// Select clause
 							selectQ = Boolean.TRUE;
@@ -281,7 +262,7 @@ public class QueryConversionModule
 							for ( String tkns : selectTkns )
 							{
 								tkns = tkns.toUpperCase();
-								if ( tkns.equalsIgnoreCase( "Select" ) || tkns.equalsIgnoreCase( "select" ) || tkns.equalsIgnoreCase( "SELECT" ) )
+								if ( tkns.equalsIgnoreCase( "Select" ))
 								{
 									selectLine.add( tkns );
 									selectLine.add( SPACE_DELIMITER );
@@ -334,7 +315,7 @@ public class QueryConversionModule
 
 							}
 						}
-						else if ( queryLines[i].startsWith( "Insert" ) || queryLines[i].startsWith( "insert" ) || queryLines[i].startsWith( "INSERT" ) )
+						else if (queryLines[i].toLowerCase().startsWith( "insert" ))
 						{
 							// Insert query
 							insertQ = Boolean.TRUE;
@@ -349,7 +330,7 @@ public class QueryConversionModule
 								indTkns = indTkns.trim();
 								if ( indTkns.length() > 0 )
 								{
-									if ( indTkns.startsWith( "Insert " ) || indTkns.startsWith( "INSERT " ) || indTkns.startsWith( "insert " ) )
+									if (indTkns.toLowerCase().startsWith( "insert" ) )
 									{
 										insertLine.append( indTkns );
 										insertLine.append( SPACE_DELIMITER );
@@ -392,7 +373,7 @@ public class QueryConversionModule
 							}
 
 						}
-						else if ( queryLines[i].startsWith( "Values" ) || queryLines[i].startsWith( "values" ) || queryLines[i].startsWith( "VALUES" ) )
+						else if (queryLines[i].toLowerCase().startsWith( "values" ))
 						{
 							int count = 0;
 							String pkFile = databaseName + SCHEMA_FILE_EXTENSION + PRIMARY_KEY_FILE_EXTENSION;
@@ -410,7 +391,7 @@ public class QueryConversionModule
 							{
 								tkns = tkns.trim();
 
-								if ( tkns.equalsIgnoreCase( "values" ) || tkns.startsWith( "Values" ) || tkns.startsWith( "VALUES" ) )
+								if ( tkns.equalsIgnoreCase( "values" ))
 								{
 									valuesLine.append( tkns );
 									valuesLine.append( SPACE_DELIMITER );
@@ -468,7 +449,7 @@ public class QueryConversionModule
 								}
 							}
 						}
-						else if ( queryLines[i].startsWith( "From" ) || queryLines[i].startsWith( "from" ) || queryLines[i].startsWith( "FROM" ) )
+						else if (queryLines[i].toLowerCase().startsWith( "from" ))
 						{
 							// From clause - insert line as is
 							fromLine.append( queryLines[i].toUpperCase() );
@@ -478,8 +459,7 @@ public class QueryConversionModule
 							for ( String tkns : fromTkns )
 							{
 								tkns = tkns.toUpperCase();
-								if ( tkns.equalsIgnoreCase( "From" ) || tkns.equalsIgnoreCase( "from" ) || tkns.equalsIgnoreCase( "FROM" )
-								        || tkns.equalsIgnoreCase( "Join" ) || tkns.equalsIgnoreCase( "join" ) || tkns.equalsIgnoreCase( "JOIN" ) )
+								if ( tkns.equalsIgnoreCase( "From" ) || tkns.equalsIgnoreCase( "Join" ))
 								{
 									continue;
 								}
@@ -568,6 +548,7 @@ public class QueryConversionModule
 															break;
 														}
 													}
+													br1.close();
 												}
 											}
 											catch ( FileNotFoundException e )
@@ -584,14 +565,14 @@ public class QueryConversionModule
 								}
 							}
 						}
-						else if ( queryLines[i].startsWith( "Update" ) || queryLines[i].startsWith( "update" ) || queryLines[i].startsWith( "UPDATE" ) )
+						else if ( queryLines[i].toLowerCase().startsWith( "update" ))
 						{ // Update query
 							String[] updateLineTkns = queryLines[i].split( "\\s+" );
 							tableName = updateLineTkns[1];
 							fromLine.append( "FROM" + " " + tableName );
 
 						}
-						else if ( queryLines[i].startsWith( "Set" ) || queryLines[i].startsWith( "set" ) || queryLines[i].startsWith( "SET" ) )
+						else if ( queryLines[i].toLowerCase().startsWith( "set" ))
 						{ // Update query
 							String[] setTkns = queryLines[i].split( "\\s+" );
 							for ( int j = 1; j < setTkns.length; j++ )
@@ -605,8 +586,7 @@ public class QueryConversionModule
 							}
 						}
 						 
-						else if ( queryLines[i].startsWith( "DELETE FROM" ) || queryLines[i].startsWith( "delete from" )
-						        || queryLines[i].startsWith( "Delete From" ) )
+						else if (queryLines[i].toLowerCase().startsWith( "delete from" ))
 						{
 							// Delete query
 							String[] deleteTkns = queryLines[i].split( "\\s+" );
@@ -773,17 +753,10 @@ public class QueryConversionModule
 		convertedQ.append( NEWLINE_DELIMITER );
 		String[] useTkns = queryLine.trim().split( "\\s+" );
 
-		if ( useTkns[1].contains( "`" ) )
-		{
-			useTkns[1] = useTkns[1].replace( "`", "" );
-			databaseName = useTkns[1].trim().substring( 0, useTkns[1].length() - 1 );
-			setDatabaseName( databaseName );
-		}
-		else
-		{
-			databaseName = useTkns[1].trim().substring( 0, useTkns[1].length() - 1 );
-			setDatabaseName( databaseName );
-		}
+		useTkns[1] = useTkns[1].replace( "`", "" );
+		databaseName = useTkns[1].trim().substring( 0, useTkns[1].length() - 1 );
+		setDatabaseName( databaseName );
+		
 		return databaseName;
 	}
 

@@ -28,23 +28,16 @@ public class SchemaConversionModule {
 	private static File modifiedSchemaFile;
 
 	public static final String TAB_DELIMITER = "\t";
-
 	public static final Object STAR = "*";
-
 	public static final String SEMI_COLON = ";";
 
 	public static String SPACE_DELIMITER = " ";
-
 	public static String NEWLINE_DELIMITER = "\n";
-
 	public static String SLASH_DELIMITER = "/";
 
 	public static String ICRL_FILE_EXTENSION = "_icrlFile.txt";
-
 	public static String RSA_KEY_FILE_EXTENSION = "_rsa.txt";
-
 	public static String SQL_FILE_EXTENSION = ".sql";
-	
 	public static String PRIMARY_KEY_FILE_EXTENSION = "_pk.txt";
 	
 
@@ -183,11 +176,9 @@ public class SchemaConversionModule {
 
 		StringBuilder modifiedSchemaFileName = new StringBuilder();
 		StringTokenizer token = new StringTokenizer(schemaFileName, ".");
-		while (token.hasMoreTokens()) {
+		if (token.hasMoreTokens()) {
 			modifiedSchemaFileName.append(token.nextToken());
-			modifiedSchemaFileName.append("_ICDB");
-			modifiedSchemaFileName.append(".sql");
-			break;
+			modifiedSchemaFileName.append("_ICDB.sql");
 		}
 
 		return modifiedSchemaFileName.toString();
@@ -212,14 +203,11 @@ public class SchemaConversionModule {
 			inputBuffer.append(strLine);
 		} else if (strLine.endsWith(";")) {
 			strLine = strLine.toLowerCase();
-			if (strLine.startsWith("drop") || strLine.startsWith("DROP")
-					|| strLine.startsWith("Drop")) {
+			if (strLine.startsWith("drop")) {
 				inputBuffer.append(strLine);
 			}
 			
-			if (strLine.startsWith("create schema")
-					|| strLine.startsWith("Create Schema")
-					|| strLine.startsWith("CREATE SCHEMA")) {
+			if (strLine.startsWith("create schema")) {
 				String dbName = null;
 				if (strLine.contains("`")) {
 					strLine = strLine.replace("`", "");
@@ -228,9 +216,7 @@ public class SchemaConversionModule {
 
 				String[] tmp = strLine.trim().split("\\s+");
 				for (int i = 0; i < tmp.length; i++) {
-					if (tmp[i].equalsIgnoreCase("create")) {
-						continue;
-					} else if (tmp[i].equalsIgnoreCase("schema")) {
+					if (tmp[i].equalsIgnoreCase("create") || tmp[i].equalsIgnoreCase("schema")) {
 						continue;
 					} else {
 						if (tmp[i].contains("`")) {
@@ -249,20 +235,13 @@ public class SchemaConversionModule {
 						+ " charset=utf8;");
 			}
 
-			if (strLine.startsWith("use") || strLine.startsWith("Use")
-					|| strLine.startsWith("USE")) {
+			if (strLine.startsWith("use")) {
 				if (strLine.contains("`")) {
 					strLine = strLine.replace("`", "");
 				}
 				inputBuffer.append(strLine);
 			}
-
-			if (strLine.startsWith("alter") || strLine.startsWith("Alter")
-					|| strLine.startsWith("ALTER")) {
-				inputBuffer.append(strLine);
-			}
-			
-			if (strLine.startsWith(")")) {
+			if (strLine.startsWith("alter") || strLine.startsWith(")")) {
 				inputBuffer.append(strLine);
 			}
 		} else if (strLine.endsWith("(")) {
@@ -276,95 +255,21 @@ public class SchemaConversionModule {
 
 			while (tokens.hasNextLine()) {
 				tmp = tokens.nextLine();
-				
+
 				if (tmp.endsWith("NOT NULL,") || tmp.endsWith("DEFAULT NULL,") || tmp.endsWith("AUTO_INCREMENT,")) {
-					if (tmp.contains("VARCHAR")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("CHAR")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("DATE")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("DATETIME")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("TIMESTAMP")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("INT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("TINYINT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("SMALLINT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("MEDIUMINT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("BIGINT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("DECIMAL")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("FLOAT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("DOUBLE")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						inputBuffer.append(tmp);
-					} else if (strLine.contains("BOOL")) {
+					if (strLine.contains("VARCHAR") || strLine.contains("CHAR") || strLine.contains("DATE") || strLine.contains("TIMESTAMP") || 
+							strLine.contains("INT") || strLine.contains("DECIMAL") || strLine.contains("FLOAT") || 
+							strLine.contains("DOUBLE") || strLine.contains("BOOL")) {
 						tmp = addIntegrityCode_SVC(strLine);
 						inputBuffer.append(tmp);
 					}
-				} else if (tmp.endsWith("CHAR,")) {
+				} else if (tmp.endsWith("CHAR,") || tmp.endsWith("INT,") || tmp.endsWith("DATE,") ||
+						tmp.endsWith("DATETIME,") || tmp.endsWith("TIMESTAMP,") || tmp.endsWith("BOOL,")) {
 					tmp = addIntegrityCode_SVC(strLine);
 					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("INT,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("TINYINT,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("SMALLINT,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("MEDIUMINT,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("BIGINT,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("DATE,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("DATETIME,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("TIMESTAMP,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("BOOL,")) {
-					tmp = addIntegrityCode_SVC(strLine);
-					inputBuffer.append(tmp);
-				} else if (tmp.endsWith("),")) {
-					if (tmp.contains("VARCHAR") || tmp.contains("CHAR")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						tmp = tmp + ",";
-						inputBuffer.append(tmp);
-					} else if (tmp.contains("DECIMAL")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						tmp = tmp + ",";
-						inputBuffer.append(tmp);
-					} else if (tmp.contains("FLOAT")) {
-						tmp = addIntegrityCode_SVC(strLine);
-						tmp = tmp + ",";
-						inputBuffer.append(tmp);
-					} else if (tmp.contains("DOUBLE")) {
+				} else if (tmp.endsWith("),")  || tmp.contains("DECIMAL") || tmp.contains("FLOAT")
+						 || tmp.contains("DOUBLE")) {
+					if (tmp.contains("CHAR")) {
 						tmp = addIntegrityCode_SVC(strLine);
 						tmp = tmp + ",";
 						inputBuffer.append(tmp);
@@ -398,10 +303,7 @@ public class SchemaConversionModule {
 		while (tokens.hasMoreElements()) {
 			tmpStr = tokens.nextToken();
 
-			if (tmpStr.equalsIgnoreCase("NOT") || tmpStr.equalsIgnoreCase("NULL") || tmpStr.equalsIgnoreCase("DEFAULT")) {
-				tmpBuffer.append(tmpStr);
-				tmpBuffer.append(SPACE_DELIMITER);
-			} else if (tmpStr.equalsIgnoreCase("NULL,")) {
+			if (tmpStr.equalsIgnoreCase("NOT") || tmpStr.equalsIgnoreCase("NULL") || tmpStr.equalsIgnoreCase("DEFAULT") || tmpStr.equalsIgnoreCase("NULL,")) {
 				tmpBuffer.append(tmpStr);
 				tmpBuffer.append(SPACE_DELIMITER);
 			} else if (tmpStr.equalsIgnoreCase("CHAR,") || tmpStr.equalsIgnoreCase("INT,") 
@@ -476,11 +378,7 @@ public class SchemaConversionModule {
 
 					if ( strLine.length() > 0 )
 					{
-						if ( strLine.startsWith( "DROP" ) )
-						{
-							continue;
-						}
-						else if ( strLine.startsWith( "USE" ) )
+						if ( strLine.startsWith( "DROP" ) || strLine.startsWith("USE"))
 						{
 							continue;
 						}
@@ -498,7 +396,7 @@ public class SchemaConversionModule {
 								dataFile = tmp[2];
 							}
 						}
-						else if ( strLine.startsWith( "PRIMARY KEY" ) || strLine.contains( "PRIMARY KEY" ) )
+						else if (strLine.contains( "PRIMARY KEY" ) )
 						{
 							String tmp = strLine;
 							String[] tokens = tmp.split( "\\(" );
@@ -518,23 +416,8 @@ public class SchemaConversionModule {
 								key = key.replace( "/ ", SLASH_DELIMITER );
 							}
 						}
-						else if ( strLine.startsWith( "FOREIGN KEY" ) )
-						{
-							continue;
-						}
-						else if ( strLine.startsWith( "CONSTRAINT" ) )
-						{
-							continue;
-						}
-						else if ( strLine.startsWith( "ALTER" ) )
-						{
-							continue;
-						}
-						else if ( strLine.startsWith( "UNIQUE" ) )
-						{
-							continue;
-						}
-						else if ( strLine.startsWith( "CREATE SCHEMA" ) )
+						else if ( strLine.startsWith("FOREIGN KEY") || strLine.startsWith("CONSTRAINT")
+								|| strLine.startsWith( "ALTER" ) || strLine.startsWith( "UNIQUE" ) || strLine.startsWith( "CREATE SCHEMA" ))
 						{
 							continue;
 						}
