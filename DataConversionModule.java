@@ -32,20 +32,20 @@ public class DataConversionModule
 {
 
 	public static String databaseName = null;
-	
+
 	private static int bitSize = 1024;
 	private static long serialNumber;
 
 	public final static SecureRandom random = new SecureRandom();
-	
+
 	private final static BigInteger one = new BigInteger( "1" );
 	private static BigInteger privateKey;
 	private static BigInteger publicKey;
 	private static BigInteger modulus;
-	
+
 	public static ArrayList<String> primaryKeyList = new ArrayList<String>();
 	public static ArrayList<String> atrList = new ArrayList<String>();
-	
+
 	public static Map<String, String> primaryKeyListWithUnl = new HashMap<String, String>();
 	public static Map<String, String> keyPositionMap = new HashMap<String, String>();
 	public static Map<String, String> attributeMap = new HashMap<String, String>();
@@ -58,7 +58,6 @@ public class DataConversionModule
 	{
 		return databaseName;
 	}
-
 	/**
 	 * @param databaseName
 	 *            the databaseName to set
@@ -67,7 +66,6 @@ public class DataConversionModule
 	{
 		DataConversionModule.databaseName = databaseName;
 	}
-
 	/**
 	 * @return the privateKey
 	 */
@@ -75,7 +73,6 @@ public class DataConversionModule
 	{
 		return privateKey;
 	}
-
 	/**
 	 * @param privateKey
 	 *            the privateKey to set
@@ -84,7 +81,6 @@ public class DataConversionModule
 	{
 		DataConversionModule.privateKey = privateKey;
 	}
-
 	/**
 	 * @return the publicKey
 	 */
@@ -92,7 +88,6 @@ public class DataConversionModule
 	{
 		return publicKey;
 	}
-
 	/**
 	 * @param publicKey
 	 *            the publicKey to set
@@ -101,7 +96,6 @@ public class DataConversionModule
 	{
 		DataConversionModule.publicKey = publicKey;
 	}
-
 	/**
 	 * @return the modulus
 	 */
@@ -109,7 +103,6 @@ public class DataConversionModule
 	{
 		return modulus;
 	}
-
 	/**
 	 * @param modulus
 	 *            the modulus to set
@@ -118,7 +111,6 @@ public class DataConversionModule
 	{
 		DataConversionModule.modulus = modulus;
 	}
-
 	/**
 	 * @return the serialNumber
 	 */
@@ -126,7 +118,6 @@ public class DataConversionModule
 	{
 		return serialNumber;
 	}
-
 	/**
 	 * @param serialNumber
 	 *            the serialNumber to set
@@ -140,7 +131,7 @@ public class DataConversionModule
 	{
 		execute(args);
 	}
-	
+
 	public static void execute(String[] args)
 	{
 		String inputDataFile = null;
@@ -160,7 +151,7 @@ public class DataConversionModule
 			schemaFileName = args[0];
 			inputDataFile = args[1];
 		}
-		
+
 		if ( inputDataFile.length() < 2 )
 		{
 			System.out.println( "Enter the schema file name: </folderpath/schemaFileName>" );
@@ -198,7 +189,7 @@ public class DataConversionModule
 			{
 				System.out.println( "DataFile doesn't exist" );
 				System.exit( 1 );
-				
+
 			}
 
 		}
@@ -225,7 +216,7 @@ public class DataConversionModule
 				if ( getDatabaseName() != null && getDatabaseName().length() > 0 )
 				{
 					if ( indFile.getAbsoluteFile().getName().startsWith( getDatabaseName() )
-					        && indFile.getAbsoluteFile().getName().contains( Symbol.ICRL_FILE_EXTENSION ) )
+							&& indFile.getAbsoluteFile().getName().contains( Symbol.ICRL_FILE_EXTENSION ) )
 					{
 						icrlFile = new File( folderPath + Symbol.SLASH_DELIMITER + indFile.getAbsoluteFile().getName() );
 						break;
@@ -256,7 +247,7 @@ public class DataConversionModule
 							sb.append( "\n" );
 							continue;
 						}
-						if ( strLine.startsWith( "Current Valid Serial Number" ) )
+						else if ( strLine.startsWith( "Current Valid Serial Number" ) )
 						{
 							hasLastValidSerialNum = Boolean.TRUE;
 							String[] tkns = strLine.split( ":" );
@@ -276,7 +267,7 @@ public class DataConversionModule
 						icrlFileOutput.close();
 					}
 
-					if ( !hasLastValidSerialNum )
+					else if ( !hasLastValidSerialNum )
 					{
 						String lastValidSNum = Long.toString( getSerialNumber() );
 						icrlFileOutput = new BufferedWriter( new FileWriter( icrlFile, true ) );
@@ -327,7 +318,7 @@ public class DataConversionModule
 			for ( File indFile : files )
 			{
 				if ( indFile.getAbsoluteFile().getName().startsWith( databaseName )
-				        && indFile.getAbsoluteFile().getName().endsWith( Symbol.ICRL_FILE_EXTENSION ) )
+						&& indFile.getAbsoluteFile().getName().endsWith( Symbol.ICRL_FILE_EXTENSION ) )
 				{
 					icrlFile = new File( folderPath + Symbol.SLASH_DELIMITER + indFile.getAbsoluteFile().getName() );
 					break;
@@ -367,7 +358,7 @@ public class DataConversionModule
 				 * Generate RSA signature for each line of data file and write
 				 * the output to new .unl file
 				 */
-				
+
 				String[] dataFileTokens; 
 				if(strLine.contains("\\") || strLine.contains("|")) {
 					dataFileTokens = strLine.split("\\|");
@@ -388,7 +379,7 @@ public class DataConversionModule
 						// datafile_ICDB.unl
 						pos = j;
 						message = generateRSASignature( Integer.toString( pos + 1 ), dataFileTokens[j], primaryKeys, unlFile,
-						        Long.toString( getSerialNumber() ), fileLocation );
+								Long.toString( getSerialNumber() ), fileLocation );
 
 						if ( message != null )
 						{
@@ -401,8 +392,8 @@ public class DataConversionModule
 							System.out.println( " Data file :: encrypt :: " + encrypt.toString( 16 ) );
 							output.write( encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
 							System.out.println( " Final data file value :: " + encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER
-							        + Long.toString( getSerialNumber() ) );
-							
+									+ Long.toString( getSerialNumber() ) );
+
 							if (j != dataFileTokens.length-1)
 								output.write( "|" );
 						}
@@ -443,12 +434,12 @@ public class DataConversionModule
 		BigInteger p = BigInteger.probablePrime( N, random );
 		BigInteger q = BigInteger.probablePrime( N, random );
 		BigInteger phi = ( p.subtract( one ) ).multiply( q.subtract( one ) ); // (p-1)
-		                                                                      // *
-		                                                                      // (q-1)
+		// *
+		// (q-1)
 		modulus = p.multiply( q ); // p*q
 		setModulus( modulus );
 		publicKey = new BigInteger( "65537" ); // common value in practice =
-		                                       // 2^16 + 1
+		// 2^16 + 1
 		setPublicKey( publicKey );
 		privateKey = publicKey.modInverse( phi );
 		setPrivateKey( privateKey );
@@ -458,63 +449,32 @@ public class DataConversionModule
 
 		if ( rsaKeyFile.exists() )
 		{
-
-			try
-			{
-				rsaKeyFile.delete();
-				rsaKeyFile.createNewFile();
-
-				// Write rsa keys to file
-				Writer rsaKeyFileOutput = new BufferedWriter( new FileWriter( rsaKeyFile, true ) );
-				rsaKeyFileOutput.write( "p:" );
-				rsaKeyFileOutput.write( p.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "q:" );
-				rsaKeyFileOutput.write( q.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "publickey:" );
-				rsaKeyFileOutput.write( publicKey.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "privatekey:" );
-				rsaKeyFileOutput.write( privateKey.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "modulus:" );
-				rsaKeyFileOutput.write( modulus.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.close();
-			}
-			catch ( IOException e )
-			{
-				e.printStackTrace();
-			}
+			rsaKeyFile.delete();
 		}
-		else
+		try
 		{
-			try
-			{
-				rsaKeyFile.createNewFile();
-				Writer rsaKeyFileOutput = new BufferedWriter( new FileWriter( rsaKeyFile, true ) );
-				rsaKeyFileOutput.write( "p:" );
-				rsaKeyFileOutput.write( p.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "q:" );
-				rsaKeyFileOutput.write( q.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "publickey:" );
-				rsaKeyFileOutput.write( publicKey.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "privatekey:" );
-				rsaKeyFileOutput.write( privateKey.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.write( "modulus:" );
-				rsaKeyFileOutput.write( modulus.toString() );
-				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
-				rsaKeyFileOutput.close();
-			}
-			catch ( IOException e )
-			{
-				e.printStackTrace();
-			}
+			rsaKeyFile.createNewFile();
+			Writer rsaKeyFileOutput = new BufferedWriter( new FileWriter( rsaKeyFile, true ) );
+			rsaKeyFileOutput.write( "p:" );
+			rsaKeyFileOutput.write( p.toString() );
+			rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
+			rsaKeyFileOutput.write( "q:" );
+			rsaKeyFileOutput.write( q.toString() );
+			rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
+			rsaKeyFileOutput.write( "publickey:" );
+			rsaKeyFileOutput.write( publicKey.toString() );
+			rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
+			rsaKeyFileOutput.write( "privatekey:" );
+			rsaKeyFileOutput.write( privateKey.toString() );
+			rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
+			rsaKeyFileOutput.write( "modulus:" );
+			rsaKeyFileOutput.write( modulus.toString() );
+			rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
+			rsaKeyFileOutput.close();
+		}
+		catch ( IOException e )
+		{
+			e.printStackTrace();
 		}
 	}
 
@@ -588,13 +548,12 @@ public class DataConversionModule
 	{
 		StringBuilder modifiedDataFileName = new StringBuilder();
 		StringTokenizer token = new StringTokenizer( dataFileName, "." );
-		while ( token.hasMoreTokens() )
+		if ( token.hasMoreTokens() )
 		{
 			modifiedDataFileName.append( token.nextToken() );
 			modifiedDataFileName.append( Symbol.ICDB_UNL_EXTENSION );
-			break;
 		}
-
+		
 		return modifiedDataFileName.toString();
 	}
 
@@ -698,7 +657,7 @@ public class DataConversionModule
 		String unlFile = "";
 
 		if ( schemaFile.exists() && primaryKeyList != null && !primaryKeyList.isEmpty() && primaryKeyListWithUnl != null
-		        && !primaryKeyListWithUnl.isEmpty() )
+				&& !primaryKeyListWithUnl.isEmpty() )
 		{
 			try
 			{
@@ -720,9 +679,9 @@ public class DataConversionModule
 
 						// Filter all the lines except data types
 						if ( strLine.startsWith( "DROP SCHEMA IF EXISTS" ) || strLine.startsWith( "CREATE SCHEMA" )
-						        || strLine.startsWith( "USE" ) || strLine.startsWith( "CREATE TABLE" )
-						        || strLine.startsWith( "CONSTRAINT" ) || strLine.startsWith( "ALTER" ) || strLine.equals( "" )
-						        || strLine.equals( ");" ) )
+								|| strLine.startsWith( "USE" ) || strLine.startsWith( "CREATE TABLE" )
+								|| strLine.startsWith( "CONSTRAINT" ) || strLine.startsWith( "ALTER" ) || strLine.equals( "" )
+								|| strLine.equals( ");" ) )
 						{
 							if ( strLine.startsWith( "CREATE TABLE" ))
 							{
@@ -730,13 +689,12 @@ public class DataConversionModule
 								if ( str[str.length - 1].equals( "(" ) )
 								{
 									unlFile = str[str.length - 2];
-									unlFile = unlFile.concat( Symbol.UNL_FILE_EXTENSION );
 								}
 								else
 								{
 									unlFile = str[str.length - 1];
-									unlFile = unlFile.concat( Symbol.UNL_FILE_EXTENSION );
 								}
+								unlFile = unlFile.concat( Symbol.UNL_FILE_EXTENSION );
 
 							}
 							position = 0;
@@ -776,7 +734,7 @@ public class DataConversionModule
 													{
 														value = Integer.toString( position );
 													}
-													else if ( !value.contains( Integer.toString( position ) ) )
+													else
 													{
 														value = value + Symbol.SLASH_DELIMITER + Integer.toString( position );
 													}
@@ -850,18 +808,14 @@ public class DataConversionModule
 		} else {
 			tokens = line.split(" ");
 		}
-		
+
 		for ( int i = 0; i < tokens.length; i++ )
 		{
-			if ( primaryKeysPosition.contains( Integer.toString( i + 1 ) ) )
+			if ( primaryKeysPosition.contains(Integer.toString(i) ) )
 			{
 				if ( primaryKeys.length() == 0 )
 				{
-					if((i + 1) < tokens.length) {
-						primaryKeys = tokens[i + 1];
-					} else {
-						primaryKeys = tokens[i];
-					}
+					primaryKeys = tokens[i];
 				}
 				else
 				{
@@ -885,7 +839,7 @@ public class DataConversionModule
 	 * @return
 	 */
 	private static BigInteger generateRSASignature ( String attrPosition, String individualToken, String primaryKeys, String dataFile,
-	        String sNumber, String fileLocation )
+			String sNumber, String fileLocation )
 	{
 		BigInteger message = null;
 		BigInteger pkBigInt, tknBigInt, attrBigInt;
@@ -900,7 +854,7 @@ public class DataConversionModule
 
 			System.out.println( " ******************************************* " );
 			System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
-			        + primaryKeys + " serial Number : " + sNumber );
+					+ primaryKeys + " serial Number : " + sNumber );
 
 			// Check if its a single primary key or combination of keys
 			if ( !primaryKeys.contains( Symbol.SLASH_DELIMITER ) )
