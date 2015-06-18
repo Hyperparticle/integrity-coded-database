@@ -139,7 +139,7 @@ public class SchemaConversionModule {
 		
 		if (token.hasMoreTokens()) {
 			modifiedSchemaFileName.append(token.nextToken());
-			modifiedSchemaFileName.append(Symbol.ICDB_FILE_EXTENSION);
+			modifiedSchemaFileName.append(Symbol.ICDB_SQL_EXTENSION);
 		}
 
 		return modifiedSchemaFileName.toString();

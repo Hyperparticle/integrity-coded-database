@@ -591,8 +591,7 @@ public class DataConversionModule
 		while ( token.hasMoreTokens() )
 		{
 			modifiedDataFileName.append( token.nextToken() );
-			modifiedDataFileName.append( "_ICDB" );
-			modifiedDataFileName.append( ".unl" );
+			modifiedDataFileName.append( Symbol.ICDB_UNL_EXTENSION );
 			break;
 		}
 
