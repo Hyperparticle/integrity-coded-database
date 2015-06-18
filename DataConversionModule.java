@@ -31,13 +31,6 @@ import java.util.StringTokenizer;
 public class DataConversionModule
 {
 
-	public static String NEWLINE_DELIMITER = "\n";
-	public static String UNL_FILE_EXTENSION = ".unl";
-	public static String ICRL_FILE_EXTENSION = "_icrlFile.txt";
-	public static String RSA_KEY_FILE_EXTENSION = "_rsa.txt";
-	public static String SQL_FILE_EXTENSION = ".sql";
-	public static String SLASH_DELIMITER = "/";
-	public static String SCHEMA_FILE_EXTENSION = "-schema";
 	public static String databaseName = null;
 	
 	private static int bitSize = 1024;
@@ -232,9 +225,9 @@ public class DataConversionModule
 				if ( getDatabaseName() != null && getDatabaseName().length() > 0 )
 				{
 					if ( indFile.getAbsoluteFile().getName().startsWith( getDatabaseName() )
-					        && indFile.getAbsoluteFile().getName().contains( ICRL_FILE_EXTENSION ) )
+					        && indFile.getAbsoluteFile().getName().contains( Symbol.ICRL_FILE_EXTENSION ) )
 					{
-						icrlFile = new File( folderPath + SLASH_DELIMITER + indFile.getAbsoluteFile().getName() );
+						icrlFile = new File( folderPath + Symbol.SLASH_DELIMITER + indFile.getAbsoluteFile().getName() );
 						break;
 					}
 				}
@@ -322,7 +315,7 @@ public class DataConversionModule
 		String fileLocation = dataFile.getParent();
 		Path dFile = Paths.get( dataFile.toString() );
 		String unlFile = dFile.getFileName().toString();
-		unlFile = unlFile.replace( UNL_FILE_EXTENSION, "" );
+		unlFile = unlFile.replace( Symbol.UNL_FILE_EXTENSION, "" );
 
 		try
 		{
@@ -334,9 +327,9 @@ public class DataConversionModule
 			for ( File indFile : files )
 			{
 				if ( indFile.getAbsoluteFile().getName().startsWith( databaseName )
-				        && indFile.getAbsoluteFile().getName().endsWith( ICRL_FILE_EXTENSION ) )
+				        && indFile.getAbsoluteFile().getName().endsWith( Symbol.ICRL_FILE_EXTENSION ) )
 				{
-					icrlFile = new File( folderPath + SLASH_DELIMITER + indFile.getAbsoluteFile().getName() );
+					icrlFile = new File( folderPath + Symbol.SLASH_DELIMITER + indFile.getAbsoluteFile().getName() );
 					break;
 				}
 			}
@@ -406,8 +399,8 @@ public class DataConversionModule
 						if ( encrypt.toString() != null )
 						{
 							System.out.println( " Data file :: encrypt :: " + encrypt.toString( 16 ) );
-							output.write( encrypt.toString( 16 ) + SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
-							System.out.println( " Final data file value :: " + encrypt.toString( 16 ) + SLASH_DELIMITER
+							output.write( encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
+							System.out.println( " Final data file value :: " + encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER
 							        + Long.toString( getSerialNumber() ) );
 							
 							if (j != dataFileTokens.length-1)
@@ -445,7 +438,7 @@ public class DataConversionModule
 	private static void generateRSASignature ( int N, String databaseName, Path schemaFile )
 	{
 		// Write public and private key to file
-		File rsaKeyFile = new File( schemaFile.getParent() + SLASH_DELIMITER + databaseName + SCHEMA_FILE_EXTENSION + RSA_KEY_FILE_EXTENSION );
+		File rsaKeyFile = new File( schemaFile.getParent() + Symbol.SLASH_DELIMITER + databaseName + Symbol.SCHEMA_FILE_EXTENSION + Symbol.RSA_KEY_FILE_EXTENSION );
 
 		BigInteger p = BigInteger.probablePrime( N, random );
 		BigInteger q = BigInteger.probablePrime( N, random );
@@ -475,19 +468,19 @@ public class DataConversionModule
 				Writer rsaKeyFileOutput = new BufferedWriter( new FileWriter( rsaKeyFile, true ) );
 				rsaKeyFileOutput.write( "p:" );
 				rsaKeyFileOutput.write( p.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "q:" );
 				rsaKeyFileOutput.write( q.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "publickey:" );
 				rsaKeyFileOutput.write( publicKey.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "privatekey:" );
 				rsaKeyFileOutput.write( privateKey.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "modulus:" );
 				rsaKeyFileOutput.write( modulus.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.close();
 			}
 			catch ( IOException e )
@@ -503,19 +496,19 @@ public class DataConversionModule
 				Writer rsaKeyFileOutput = new BufferedWriter( new FileWriter( rsaKeyFile, true ) );
 				rsaKeyFileOutput.write( "p:" );
 				rsaKeyFileOutput.write( p.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "q:" );
 				rsaKeyFileOutput.write( q.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "publickey:" );
 				rsaKeyFileOutput.write( publicKey.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "privatekey:" );
 				rsaKeyFileOutput.write( privateKey.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.write( "modulus:" );
 				rsaKeyFileOutput.write( modulus.toString() );
-				rsaKeyFileOutput.write( NEWLINE_DELIMITER );
+				rsaKeyFileOutput.write( Symbol.NEWLINE_DELIMITER );
 				rsaKeyFileOutput.close();
 			}
 			catch ( IOException e )
@@ -543,7 +536,7 @@ public class DataConversionModule
 				inputDataFile = inputDataFile.replace( ".sql", "" );
 			}
 
-			File icrlFile = new File( schemaFile.getParent() + SLASH_DELIMITER + inputDataFile + ICRL_FILE_EXTENSION );
+			File icrlFile = new File( schemaFile.getParent() + Symbol.SLASH_DELIMITER + inputDataFile + Symbol.ICRL_FILE_EXTENSION );
 
 			if ( icrlFile.exists() )
 			{
@@ -622,9 +615,9 @@ public class DataConversionModule
 		String unlFile = dFile.getFileName().toString();
 		boolean dataFileMatched = false;
 
-		if ( unlFile.endsWith( UNL_FILE_EXTENSION ) )
+		if ( unlFile.endsWith( Symbol.UNL_FILE_EXTENSION ) )
 		{
-			unlFile = unlFile.replace( UNL_FILE_EXTENSION, "" );
+			unlFile = unlFile.replace( Symbol.UNL_FILE_EXTENSION, "" );
 		}
 		try
 		{
@@ -668,8 +661,8 @@ public class DataConversionModule
 
 							if ( key.contains( "," ) )
 							{
-								key = key.replace( ",", SLASH_DELIMITER );
-								key = key.replace( "/ ", SLASH_DELIMITER );
+								key = key.replace( ",", Symbol.SLASH_DELIMITER );
+								key = key.replace( "/ ", Symbol.SLASH_DELIMITER );
 							}
 
 							primaryKeyList.add( key );
@@ -738,12 +731,12 @@ public class DataConversionModule
 								if ( str[str.length - 1].equals( "(" ) )
 								{
 									unlFile = str[str.length - 2];
-									unlFile = unlFile.concat( UNL_FILE_EXTENSION );
+									unlFile = unlFile.concat( Symbol.UNL_FILE_EXTENSION );
 								}
 								else
 								{
 									unlFile = str[str.length - 1];
-									unlFile = unlFile.concat( UNL_FILE_EXTENSION );
+									unlFile = unlFile.concat( Symbol.UNL_FILE_EXTENSION );
 								}
 
 							}
@@ -765,9 +758,9 @@ public class DataConversionModule
 
 								if ( primaryKey != null )
 								{
-									if ( primaryKey.contains( SLASH_DELIMITER ) )
+									if ( primaryKey.contains( Symbol.SLASH_DELIMITER ) )
 									{
-										String[] keyTokens = primaryKey.split( SLASH_DELIMITER );
+										String[] keyTokens = primaryKey.split( Symbol.SLASH_DELIMITER );
 
 										for ( int j = 0; j < keyTokens.length; j++ )
 										{
@@ -786,7 +779,7 @@ public class DataConversionModule
 													}
 													else if ( !value.contains( Integer.toString( position ) ) )
 													{
-														value = value + SLASH_DELIMITER + Integer.toString( position );
+														value = value + Symbol.SLASH_DELIMITER + Integer.toString( position );
 													}
 													keyPositionMap.put( unlFile, value );
 												}
@@ -807,7 +800,7 @@ public class DataConversionModule
 								String[] attributeTokens = strLine.trim().split( "\\s+" );
 								for ( int k = 0; k < attributeTokens.length;)
 								{
-									attributeMap.put( position + SLASH_DELIMITER + unlFile, attributeTokens[k] );
+									attributeMap.put( position + Symbol.SLASH_DELIMITER + unlFile, attributeTokens[k] );
 									break;
 								}
 							}
@@ -873,7 +866,7 @@ public class DataConversionModule
 				}
 				else
 				{
-					primaryKeys += SLASH_DELIMITER + tokens[i];
+					primaryKeys += Symbol.SLASH_DELIMITER + tokens[i];
 				}
 			}
 		}
@@ -900,18 +893,18 @@ public class DataConversionModule
 		dataFile = dataFile.toUpperCase();
 
 		// Loop through each attribute
-		if ( attributeMap.containsKey( attrPosition + SLASH_DELIMITER + dataFile ) )
+		if ( attributeMap.containsKey( attrPosition + Symbol.SLASH_DELIMITER + dataFile ) )
 		{
 
 			// Attribute name
-			String attrNameTokens = attributeMap.get( attrPosition + SLASH_DELIMITER + dataFile );
+			String attrNameTokens = attributeMap.get( attrPosition + Symbol.SLASH_DELIMITER + dataFile );
 
 			System.out.println( " ******************************************* " );
 			System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
 			        + primaryKeys + " serial Number : " + sNumber );
 
 			// Check if its a single primary key or combination of keys
-			if ( !primaryKeys.contains( SLASH_DELIMITER ) )
+			if ( !primaryKeys.contains( Symbol.SLASH_DELIMITER ) )
 			{
 				// Check if primary key is a number or not
 				if ( !isIntegerRegex( primaryKeys ) )
@@ -968,7 +961,7 @@ public class DataConversionModule
 		double pkInt = 0;
 		BigInteger product = null;
 
-		String[] primaryKeyTokens = primaryKeys.split( SLASH_DELIMITER );
+		String[] primaryKeyTokens = primaryKeys.split( Symbol.SLASH_DELIMITER );
 
 		for ( int i = 0; i < primaryKeyTokens.length; i++ )
 		{

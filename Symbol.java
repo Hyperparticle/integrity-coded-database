@@ -1,4 +1,4 @@
-package symbols;
+
 
 public class Symbol {
 	public static final Object STAR = "*";
