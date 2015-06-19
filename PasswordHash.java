@@ -1,4 +1,4 @@
-/* 
+/**
  * Password Hashing With PBKDF2 (http://crackstation.net/hashing-security.htm).
  * Copyright (c) 2013, Taylor Hornby
  * All rights reserved.

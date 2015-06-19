@@ -20,7 +20,9 @@ import java.io.Writer;
 import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -986,6 +988,19 @@ public class DataConversionModule
 	public static BigInteger encrypt ( BigInteger message )
 	{
 		return message.modPow( getPrivateKey(), getModulus() );
+	}
+	
+	public static String hash(String message)
+	{
+		try {
+			return PasswordHash.createHash(message);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }
