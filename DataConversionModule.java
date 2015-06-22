@@ -358,7 +358,7 @@ public class DataConversionModule
 
 			while ( ( strLine = br.readLine() ) != null )
 			{
-				System.out.println( "Serial Number :: " + serialNumber );
+//				System.out.println( "Serial Number :: " + serialNumber );
 				// Get the primary keys position
 				primaryKeys = getPrimaryKeys( strLine.trim(), fileLocation, unlFile );
 
@@ -408,10 +408,10 @@ public class DataConversionModule
 							System.out.println( " Final data file value :: " + encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER
 									+ Long.toString( getSerialNumber() ) );
 						} else {
-							System.out.println( " Data file :: encrypt :: " + encr );
+//							System.out.println( " Data file :: encrypt :: " + encr );
 							output.write( encr + Symbol.SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
-							System.out.println( " Final data file value :: " + encr + Symbol.SLASH_DELIMITER
-									+ Long.toString( getSerialNumber() ) );
+//							System.out.println( " Final data file value :: " + encr + Symbol.SLASH_DELIMITER
+//									+ Long.toString( getSerialNumber() ) );
 						}
 
 						if (j != dataFileTokens.length-1)
@@ -1027,9 +1027,9 @@ public class DataConversionModule
 		// Attribute name
 		String attrNameTokens = attributeMap.get( attrPosition + Symbol.SLASH_DELIMITER + dataFile );
 		
-		System.out.println( " ******************************************* " );
-		System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
-				+ primaryKeys + " serial Number : " + sNumber );
+//		System.out.println( " ******************************************* " );
+//		System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
+//				+ primaryKeys + " serial Number : " + sNumber );
 		
 		return primaryKeys + individualToken + attrNameTokens + sNumber;
 	}
