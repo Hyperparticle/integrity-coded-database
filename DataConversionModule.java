@@ -32,7 +32,9 @@ import java.util.StringTokenizer;
 
 public class DataConversionModule
 {
-
+	// Set this to false to use hashing
+	private static boolean RSA = false;
+	
 	public static String databaseName = null;
 
 	private static int bitSize = 1024;
@@ -173,10 +175,12 @@ public class DataConversionModule
 				/* Generate ICRL serial number */
 				generateSerialNum( databaseName, schemaFile );
 				System.out.println( " Serial Number generated.." + getSerialNumber() );
-
-				/* Generate RSA keys */
-				generateRSASignature( bitSize, databaseName, schemaFile );
-				System.out.println( "RSA keys generated.. " );
+				
+				if (RSA) {
+					/* Generate RSA keys */
+					generateRSASignature( bitSize, databaseName, schemaFile );
+					System.out.println( "RSA keys generated.. " );
+				}
 
 				// Find the Primary Key
 				primaryKeyList = findPrimaryKey( schemaFileName, inputDataFile );
@@ -309,6 +313,8 @@ public class DataConversionModule
 		Path dFile = Paths.get( dataFile.toString() );
 		String unlFile = dFile.getFileName().toString();
 		unlFile = unlFile.replace( Symbol.UNL_FILE_EXTENSION, "" );
+		
+		String encr = null;
 
 		try
 		{
@@ -380,25 +386,36 @@ public class DataConversionModule
 						// write the integrity coded data to
 						// datafile_ICDB.unl
 						pos = j;
-						message = generateRSASignature( Integer.toString( pos + 1 ), dataFileTokens[j], primaryKeys, unlFile,
-								Long.toString( getSerialNumber() ), fileLocation );
-
-						if ( message != null )
-						{
-							System.out.println( " Data file :: message :: " + message.toString() );
-							encrypt = encrypt( message );
+						
+						if (RSA) {
+							message = generateRSASignature( Integer.toString( pos + 1 ), dataFileTokens[j], primaryKeys, unlFile,
+									Long.toString( getSerialNumber() ), fileLocation );
+							
+							if ( message != null )
+							{
+								System.out.println( " Data file :: message :: " + message.toString() );
+								encrypt = encrypt( message );
+							}
+						} else {
+							String m = generateHashSignature(Integer.toString( pos + 1 ), dataFileTokens[j], primaryKeys, unlFile,
+									Long.toString( getSerialNumber() ));
+							encr = hash(m);
 						}
-
-						if ( encrypt.toString() != null )
-						{
+						
+						if (RSA) {
 							System.out.println( " Data file :: encrypt :: " + encrypt.toString( 16 ) );
 							output.write( encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
 							System.out.println( " Final data file value :: " + encrypt.toString( 16 ) + Symbol.SLASH_DELIMITER
 									+ Long.toString( getSerialNumber() ) );
-
-							if (j != dataFileTokens.length-1)
-								output.write( "|" );
+						} else {
+							System.out.println( " Data file :: encrypt :: " + encr );
+							output.write( encr + Symbol.SLASH_DELIMITER + Long.toString( getSerialNumber() ) );
+							System.out.println( " Final data file value :: " + encr + Symbol.SLASH_DELIMITER
+									+ Long.toString( getSerialNumber() ) );
 						}
+
+						if (j != dataFileTokens.length-1)
+							output.write( "|" );
 
 						setSerialNumber( getIncrementedSerialNum() );
 					}
@@ -990,6 +1007,36 @@ public class DataConversionModule
 		return message.modPow( getPrivateKey(), getModulus() );
 	}
 	
+	/**
+	 * Generates a Hash signature (similar to RSA signature, but just 
+	 * with concatenated strings)
+	 * 
+	 * @param attrPosition
+	 * @param dataFile
+	 * @param individualToken
+	 * @param primaryKeys
+	 * @param sNumber
+	 * @return
+	 */
+	public static String generateHashSignature(String attrPosition, String dataFile, String individualToken, String primaryKeys, String sNumber)
+	{
+		// Attribute name
+		String attrNameTokens = attributeMap.get( attrPosition + Symbol.SLASH_DELIMITER + dataFile );
+		
+		System.out.println( " ******************************************* " );
+		System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
+				+ primaryKeys + " serial Number : " + sNumber );
+		
+		return primaryKeys + individualToken + attrNameTokens + sNumber;
+	}
+	
+	/**
+	 * Securely salts and hashes the message and returns the 
+	 * iterations, salt, and hash
+	 * 
+	 * @param message
+	 * @return
+	 */
 	public static String hash(String message)
 	{
 		try {
