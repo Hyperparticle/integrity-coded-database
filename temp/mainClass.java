@@ -8,7 +8,6 @@ public class mainClass {
 	
 	public static void main ( String[] args )
 	{
-		long startTime = System.currentTimeMillis();
 		if(args.length == 0) {
 			System.out.println("No argument was entered: </directory/schema-file.sql/>");
 			System.exit(1);
@@ -35,8 +34,6 @@ public class mainClass {
 				e.printStackTrace();
 			}
 		}
-		long endTime = System.currentTimeMillis();
-		System.out.println(endTime-startTime);
 	}
 	
 	public static ArrayList<Path> unlList(Path schemaFilePath) {

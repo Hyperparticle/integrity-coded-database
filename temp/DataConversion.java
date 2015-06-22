@@ -295,6 +295,11 @@ public class DataConversion
 
 								if ( primaryKey != null )
 								{
+
+									if(pKey.startsWith("(")) {
+										pKey = pKey.substring(1, pKey.length());
+									}
+
 									if ( primaryKey.contains( Symbol.SLASH_DELIMITER ) )
 									{
 										String[] keyTokens = primaryKey.split( Symbol.SLASH_DELIMITER );
