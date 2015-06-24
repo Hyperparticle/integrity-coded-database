@@ -113,6 +113,7 @@ public class VerifyQueryModule
 			{
 				System.out.println( "Enter the sql query file to be converted" );
 				qFile = scan.nextLine();
+				scan.close();
 
 				if ( qFile.length() > 0 )
 				{
@@ -631,7 +632,7 @@ public class VerifyQueryModule
 			/* Read File Line By Line */
 			while ( ( strLine = br.readLine() ) != null )
 			{
-				if ( strLine.startsWith( "USE" ) )
+				if ( strLine.toUpperCase().startsWith( "USE" ) )
 				{
 					getDatabaseNameFromQuery( strLine );
 				}
@@ -639,7 +640,7 @@ public class VerifyQueryModule
 				{
 					sb.append( Symbol.NEWLINE_DELIMITER );
 				}
-				else if ( strLine.startsWith( "FROM" ) || strLine.startsWith( "WHERE" ) )
+				else if ( strLine.toUpperCase().startsWith( "FROM" ) || strLine.toUpperCase().startsWith( "WHERE" ) )
 				{
 					sb.append( Symbol.NEWLINE_DELIMITER );
 				}
