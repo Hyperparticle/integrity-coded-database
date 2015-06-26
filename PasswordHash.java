@@ -27,13 +27,16 @@
  */
 
 import java.security.SecureRandom;
+
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.SecretKeyFactory;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Map;
 
-/*
+/**
  * PBKDF2 salted password hashing.
  * Author: havoc AT defuse.ca
  * www: http://crackstation.net/hashing-security.htm
@@ -43,9 +46,9 @@ public class PasswordHash
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
 
     // The following constants may be changed without breaking existing hashes.
-    public static final int SALT_BYTE_SIZE = 24;
-    public static final int HASH_BYTE_SIZE = 24;
-    public static final int PBKDF2_ITERATIONS = 10;
+    public static final int SALT_BYTE_SIZE = 16;	// 128-bit (16 byte) hash and salt 
+    public static final int HASH_BYTE_SIZE = 16;
+    public static final int PBKDF2_ITERATIONS = 100;
 
     public static final int ITERATION_INDEX = 0;
     public static final int SALT_INDEX = 1;
@@ -231,5 +234,36 @@ public class PasswordHash
             System.out.println("ERROR: " + ex);
         }
     }
+	
+	/**
+	 * Securely salts and hashes the message and returns the 
+	 * iterations, salt, and hash
+	 * 
+	 * @return
+	 */
+	public static String hashDB(String attrPosition, 
+			String dataFile, String individualToken, String primaryKeys, 
+			String sNumber, Map<String, String> attributeMap)
+	{
+		// Attribute name
+		String attrNameTokens = attributeMap.get( attrPosition + Symbol.SLASH_DELIMITER + dataFile );
+		
+//				System.out.println( " ******************************************* " );
+//				System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
+//						+ primaryKeys + " serial Number : " + sNumber );
+		
+		String message = primaryKeys + individualToken + attrNameTokens + sNumber;
+
+		
+		try {
+			return createHash(message);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 }

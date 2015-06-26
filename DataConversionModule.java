@@ -397,9 +397,8 @@ public class DataConversionModule
 								encrypt = encrypt( message );
 							}
 						} else {
-							String m = generateHashSignature(Integer.toString( pos + 1 ), dataFileTokens[j], primaryKeys, unlFile,
-									Long.toString( getSerialNumber() ));
-							encr = hash(m);
+							encr = PasswordHash.hashDB(Integer.toString( pos + 1 ), dataFileTokens[j], primaryKeys, unlFile,
+									Long.toString(getSerialNumber()), attributeMap );
 						}
 						
 						if (RSA) {
@@ -735,7 +734,7 @@ public class DataConversionModule
 								if ( primaryKey != null )
 								{
 									if(pKey.startsWith("(")) {
-										pKey = pKey.substring(1, pKey.length);
+										pKey = pKey.substring(1, pKey.length());
 									}
 
 									if ( primaryKey.contains( Symbol.SLASH_DELIMITER ) )
@@ -1011,47 +1010,4 @@ public class DataConversionModule
 		return message.modPow( getPrivateKey(), getModulus() );
 	}
 	
-	/**
-	 * Generates a Hash signature (similar to RSA signature, but just 
-	 * with concatenated strings)
-	 * 
-	 * @param attrPosition
-	 * @param dataFile
-	 * @param individualToken
-	 * @param primaryKeys
-	 * @param sNumber
-	 * @return
-	 */
-	public static String generateHashSignature(String attrPosition, String dataFile, String individualToken, String primaryKeys, String sNumber)
-	{
-		// Attribute name
-		String attrNameTokens = attributeMap.get( attrPosition + Symbol.SLASH_DELIMITER + dataFile );
-		
-//		System.out.println( " ******************************************* " );
-//		System.out.println( " data file :: " + dataFile + " attr name :: " + attrNameTokens + " attr val :: " + individualToken + " pk name :: "
-//				+ primaryKeys + " serial Number : " + sNumber );
-		
-		return primaryKeys + individualToken + attrNameTokens + sNumber;
-	}
-	
-	/**
-	 * Securely salts and hashes the message and returns the 
-	 * iterations, salt, and hash
-	 * 
-	 * @param message
-	 * @return
-	 */
-	public static String hash(String message)
-	{
-		try {
-			return PasswordHash.createHash(message);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-
 }
