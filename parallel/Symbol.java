@@ -1,3 +1,4 @@
+package parallel;
 
 
 public class Symbol {
