@@ -26,6 +26,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import AES.Symbol;
+
 public class VerifyQueryModule
 {
 	private final static Logger log = Logger.getLogger( VerifyQueryModule.class.getName() );

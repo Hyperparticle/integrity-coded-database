@@ -20,6 +20,8 @@ import java.io.Writer;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import AES.Symbol;
+
 public class SchemaConversionModule {
 	
 	public static void main(String[] args) {

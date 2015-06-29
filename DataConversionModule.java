@@ -29,6 +29,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import AES.Symbol;
+
 public class DataConversionModule
 {
 	// Set this to false to use hashing
@@ -194,7 +196,6 @@ public class DataConversionModule
 			{
 				System.out.println( "DataFile doesn't exist" );
 				System.exit( 1 );
-
 			}
 
 		}

@@ -1,4 +1,6 @@
+package AES;
 
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +28,7 @@ public class AESCipher {
 	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5PADDING";
 	private static final String KEYGEN_INSTANCE = "AES";
 	private static final String DELIMITER = " ";
+	private static final int KEY_SIZE = 128;
 	
 	private Cipher cipher;
 	private KeyGenerator keyGenerator;
@@ -41,7 +44,7 @@ public class AESCipher {
 		try {
 			cipher = Cipher.getInstance(CIPHER_INSTANCE);
 			keyGenerator = KeyGenerator.getInstance(KEYGEN_INSTANCE);
-			keyGenerator.init(128);
+			keyGenerator.init(KEY_SIZE);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -75,8 +78,9 @@ public class AESCipher {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 			System.exit(1);
-			return null;
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -104,8 +108,9 @@ public class AESCipher {
 				BadPaddingException | InvalidAlgorithmParameterException e) {
 			e.printStackTrace();
 			System.exit(1);
-			return null;
 		}
+		
+		return null;
 	}
 	
 	/**

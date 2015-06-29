@@ -1,7 +1,5 @@
 package tests;
 
-import AESCipher;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -9,6 +7,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+
+import AES.AESCipher;
 
 public class AESTest {
 	/**
@@ -39,6 +39,6 @@ public class AESTest {
 		String decryptedText = aes.decrypt(encryptedText, decodeKey);
 		System.out.println("Decrypted Text After Decryption: " + decryptedText);
 		
-		System.out.println(plainText.equals(decryptedText) ? "Passed" : "Failed");
+		System.out.println(plainText.equals(decryptedText) ? "Passed!" : "Failed!");
 	}
 }
