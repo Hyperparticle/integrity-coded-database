@@ -51,11 +51,19 @@ public class AESDataConverter {
 	}
 	
 	/**
-	 * Generates a key and initiates conversion.
+	 * Initiates conversion.
 	 */
 	public void convert() {
 //		generateSerialNum();
 		generateKey();
+		convertDataFile();
+	}
+	
+	/**
+	 * Initiates conversion.
+	 */
+	public void convert(SecretKey k) {
+		key = k;
 		convertDataFile();
 	}
 	
@@ -107,7 +115,7 @@ public class AESDataConverter {
 	/**
 	 * Securely generate a SecretKey and keep it in a file.
 	 */
-	private void generateKey()
+	private SecretKey generateKey()
 	{
 		key = cipher.generateKey();
 		
@@ -126,6 +134,35 @@ public class AESDataConverter {
 			e.printStackTrace();
 			System.exit(2);
 		}
+		
+		return key;
+	}
+	
+	/**
+	 * Securely generate a SecretKey and keep it in a file.
+	 */
+	public static SecretKey generateKey(String fileLocation, String databaseName)
+	{
+		AESCipher c = new AESCipher();
+		SecretKey k = c.generateKey();
+		
+		File keyFile = new File(fileLocation + Symbol.SLASH_DELIMITER + databaseName + Symbol.SCHEMA_FILE_EXTENSION + Symbol.AES_KEY_FILE_EXTENSION);
+		if (keyFile.exists())
+			keyFile.delete();
+		
+		try {
+			keyFile.createNewFile();
+			Writer keyFileOutput = new BufferedWriter(new FileWriter(keyFile, true));
+			
+			keyFileOutput.write("AES KEY: ");
+			keyFileOutput.write(c.keyToString(k));
+			keyFileOutput.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(2);
+		}
+		
+		return k;
 	}
 
 	/**

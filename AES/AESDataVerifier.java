@@ -91,7 +91,7 @@ public class AESDataVerifier {
 		if (mismatches == 0) {
 			System.out.println("All data is verified.");
 		} else {
-			System.out.println("Recieved " + mismatches + " mismatches across " + mismatchedLines + " lines.");
+			System.out.println("Recieved " + mismatches + " mismatches across " + mismatchedLines + " lines in " + icdbDataFile.getName());
 		}
 	}
 	

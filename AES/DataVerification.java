@@ -1,10 +1,15 @@
 package AES;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class DataVerification {
 
-	private static final int EXPECTED_ARGS = 2;
+	private static final int EXPECTED_ARGS = 1;
 
 	/**
 	 * Tests the arguments and converts the specified DataFile.
@@ -21,7 +26,7 @@ public class DataVerification {
 	 */
 	private static void testArgs(String[] args) {
 		if (args.length != EXPECTED_ARGS) {
-			System.err.println("Usage: java DataConversion <DataFile Path> <KeyFile Path>");
+			System.err.println("Usage: java DataConversion <Folder Path>");
 			System.exit(1);
 		}
 	}
@@ -31,16 +36,49 @@ public class DataVerification {
 	 * @param args
 	 */
 	private static void verifyDataFile(String[] args) {
-		File dataFile = new File(args[0]);
-		File keyFile = new File(args[1]);
+		Path dataPath = Paths.get(args[0]);
+		File keyFile = getKeyFile(dataPath);
 		
-		if (dataFile.isFile() && dataFile.exists() &&
-				keyFile.isFile() && keyFile.exists()) {
-			AESDataVerifier verifier = new AESDataVerifier(dataFile, keyFile);
+		ArrayList<File> list = fileList(dataPath);
+		
+		for (File unl : list) {
+			AESDataVerifier verifier = new AESDataVerifier(unl, keyFile);
 			verifier.verify();
-		} else {
-			System.out.println("Error: Cannot open files.");
 		}
+	}
+	
+	private static ArrayList<File> fileList(Path schemaFilePath) {
+		ArrayList<File> unlFiles = new ArrayList<File>();
+		try {
+			Files.walk(schemaFilePath.getParent()).forEach(dataFilePath -> {
+				if (Files.isRegularFile(dataFilePath)) {
+					if (dataFilePath.toString().endsWith("_ICDB.unl")) {
+						unlFiles.add(dataFilePath.toFile());
+					}
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return unlFiles;
+	}
+	
+	private static File getKeyFile(Path schemaFilePath) {
+		ArrayList<File> keyFiles = new ArrayList<File>();
+		
+		try {
+			Files.walk(schemaFilePath.getParent()).forEach(dataFilePath -> {
+				if (Files.isRegularFile(dataFilePath)) {
+					if (dataFilePath.toString().endsWith("_aes.txt")) {
+						keyFiles.add(dataFilePath.toFile());
+					}
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return keyFiles.get(0);
 	}
 
 }

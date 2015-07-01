@@ -1,6 +1,6 @@
 package AES;
 
-import java.math.BigInteger;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +27,7 @@ public class AESCipher {
 	
 	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5PADDING";
 	private static final String KEYGEN_INSTANCE = "AES";
+	private static final String ENCODING = "UTF-8";
 	private static final String DELIMITER = " ";
 	private static final int KEY_SIZE = 128;
 	
@@ -61,11 +62,11 @@ public class AESCipher {
 	 */
 	public String encrypt(String message, SecretKey secretKey) {
 		try {
-			byte[] plainTextByte = message.getBytes();
+			byte[] messageByte = message.getBytes(ENCODING);
 			
 			// Encrypt the message, get ciphertext and iv
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-			byte[] encryptedByte = cipher.doFinal(plainTextByte);
+			byte[] encryptedByte = cipher.doFinal(messageByte);
 			byte[] iv = cipher.getIV();
 			
 			// Convert codes to string
@@ -75,7 +76,8 @@ public class AESCipher {
 			// Return the delimited string codes
 			builder = new StringBuilder(ivText).append(DELIMITER).append(encryptedText);
 			return builder.toString();
-		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (InvalidKeyException | IllegalBlockSizeException 
+				| BadPaddingException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -103,9 +105,9 @@ public class AESCipher {
 			byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
 			
 			// Return the decrypted message
-			return new String(decryptedByte);
+			return new String(decryptedByte, ENCODING);
 		} catch (InvalidKeyException | IllegalBlockSizeException | 
-				BadPaddingException | InvalidAlgorithmParameterException e) {
+				BadPaddingException | InvalidAlgorithmParameterException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}

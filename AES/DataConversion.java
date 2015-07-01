@@ -1,6 +1,13 @@
 package AES;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
+import javax.crypto.SecretKey;
 
 /**
  * Converts a DB data file (.unl) to an ICDB AES file.
@@ -18,7 +25,7 @@ public class DataConversion {
 	 */
 	public static void main(String[] args) {
 		testArgs(args);
-		convertDataFile(args);
+		convertDataFiles(args);
 	}
 	
 	/**
@@ -27,7 +34,7 @@ public class DataConversion {
 	 */
 	private static void testArgs(String[] args) {
 		if (args.length != EXPECTED_ARGS) {
-			System.err.println("Usage: java DataConversion <DataFile Path> <Database Name>");
+			System.err.println("Usage: java DataConversion <Folder Path> <Database Name>");
 			System.exit(1);
 		}
 	}
@@ -36,15 +43,33 @@ public class DataConversion {
 	 * Converts the DB file by creating an AESDataConverter.
 	 * @param args
 	 */
-	private static void convertDataFile(String[] args) {
-		File dataFile = new File(args[0]);
+	private static void convertDataFiles(String[] args) {
+		Path dataPath = Paths.get(args[0]); 
 		String databaseName = args[1];
 		
-		if (dataFile.isFile() && dataFile.exists()) {
-			AESDataConverter converter = new AESDataConverter(dataFile, databaseName);
-			converter.convert();
-		} else {
-			System.out.println("Error: Cannot open Datafile.");
+		SecretKey key = AESDataConverter.generateKey(dataPath.toString(), databaseName);
+		
+		ArrayList<File> list = fileList(dataPath);
+		
+		for (File unl : list) {
+			AESDataConverter converter = new AESDataConverter(unl, databaseName);
+			converter.convert(key);
 		}
+	}
+	
+	private static ArrayList<File> fileList(Path schemaFilePath) {
+		ArrayList<File> unlFiles = new ArrayList<File>();
+		try {
+			Files.walk(schemaFilePath.getParent()).forEach(dataFilePath -> {
+				if (Files.isRegularFile(dataFilePath)) {
+					if(dataFilePath.toString().endsWith(".unl") && !dataFilePath.toString().endsWith("_ICDB.unl")) {
+						unlFiles.add(dataFilePath.toFile());
+					}
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return unlFiles;
 	}
 }
