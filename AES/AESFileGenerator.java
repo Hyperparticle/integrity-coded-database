@@ -43,7 +43,7 @@ public class AESFileGenerator {
 			keyFile.createNewFile();
 			Writer keyFileOutput = new BufferedWriter(new FileWriter(keyFile, true));
 			
-			keyFileOutput.write("AES KEY: ");
+			keyFileOutput.write(Symbol.AES_KEY_STRING);
 			keyFileOutput.write(cipher.keyToString(key));
 			keyFileOutput.close();
 		} catch (IOException e) {

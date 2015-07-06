@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class DataVerification {
+public class DataFileVerification {
 
 	private static final int EXPECTED_ARGS = 1;
 
@@ -42,7 +42,7 @@ public class DataVerification {
 		ArrayList<File> list = fileList(dataPath);
 		
 		for (File unl : list) {
-			AESDataVerifier verifier = new AESDataVerifier(unl, keyFile);
+			AESDataFileVerifier verifier = new AESDataFileVerifier(unl, keyFile);
 			verifier.verify();
 		}
 	}

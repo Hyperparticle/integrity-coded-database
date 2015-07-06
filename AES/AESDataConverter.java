@@ -8,8 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Writer;
-import java.security.SecureRandom;
 
 import javax.crypto.SecretKey;
 
@@ -56,6 +54,7 @@ public class AESDataConverter {
 			DataInputStream in = new DataInputStream(fStream);
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
 			
+			// If the file exists, replace it
 			File icdbFile = new File(icdbFileName);
 			if (icdbFile.exists())
 				icdbFile.delete();
@@ -63,6 +62,8 @@ public class AESDataConverter {
 			
 			BufferedWriter output = new BufferedWriter(new FileWriter(icdbFile));
 			
+			// Loop through each line and generate an encrypted IC.
+			// Output results to file.
 			String strLine;
 			while ((strLine = input.readLine()) != null) {
 				String message = strLine + Symbol.FILE_DELIMITER + Long.toString(serialNumber);

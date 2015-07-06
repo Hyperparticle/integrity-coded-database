@@ -209,16 +209,32 @@ public class QueryConversionModule
 		String folderPath = "";
 
 		Scanner scan = new Scanner( System.in );
-		System.out.println( "Enter the folderPath where schema file exists" );
-		folderPath = scan.nextLine();
+		
+		if (args.length != 2)
+		{
+			System.out.println( "Enter the folderPath where schema file exists" );
+			folderPath = scan.nextLine();
+		}
+		else
+		{
+			folderPath = args[0];
+		}
 
 		if ( folderPath.length() > 0 )
 		{
 			File fPath = new File( folderPath );
 			if ( fPath.exists() )
 			{
-				System.out.println( "Enter the sql query file to be converted" );
-				initialQuery = scan.nextLine();
+				if (args.length != 2)
+				{
+					System.out.println( "Enter the sql query file to be converted" );
+					initialQuery = scan.nextLine();
+				}
+				else
+				{
+					initialQuery = args[1];
+				}
+				
 
 				if ( initialQuery.length() > 0 )
 				{

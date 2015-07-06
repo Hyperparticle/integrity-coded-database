@@ -30,4 +30,5 @@ public class Symbol {
 	public static final String COMMA_DELIMITER_WITHOUT_SPACE = ",";
 	public static final String COMMA_DELIMITER_WITH_SPACE = ", ";
 	
+	public static final String AES_KEY_STRING = "AES KEY: ";
 }
