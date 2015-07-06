@@ -47,13 +47,16 @@ public class DataConversion {
 		Path dataPath = Paths.get(args[0]); 
 		String databaseName = args[1];
 		
-		SecretKey key = AESDataConverter.generateKey(dataPath.toString(), databaseName);
+		AESFileGenerator generator = new AESFileGenerator(dataPath, databaseName);
+		SecretKey key = generator.generateKey();
+		long serialNumber = generator.generateSerialNum();
 		
 		ArrayList<File> list = fileList(dataPath);
 		
 		for (File unl : list) {
-			AESDataConverter converter = new AESDataConverter(unl, databaseName);
-			converter.convert(key);
+			AESDataConverter converter = new AESDataConverter(unl, key, serialNumber);
+			serialNumber = converter.convertDataFile();
+			generator.saveSerialNum(serialNumber);
 		}
 	}
 	
@@ -69,6 +72,7 @@ public class DataConversion {
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 		return unlFiles;
 	}

@@ -74,6 +74,12 @@ public class AESDataVerifier {
 					}
 				}
 				
+				if (data.length != decodedIC.length) {
+					System.out.println("Mismatch at line " + lineNum + ", data sizes do not match.");
+					mismatchedLine = true;
+					mismatches++;
+				}
+				
 				if (mismatchedLine)
 					mismatchedLines++;
 				
@@ -105,9 +111,12 @@ public class AESDataVerifier {
 				String k;
 				if (line.contains("AES KEY: ")) {
 					k = line.replace("AES KEY: ", "");
+					scan.close();
 					return cipher.stringToKey(k);
 				}
 			}
+			
+			scan.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			System.exit(2);

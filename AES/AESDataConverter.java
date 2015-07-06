@@ -23,12 +23,7 @@ import javax.crypto.SecretKey;
 public class AESDataConverter {
 	
 	private File dataFile;
-	private File icrlFile;
-	private File keyFile;
 	
-	private String databaseName;
-	private String fileLocation;
-	private String tableName;
 	private String icdbFileName;
 	
 	private SecretKey key;
@@ -40,37 +35,20 @@ public class AESDataConverter {
 	 * Creates an AESDataConverter and gets filenames ready.
 	 * @param dataFile the file path to convert
 	 * @param databaseName the name of the database the data comes from
+	 * @param key a predefined key to encrypt with
 	 */
-	public AESDataConverter(File dataFile, String databaseName) {
+	public AESDataConverter(File dataFile, SecretKey key, long serialNumber) {
 		this.dataFile = dataFile;
-		this.databaseName = databaseName;
+		this.key = key;
+		this.serialNumber = serialNumber;
 		
-		fileLocation = dataFile.getParent();
-		tableName = dataFile.getName().replace(Symbol.UNL_FILE_EXTENSION, "");
 		icdbFileName = dataFile.getPath().replace(Symbol.UNL_FILE_EXTENSION, Symbol.ICDB_UNL_EXTENSION);
-	}
-	
-	/**
-	 * Initiates conversion.
-	 */
-	public void convert() {
-//		generateSerialNum();
-		generateKey();
-		convertDataFile();
-	}
-	
-	/**
-	 * Initiates conversion.
-	 */
-	public void convert(SecretKey k) {
-		key = k;
-		convertDataFile();
 	}
 	
 	/**
 	 * Converts the DataFile by generating a signature for each tuple (line) in the file.
 	 */
-	private void convertDataFile() {
+	public long convertDataFile() {
 		System.out.println("Converting " + dataFile.getName() + "...");
 		
 		try {
@@ -87,12 +65,10 @@ public class AESDataConverter {
 			
 			String strLine;
 			while ((strLine = input.readLine()) != null) {
-//				System.out.println( "Serial Number :: " + serialNumber );
+				String message = strLine + Symbol.FILE_DELIMITER + Long.toString(serialNumber);
+				String encryptedMessage = cipher.encrypt(message, key);
 				
-				String message = strLine; // + Symbol.SLASH_DELIMITER + serialNumber;
-				String encryptedMessage = cipher.encrypt(message, key); // + Symbol.FILE_DELIMITER + serialNumber;
-				
-				output.write(strLine);
+				output.write(message);
 				output.write(Symbol.FILE_DELIMITER);
 				output.write(encryptedMessage);
 				output.write(System.lineSeparator());
@@ -110,84 +86,8 @@ public class AESDataConverter {
 		}
 		
 		System.out.println("Finished converting " + dataFile.getName() + ".");
+		
+		return serialNumber;
 	}
 	
-	/**
-	 * Securely generate a SecretKey and keep it in a file.
-	 */
-	private SecretKey generateKey()
-	{
-		key = cipher.generateKey();
-		
-		keyFile = new File(fileLocation + Symbol.SLASH_DELIMITER + databaseName + Symbol.SCHEMA_FILE_EXTENSION + Symbol.AES_KEY_FILE_EXTENSION);
-		if (keyFile.exists())
-			keyFile.delete();
-		
-		try {
-			keyFile.createNewFile();
-			Writer keyFileOutput = new BufferedWriter(new FileWriter(keyFile, true));
-			
-			keyFileOutput.write("AES KEY: ");
-			keyFileOutput.write(cipher.keyToString(key));
-			keyFileOutput.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(2);
-		}
-		
-		return key;
-	}
-	
-	/**
-	 * Securely generate a SecretKey and keep it in a file.
-	 */
-	public static SecretKey generateKey(String fileLocation, String databaseName)
-	{
-		AESCipher c = new AESCipher();
-		SecretKey k = c.generateKey();
-		
-		File keyFile = new File(fileLocation + Symbol.SLASH_DELIMITER + databaseName + Symbol.SCHEMA_FILE_EXTENSION + Symbol.AES_KEY_FILE_EXTENSION);
-		if (keyFile.exists())
-			keyFile.delete();
-		
-		try {
-			keyFile.createNewFile();
-			Writer keyFileOutput = new BufferedWriter(new FileWriter(keyFile, true));
-			
-			keyFileOutput.write("AES KEY: ");
-			keyFileOutput.write(c.keyToString(k));
-			keyFileOutput.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(2);
-		}
-		
-		return k;
-	}
-
-	/**
-	 * Method to generate the first valid serial Number. (Maybe Unnecessary?)
-	 */
-	private void generateSerialNum() {
-		try {
-			databaseName = databaseName.replace( ".sql", "" );
-			File icrlFile = new File(fileLocation + Symbol.SLASH_DELIMITER + databaseName + Symbol.ICRL_FILE_EXTENSION);
-
-			if (icrlFile.exists())
-				icrlFile.delete();
-			icrlFile.createNewFile();
-			this.icrlFile = icrlFile;
-			
-			SecureRandom rand = new SecureRandom();
-			serialNumber = new Integer(rand.nextInt(Integer.MAX_VALUE));
-			
-			Writer icrlFileOutput = new BufferedWriter(new FileWriter(icrlFile));
-			icrlFileOutput.write("First Valid Serial Number: ");
-			icrlFileOutput.write(Long.toString(serialNumber));
-			icrlFileOutput.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(2);
-		}
-	}
 }

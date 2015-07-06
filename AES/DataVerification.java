@@ -76,6 +76,7 @@ public class DataVerification {
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 		
 		return keyFiles.get(0);

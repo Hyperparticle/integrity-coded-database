@@ -25,7 +25,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AESCipher {
 	
-	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5PADDING";
+//	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5PADDING";
+	private static final String CIPHER_INSTANCE = "AES/ECB/PKCS5PADDING";
 	private static final String KEYGEN_INSTANCE = "AES";
 	private static final String ENCODING = "UTF-8";
 	private static final String DELIMITER = " ";
@@ -67,17 +68,18 @@ public class AESCipher {
 			// Encrypt the message, get ciphertext and iv
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 			byte[] encryptedByte = cipher.doFinal(messageByte);
-			byte[] iv = cipher.getIV();
+//			byte[] iv = cipher.getIV();
 			
 			// Convert codes to string
 			String encryptedText = encoder.encodeToString(encryptedByte);
-			String ivText = encoder.encodeToString(iv);
+//			String ivText = encoder.encodeToString(iv);
 			
-			// Return the delimited string codes
-			builder = new StringBuilder(ivText).append(DELIMITER).append(encryptedText);
-			return builder.toString();
-		} catch (InvalidKeyException | IllegalBlockSizeException 
-				| BadPaddingException | UnsupportedEncodingException e) {
+//			// Return the delimited string codes
+//			builder = new StringBuilder(ivText).append(DELIMITER).append(encryptedText);
+//			return builder.toString();
+			return encryptedText;
+		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException 
+				| UnsupportedEncodingException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -94,20 +96,23 @@ public class AESCipher {
 	 */
 	public String decrypt(String encryptedText, SecretKey secretKey) {
 		try {
-			String[] codes = encryptedText.split(DELIMITER);
+//			String[] codes = encryptedText.split(DELIMITER);
+//			
+//			// Extract the iv and ciphertext
+//			byte[] iv = decoder.decode(codes[0]);
+//			byte[] encryptedByte = decoder.decode(codes[1]);
+			byte[] encryptedByte = decoder.decode(encryptedText);
 			
-			// Extract the iv and ciphertext
-			byte[] iv = decoder.decode(codes[0]);
-			byte[] encryptedTextByte = decoder.decode(codes[1]);
 			
 			// Decrypt the message
-			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
-			byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
+//			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			byte[] decryptedByte = cipher.doFinal(encryptedByte);
 			
 			// Return the decrypted message
 			return new String(decryptedByte, ENCODING);
 		} catch (InvalidKeyException | IllegalBlockSizeException | 
-				BadPaddingException | InvalidAlgorithmParameterException | UnsupportedEncodingException e) {
+				BadPaddingException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
