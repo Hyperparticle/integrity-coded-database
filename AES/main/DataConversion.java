@@ -1,4 +1,6 @@
-package AES;
+package AES.main;
+
+import AES.helper.AESFileGenerator;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,9 +9,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class DataFileVerification {
+import javax.crypto.SecretKey;
 
-	private static final int EXPECTED_ARGS = 1;
+import AES.AESDataConverter;
+
+/**
+ * Converts a DB data file (.unl) to an ICDB AES file.
+ * 
+ * @author Daniel Kondratyuk
+ *
+ */
+public class DataConversion {
+	
+	private static final int EXPECTED_ARGS = 2;
 
 	/**
 	 * Tests the arguments and converts the specified DataFile.
@@ -17,7 +29,7 @@ public class DataFileVerification {
 	 */
 	public static void main(String[] args) {
 		testArgs(args);
-		verifyDataFile(args);
+		convertDataFiles(args);
 	}
 	
 	/**
@@ -26,7 +38,7 @@ public class DataFileVerification {
 	 */
 	private static void testArgs(String[] args) {
 		if (args.length != EXPECTED_ARGS) {
-			System.err.println("Usage: java DataConversion <Folder Path>");
+			System.err.println("Usage: java DataConversion <Folder Path> <Database Name>");
 			System.exit(1);
 		}
 	}
@@ -35,15 +47,20 @@ public class DataFileVerification {
 	 * Converts the DB file by creating an AESDataConverter.
 	 * @param args
 	 */
-	private static void verifyDataFile(String[] args) {
-		Path dataPath = Paths.get(args[0]);
-		File keyFile = getKeyFile(dataPath);
+	private static void convertDataFiles(String[] args) {
+		Path dataPath = Paths.get(args[0]); 
+		String databaseName = args[1];
+		
+		AESFileGenerator generator = new AESFileGenerator(dataPath, databaseName);
+		SecretKey key = generator.generateKey();
+		long serialNumber = generator.generateSerialNum();
 		
 		ArrayList<File> list = fileList(dataPath);
 		
 		for (File unl : list) {
-			AESDataFileVerifier verifier = new AESDataFileVerifier(unl, keyFile);
-			verifier.verify();
+			AESDataConverter converter = new AESDataConverter(unl, key, serialNumber);
+			serialNumber = converter.convertDataFile();
+			generator.saveSerialNum(serialNumber);
 		}
 	}
 	
@@ -52,34 +69,15 @@ public class DataFileVerification {
 		try {
 			Files.walk(schemaFilePath.getParent()).forEach(dataFilePath -> {
 				if (Files.isRegularFile(dataFilePath)) {
-					if (dataFilePath.toString().endsWith("_ICDB.unl")) {
+					if(dataFilePath.toString().endsWith(".unl") && !dataFilePath.toString().endsWith("_ICDB.unl")) {
 						unlFiles.add(dataFilePath.toFile());
 					}
 				}
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 		return unlFiles;
 	}
-	
-	private static File getKeyFile(Path schemaFilePath) {
-		ArrayList<File> keyFiles = new ArrayList<File>();
-		
-		try {
-			Files.walk(schemaFilePath.getParent()).forEach(dataFilePath -> {
-				if (Files.isRegularFile(dataFilePath)) {
-					if (dataFilePath.toString().endsWith("_aes.txt")) {
-						keyFiles.add(dataFilePath.toFile());
-					}
-				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		return keyFiles.get(0);
-	}
-
 }

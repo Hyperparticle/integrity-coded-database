@@ -1,4 +1,4 @@
-package AES;
+package AES.helper;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;

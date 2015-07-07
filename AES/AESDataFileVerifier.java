@@ -1,5 +1,8 @@
 package AES;
 
+import AES.helper.AESCipher;
+import AES.helper.Symbol;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -9,7 +12,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Scanner;
 
 import javax.crypto.SecretKey;
@@ -41,10 +43,11 @@ public class AESDataFileVerifier {
 		this.icdbDataFile = icdbDataFile;
 		this.keyFile = keyFile;
 		
-		key = getKeyFromFile();
 		fileLocation = icdbDataFile.getParent();
-		icrlFile = getICRLFile();
 		
+		key = getKeyFromFile();
+		
+		icrlFile = getICRLFile();
 		getICRLBounds();
 	}
 	
@@ -183,14 +186,6 @@ public class AESDataFileVerifier {
 					revokedCodes.add(Long.parseLong(strLine));
 				}
 			}
-			
-			// Sort the revoked (invalid) codes
-//			revokedCodes.sort(new Comparator<Long>() {
-//				@Override
-//				public int compare(Long o1, Long o2) {
-//					return (int)(o1 - o2);
-//				}
-//			});
 			
 			input.close();
 			in.close();

@@ -1,5 +1,7 @@
 package tests;
 
+import helper.AESCipher;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -7,8 +9,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-
-import AES.AESCipher;
 
 public class AESTest {
 	/**

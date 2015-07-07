@@ -1,4 +1,4 @@
-package AES;
+package AES.helper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

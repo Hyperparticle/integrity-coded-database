@@ -1,5 +1,8 @@
 package AES;
 
+import AES.helper.AESCipher;
+import AES.helper.Symbol;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;

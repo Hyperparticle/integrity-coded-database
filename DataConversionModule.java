@@ -8,6 +8,8 @@
  * 
  ************************************************************/
 
+import AES.helper.Symbol;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -28,8 +30,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-
-import AES.Symbol;
 
 public class DataConversionModule
 {

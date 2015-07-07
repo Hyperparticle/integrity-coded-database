@@ -6,6 +6,8 @@
  * 
  ************************************************************/
 
+import AES.helper.Symbol;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
@@ -25,8 +27,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import AES.Symbol;
 
 public class VerifyQueryModule
 {

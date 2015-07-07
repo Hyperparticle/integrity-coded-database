@@ -1,4 +1,4 @@
-package AES;
+package AES.helper;
 
 /**
  * Class that contains useful symbols.
