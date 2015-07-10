@@ -1,13 +1,15 @@
-package AES;
+package AES.main;
 
 import AES.helper.Symbol;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.sql.*;
 
@@ -21,10 +23,13 @@ public class AESQueryVerifier {
 	private File queryFile;
 	private final String databaseName;
 	private final String connectionURL;
+	private final String dataPath;
 	
 	public AESQueryVerifier(File queryFile, String databaseName) {
 		this.queryFile = queryFile;
 		this.databaseName = databaseName;
+		
+		dataPath = queryFile.getParent();
 		
 		connectionURL = DB_URL + databaseName + "?allowMultiQueries=true";
 	}
@@ -44,14 +49,40 @@ public class AESQueryVerifier {
 		}
 	}
 	
-	public boolean verifyQueries(Connection connection, ArrayList<String> queries) throws SQLException {
+	public void verifyQueries(Connection connection, ArrayList<String> queries) throws SQLException {
+		boolean verified = false;
 		Statement statement = connection.createStatement();
 		
+		AESDataFileVerifier verifier = new AESDataFileVerifier(dataPath);
+		
 		for (String query : queries) {
-			statement.executeQuery(query);
+			ResultSet result = statement.executeQuery(query);
+			ResultSetMetaData resultMeta = result.getMetaData();
+			int colCount = resultMeta.getColumnCount();
+			
+			String[] data = new String[colCount];
+			
+			if (!query.contains("use")) {
+				long row = 0;
+				
+				while (result.next()) {
+					for (int i = 1; i <= data.length; i++) {
+						data[i-1] = result.getString(i);
+					}
+					
+					String icCode = data[data.length-1];
+					String[] dataCpy = Arrays.copyOf(data, data.length-1);
+					
+					verifier.verify(dataCpy, icCode, row);
+					row++;
+				}
+			}
 		}
 		
-		return false;
+		if (verified)
+			System.out.println("All statements verified");
+		else
+			System.out.println("Statements not verified");
 	}
 	
 	public ArrayList<String> getQueries() {
@@ -74,5 +105,17 @@ public class AESQueryVerifier {
 		}
 		
 		return null;
+	}
+	
+	private static File getKeyFile(String fileLocation) {
+		File dir = new File(fileLocation);
+		File [] files = dir.listFiles(new FilenameFilter() {
+		    @Override
+		    public boolean accept(File dir, String name) {
+		        return name.endsWith(Symbol.AES_KEY_FILE_EXTENSION);
+		    }
+		});
+		
+		return files[0];
 	}
 }

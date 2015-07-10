@@ -1,8 +1,8 @@
-package AES.main;
+package AES;
 
 import java.io.File;
 
-import AES.AESQueryVerifier;
+import AES.main.AESQueryVerifier;
 
 public class QueryVerification {
 	

@@ -1,6 +1,7 @@
-package AES.main;
+package AES;
 
 import AES.helper.AESFileGenerator;
+import AES.main.AESDataConverter;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +11,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
-
-import AES.AESDataConverter;
 
 /**
  * Converts a DB data file (.unl) to an ICDB AES file.

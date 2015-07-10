@@ -1,7 +1,4 @@
-package AES;
-
-import AES.helper.AESCipher;
-import AES.helper.Symbol;
+package AES.main;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -15,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.crypto.SecretKey;
+
+import AES.DataFileVerification;
+import AES.helper.AESCipher;
+import AES.helper.Symbol;
 
 public class AESDataFileVerifier {
 	
@@ -37,7 +38,6 @@ public class AESDataFileVerifier {
 	/**
 	 * Creates an AESDataConverter and gets filenames ready.
 	 * @param dataFile the file path to convert
-	 * @param databaseName the name of the database the data comes from
 	 */
 	public AESDataFileVerifier(File icdbDataFile, File keyFile) {
 		this.icdbDataFile = icdbDataFile;
@@ -52,9 +52,26 @@ public class AESDataFileVerifier {
 	}
 	
 	/**
+	 * Creates an AESDataConverter and gets filenames ready.
+	 */
+	public AESDataFileVerifier(String path) {
+		this.keyFile = DataFileVerification.getKeyFile(path);
+		
+		fileLocation = keyFile.getParent();
+		key = getKeyFromFile();
+		
+		icrlFile = getICRLFile();
+		getICRLBounds();
+	}
+	
+	/**
 	 * Verifies the data file.
 	 */
-	public void verify() {
+	public void verifyFile() {
+		if (icdbDataFile == null) {
+			System.out.println("Error: datafile not set.");
+		}
+		
 		System.out.println("Verifying " + icdbDataFile.getName() + "...");
 		
 		try {
@@ -71,48 +88,7 @@ public class AESDataFileVerifier {
 				String[] data = strLine.substring(0, index).split("\\|");
 				String icCode = strLine.substring(index+1);
 				
-				// Decode the IC
-				String[] decodedIC = cipher.decrypt(icCode, key).split("\\|");
-				
-				// Verify by comparing each entry in the data with the IC
-				boolean mismatchedLine = false;
-				for (int i = 0; i < data.length && i < decodedIC.length; i++) {
-					if (!data[i].equals(decodedIC[i])) {
-						if (!mismatchedLine) {
-							System.out.println("Mismatch at line " + lineNum);
-							mismatchedLine = true;
-						}
-							
-						System.out.println("IC Code: \"" + decodedIC[i] + "\", Data: \"" + data[i] + "\".");
-						
-						mismatches++;
-					}
-				}
-				
-				// Make sure all data is verified!
-				if (data.length != decodedIC.length) {
-					System.out.println("Mismatch at line " + lineNum + ", data sizes do not match.");
-					mismatchedLine = true;
-					mismatches++;
-				}
-				
-				// Verify that the serial number is valid
-				try {
-					long serial = Long.parseLong(data[data.length-1]);
-					if (serial < minSerial || serial > maxSerial || revokedCodes.contains(serial)) {
-						System.out.println("Mismatch at line " + lineNum + ", serial no. is invalid");
-						mismatchedLine = true;
-						mismatches++;
-					}
-				} catch (NumberFormatException e) {
-					System.out.println("Mismatch at line " + lineNum + ", serial no. is not formatted correctly or missing");
-					mismatchedLine = true;
-					mismatches++;
-				}
-				
-				
-				if (mismatchedLine)
-					mismatchedLines++;
+				verify(data, icCode, lineNum);
 				
 				lineNum++;
 			}
@@ -130,6 +106,51 @@ public class AESDataFileVerifier {
 		} else {
 			System.out.println("Recieved " + mismatches + " mismatches across " + mismatchedLines + " lines in " + icdbDataFile.getName());
 		}
+	}
+	
+	public void verify(String[] data, String icCode, long lineNum) {
+		// Decode the IC
+		String[] decodedIC = cipher.decrypt(icCode, key).split("\\|");
+		
+		// Verify by comparing each entry in the data with the IC
+		boolean mismatchedLine = false;
+		for (int i = 0; i < data.length && i < decodedIC.length; i++) {
+			if (!data[i].equals(decodedIC[i])) {
+				if (!mismatchedLine) {
+					System.out.println("Mismatch at line " + lineNum);
+					mismatchedLine = true;
+				}
+					
+				System.out.println("IC Code: \"" + decodedIC[i] + "\", Data: \"" + data[i] + "\".");
+				
+				mismatches++;
+			}
+		}
+		
+		// Make sure all data is verified!
+		if (data.length != decodedIC.length) {
+			System.out.println("Mismatch at line " + lineNum + ", data sizes do not match.");
+			mismatchedLine = true;
+			mismatches++;
+		}
+		
+		// Verify that the serial number is valid
+		try {
+			long serial = Long.parseLong(data[data.length-1]);
+			if (serial < minSerial || serial > maxSerial || revokedCodes.contains(serial)) {
+				System.out.println("Mismatch at line " + lineNum + ", serial no. is invalid");
+				mismatchedLine = true;
+				mismatches++;
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Mismatch at line " + lineNum + ", serial no. is not formatted correctly or missing");
+			mismatchedLine = true;
+			mismatches++;
+		}
+		
+		
+		if (mismatchedLine)
+			mismatchedLines++;
 	}
 	
 	private SecretKey getKeyFromFile() {

@@ -1,4 +1,4 @@
-package AES;
+package AES.main;
 
 import AES.helper.AESCipher;
 import AES.helper.Symbol;

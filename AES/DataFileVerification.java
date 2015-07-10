@@ -1,13 +1,12 @@
-package AES.main;
+package AES;
 
 import AES.helper.Symbol;
+import AES.main.AESDataFileVerifier;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import AES.AESDataFileVerifier;
 
 public class DataFileVerification {
 
@@ -46,7 +45,7 @@ public class DataFileVerification {
 		// Verify all ICDB data files
 		for (File icdb : icdbFiles) {
 			AESDataFileVerifier verifier = new AESDataFileVerifier(icdb, keyFile);
-			verifier.verify();
+			verifier.verifyFile();
 		}
 	}
 	
@@ -62,7 +61,7 @@ public class DataFileVerification {
 		return files;
 	}
 	
-	private static File getKeyFile(String fileLocation) {
+	public static File getKeyFile(String fileLocation) {
 		File dir = new File(fileLocation);
 		File [] files = dir.listFiles(new FilenameFilter() {
 		    @Override

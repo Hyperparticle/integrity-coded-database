@@ -1,6 +1,6 @@
 package tests;
 
-import helper.AESCipher;
+import AES.helper.AESCipher;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
