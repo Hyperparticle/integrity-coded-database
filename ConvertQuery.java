@@ -50,7 +50,13 @@ public class ConvertQuery {
 
 			if(query.startsWith("SELECT")) 
 			{
-				modQuery = convSelectQuery(query, schemaFile);
+				if(query.startsWith("SELECT " + Symbol.STAR)) {
+					modQuery = query;
+				} 
+				else 
+				{
+					modQuery = convSelectQuery(query, schemaFile);
+				}
 			}
 			else if(query.startsWith("INSERT"))
 			{
