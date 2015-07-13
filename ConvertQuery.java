@@ -12,6 +12,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Random;
 
+import AES.helper.Symbol;
+
 public class ConvertQuery {
 
 	private static String publicKey, privateKey, modulus;
@@ -19,8 +21,8 @@ public class ConvertQuery {
 
 	public static void main(String[] args) {
 
-		File schemaFile = new File("providedfiles/World/world-schema.sql");
-		File queryFile = new File("providedfiles/QueryExample.sql");
+		File schemaFile = new File("C:/Users/Dan/Downloads/queries/world-schema.sql");
+		File queryFile = new File("C:/Users/Dan/Downloads/queries/select.sql");
 		ArrayList<String> queryList = new ArrayList<String>();
 
 		double startTime, stopTime, numTests = 10;

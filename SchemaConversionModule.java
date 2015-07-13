@@ -330,10 +330,10 @@ public class SchemaConversionModule {
 				output = new BufferedWriter(new FileWriter(primaryKeyFile));
 
 				while ((strLine = br.readLine()) != null) {
-					strLine = strLine.trim().toUpperCase();
+					strLine = strLine.trim().toUpperCase().replace("`", "");
 
 					if (strLine.length() > 0) {
-						if (strLine.startsWith("DROP") || strLine.startsWith("USE")) {
+						if (strLine.startsWith("DROP") || strLine.startsWith("USE") || strLine.startsWith("/*")) {
 							continue;
 						} else if (strLine.startsWith("CREATE TABLE")) {
 							String[] tmp = strLine.trim().split("\\s+");
@@ -365,7 +365,7 @@ public class SchemaConversionModule {
 						strLine.startsWith("ALTER") || strLine.startsWith("UNIQUE") || 
 						strLine.startsWith("CREATE SCHEMA")) {
 							continue;
-						} else if (strLine.equals(");")) {
+						} else if (strLine.equals(");") || (strLine.startsWith(")") && strLine.endsWith(";"))) {
 							StringBuffer sbuff = new StringBuffer();
 							// System.out.println( "attr :: " + attr );
 							sbuff.append(dataFile + ":" + attr + ":" + key);
