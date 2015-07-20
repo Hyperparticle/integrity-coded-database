@@ -38,7 +38,7 @@ public class VerifyQueryModule
 	private static String folderPath;
 
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/";
+	private static final String DB_URL = "jdbc:mysql://localhost:3333/";
 
 	public static boolean selectQ = Boolean.FALSE;
 
@@ -151,7 +151,7 @@ public class VerifyQueryModule
 					}
 					else
 					{
-						System.out.println( "QUery file doesnt exist" );
+						System.out.println( "Query file doesnt exist" );
 						System.exit( 1 );
 					}
 				}
@@ -218,7 +218,7 @@ public class VerifyQueryModule
 
 			// Setup the connection with the DB
 
-			connect = DriverManager.getConnection( DB_URL + getDatabaseName() + "?allowMultiQueries=true" + "&user=root&password=" );
+			connect = DriverManager.getConnection( DB_URL + getDatabaseName() + "?allowMultiQueries=true" + "&user=root&password=spidermonkey" );
 
 			if ( connect != null )
 			{

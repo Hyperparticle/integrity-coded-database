@@ -21,21 +21,31 @@ public class ConvertQuery {
 
 	public static void main(String[] args) {
 
-		File schemaFile = new File("C:/Users/Dan/Downloads/queries/world-schema.sql");
-		File queryFile = new File("C:/Users/Dan/Downloads/queries/select.sql");
+		File schemaFile;
+		File queryFile;
+		
+		if (args.length == 2) {
+			schemaFile = new File(args[0]);
+			queryFile = new File(args[1]);
+		} else {
+			schemaFile = new File("C:/Users/Dan/Downloads/queries/world-schema.sql");
+			queryFile = new File("C:/Users/Dan/Downloads/queries/select.sql");
+		}
+		
 		ArrayList<String> queryList = new ArrayList<String>();
 
-		double startTime, stopTime, numTests = 10;
-		for(int z = 0; z < numTests; z++) {
-			startTime = System.nanoTime();
+//		double startTime, stopTime, numTests = 10;
+//		for(int z = 0; z < numTests; z++) {
+//			startTime = System.nanoTime();
 			if(schemaFile.exists() && queryFile.exists()) {
 				queryList = convertQuerys(schemaFile, queryFile);
 			}
-			
-			stopTime = System.nanoTime();
-			System.out.println((stopTime-startTime)/1000000);
-		}
-		System.out.println(queryList.get(1));
+//			
+//			stopTime = System.nanoTime();
+//			System.out.println((stopTime-startTime)/1000000);
+//		}
+		
+		System.out.println(queryList.get(0));
 	}
 
 	private static ArrayList<String> convertQuerys(File schemaFile, File queryFile) {
@@ -218,7 +228,8 @@ public class ConvertQuery {
 		}
 		modQuery.delete(modQuery.length() - 2,  modQuery.length());
 
-		modQuery.append(tokenList[4]);
+//		modQuery.append(tokenList[4]);
+		modQuery.append(");");
 
 		saveCurrentSerialNum(schemaFile);
 
@@ -429,7 +440,7 @@ public class ConvertQuery {
 		{
 			e.printStackTrace();
 		}
-		System.out.println(" Last serial number :: " + serialNum);
+//		System.out.println(" Last serial number :: " + serialNum);
 
 	}
 
