@@ -32,7 +32,7 @@ public class RegenerateSignatureModule
 
 	// JDBC driver name and database URL
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/";
+	private static final String DB_URL = "jdbc:mysql://localhost:3333/";
 
 	public static String SPACE_DELIMITER = " ";
 
