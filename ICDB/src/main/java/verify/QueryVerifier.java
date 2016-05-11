@@ -8,4 +8,5 @@ package verify;
  * @author Dan Kondratyuk
  */
 public class QueryVerifier {
+    
 }
