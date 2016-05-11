@@ -12,10 +12,10 @@ import java.util.List;
  *
  * @author Dan Kondratyuk
  */
-@Parameters(commandDescription = "Execute queries on an ICDB Server")
+@Parameters(commandNames = { "execute-query" }, commandDescription = "Execute queries on an ICDB Server")
 public class ExecuteQueryCommand {
 
-    @Parameter(description = "Execute one or more queries as arguments")
+    @Parameter(names = { "-q" }, description = "Execute one or more queries as arguments")
     public List<String> queries;
 
     @Parameter(names = { "-f" }, description = "Execute all queries in one or more files")

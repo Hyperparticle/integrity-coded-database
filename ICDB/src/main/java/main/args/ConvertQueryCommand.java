@@ -13,10 +13,10 @@ import java.util.List;
  *
  * @author Dan Kondratyuk
  */
-@Parameters(commandDescription = "Convert queries to ICDB queries")
+@Parameters(commandNames = { "convert-query" }, commandDescription = "Convert queries to ICDB queries")
 public class ConvertQueryCommand {
 
-    @Parameter(description = "Convert one or more queries as arguments")
+    @Parameter(names = { "-q" }, description = "Convert one or more queries as arguments")
     public List<String> queries;
 
     @Parameter(names = { "-f" }, description = "Convert all queries in one or more files")

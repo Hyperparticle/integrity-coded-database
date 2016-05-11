@@ -12,16 +12,22 @@ import java.util.List;
  *
  * @author Dan Kondratyuk
  */
-@Parameters(commandDescription = "Convert data tuples to ICDB data tuples")
+@Parameters(commandNames = { "convert-data" }, commandDescription = "Convert data tuples to ICDB data tuples")
 public class ConvertDataCommand {
 
-    @Parameter(description = "Convert one or more queries as arguments")
-    public List<String> queries;
+    @Parameter(names = { "-t" }, description = "Convert one or more tuples as arguments")
+    public List<String> tuples;
 
     @Parameter(names = { "-f" }, description = "Convert one or more files containing comma separated values")
     public List<String> files;
 
     @Parameter(names = { "--verify" }, description = "Verify that the generated checksums are correct")
     public Boolean verify = false;
+
+    @Parameter(names = { "--cipher" }, description = "The cipher to use")
+    public String cipher = "AES";
+
+    @Parameter(names = { "--granularity" }, description = "OCF or OCT conversion")
+    public String granularity = "Field";
 
 }

@@ -2,20 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6145c685-87f5-47c9-a459-7b7494d6a983" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/hyper.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/file.template.settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Readme.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/main/DataConversion.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/main/QueryConversion.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/main/QueryVerification.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java" afterPath="$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Readme.md" afterPath="$PROJECT_DIR$/Readme.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" afterPath="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java" afterPath="$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" afterPath="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" afterPath="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" />
     </list>
     <ignored path="ICDB.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -53,14 +45,14 @@
               <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/pom.xml">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="767">
+                    <state relative-caret-position="1037">
                       <caret line="61" column="57" selection-start-line="61" selection-start-column="57" selection-end-line="61" selection-end-column="57" />
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="QueryConverter.java" pinned="false" current-in-tab="false">
+              <file leaf-file-name="QueryConverter.java" pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/main/java/parse/QueryConverter.java">
                   <provider selected="true" editor-type-id="text-editor">
                     <state relative-caret-position="204">
@@ -70,12 +62,12 @@
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="Readme.md" pinned="false" current-in-tab="true">
+              <file leaf-file-name="Readme.md" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/Readme.md">
                   <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
                     <state split_layout="FIRST">
-                      <first_editor relative-caret-position="136">
-                        <caret line="8" column="6" selection-start-line="8" selection-start-column="6" selection-end-line="8" selection-end-column="6" />
+                      <first_editor relative-caret-position="170">
+                        <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
                         <folding />
                       </first_editor>
                       <second_editor />
@@ -100,8 +92,8 @@
               <file leaf-file-name="ConvertDataCommand.java" pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="374">
-                      <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+                    <state relative-caret-position="343">
+                      <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
                       <folding>
                         <element signature="imports" expanded="true" />
                       </folding>
@@ -112,8 +104,8 @@
               <file leaf-file-name="ExecuteQueryCommand.java" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="306">
-                      <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+                    <state relative-caret-position="119">
+                      <caret line="7" column="3" selection-start-line="6" selection-start-column="0" selection-end-line="7" selection-end-column="3" />
                       <folding>
                         <element signature="imports" expanded="true" />
                       </folding>
@@ -124,8 +116,8 @@
               <file leaf-file-name="ConvertQueryCommand.java" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="289">
-                      <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+                    <state relative-caret-position="374">
+                      <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
                       <folding>
                         <element signature="imports" expanded="true" />
                       </folding>
@@ -164,8 +156,8 @@
               <file leaf-file-name="ICDBTool.java" pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/main/java/main/ICDBTool.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="85">
-                      <caret line="5" column="37" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="37" />
+                    <state relative-caret-position="476">
+                      <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
                       <folding>
                         <element signature="imports" expanded="true" />
                       </folding>
@@ -180,8 +172,8 @@
               <file leaf-file-name="CommandLineArgs.java" pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="272">
-                      <caret line="16" column="45" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
+                    <state relative-caret-position="187">
+                      <caret line="11" column="2" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
                       <folding>
                         <element signature="imports" expanded="true" />
                       </folding>
@@ -194,7 +186,12 @@
                   <provider selected="true" editor-type-id="text-editor">
                     <state relative-caret-position="187">
                       <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-                      <folding />
+                      <folding>
+                        <element signature="e#306#307#0" expanded="false" />
+                        <element signature="e#333#334#0" expanded="false" />
+                        <element signature="e#408#409#0" expanded="false" />
+                        <element signature="e#436#437#0" expanded="false" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -205,8 +202,8 @@
                     <state relative-caret-position="221">
                       <caret line="14" column="20" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
                       <folding>
-                        <element signature="e#302#303#0" expanded="true" />
-                        <element signature="e#329#330#0" expanded="true" />
+                        <element signature="e#404#405#0" expanded="false" />
+                        <element signature="e#432#433#0" expanded="false" />
                       </folding>
                     </state>
                   </provider>
@@ -227,7 +224,12 @@
                   <provider selected="true" editor-type-id="text-editor">
                     <state relative-caret-position="85">
                       <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-                      <folding />
+                      <folding>
+                        <element signature="e#296#297#0" expanded="false" />
+                        <element signature="e#314#315#0" expanded="false" />
+                        <element signature="e#383#384#0" expanded="false" />
+                        <element signature="e#402#403#0" expanded="false" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -289,13 +291,13 @@
         <option value="$PROJECT_DIR$/src/main/java/CommandLineArgs.java" />
         <option value="$MAVEN_REPOSITORY$/com/beust/jcommander/1.48/jcommander-1.48.jar!/com/beust/jcommander/Parameters.class" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/Readme.md" />
         <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertQuery.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" />
+        <option value="$PROJECT_DIR$/Readme.md" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java" />
       </list>
     </option>
   </component>
@@ -323,8 +325,8 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1217" />
-    <option name="width" value="2630" />
+    <option name="x" value="1099" />
+    <option name="width" value="2748" />
     <option name="height" value="2127" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -357,7 +359,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -592,6 +593,7 @@
       </pane>
       <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1048,8 +1050,8 @@
     <configuration default="false" name="ICDBTool" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="main.ICDBTool" />
-      <option name="VM_PARAMETERS" value="convert-data --verify" />
-      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="convert-data --verify" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -1083,36 +1085,37 @@
       <workItem from="1462935836242" duration="321000" />
       <workItem from="1462936175119" duration="878000" />
       <workItem from="1462937070825" duration="1695000" />
-      <workItem from="1462938782389" duration="3667000" />
+      <workItem from="1462938782389" duration="4016000" />
+      <workItem from="1462942827386" duration="1346000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14315000" />
+    <option name="totallyTimeSpent" value="16010000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1217" y="0" width="2630" height="2127" extended-state="0" />
+    <frame x="1099" y="0" width="2748" height="2127" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23771314" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25914398" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25892857" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.103501946" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10342262" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299611" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24981132" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3996991" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1133,7 +1136,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="3" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -1183,7 +1188,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#306#307#0" expanded="false" />
+            <element signature="e#333#334#0" expanded="false" />
+            <element signature="e#408#409#0" expanded="false" />
+            <element signature="e#436#437#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1192,8 +1202,8 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#302#303#0" expanded="true" />
-            <element signature="e#329#330#0" expanded="true" />
+            <element signature="e#404#405#0" expanded="false" />
+            <element signature="e#432#433#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1210,7 +1220,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-          <folding />
+          <folding>
+            <element signature="e#296#297#0" expanded="false" />
+            <element signature="e#314#315#0" expanded="false" />
+            <element signature="e#383#384#0" expanded="false" />
+            <element signature="e#402#403#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1242,7 +1257,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#306#307#0" expanded="false" />
+            <element signature="e#333#334#0" expanded="false" />
+            <element signature="e#408#409#0" expanded="false" />
+            <element signature="e#436#437#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1274,7 +1294,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
-          <folding />
+          <folding>
+            <element signature="e#296#297#0" expanded="false" />
+            <element signature="e#314#315#0" expanded="false" />
+            <element signature="e#383#384#0" expanded="false" />
+            <element signature="e#402#403#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1304,8 +1329,8 @@
         <state relative-caret-position="221">
           <caret line="14" column="20" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
           <folding>
-            <element signature="e#302#303#0" expanded="true" />
-            <element signature="e#329#330#0" expanded="true" />
+            <element signature="e#404#405#0" expanded="false" />
+            <element signature="e#432#433#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1318,14 +1343,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/main/QueryVerification.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/verify/ICRevocationList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/main/DataConversion.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/helper/FileEndings.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -1339,7 +1356,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1353,61 +1369,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="767">
+        <state relative-caret-position="1037">
           <caret line="61" column="57" selection-start-line="61" selection-start-column="57" selection-end-line="61" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/parse/QueryConverter.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/verify/ICRevocationList.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state relative-caret-position="153">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Readme.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="136">
-            <caret line="8" column="6" selection-start-line="8" selection-start-column="6" selection-end-line="8" selection-end-column="6" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/ICDBTool.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+        <state relative-caret-position="476">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1416,21 +1395,66 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="45" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
+        <state relative-caret-position="187">
+          <caret line="11" column="2" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/ICDBTool.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="37" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="37" />
+        <state relative-caret-position="119">
+          <caret line="7" column="3" selection-start-line="6" selection-start-column="0" selection-end-line="7" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Readme.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="170">
+            <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/QueryConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

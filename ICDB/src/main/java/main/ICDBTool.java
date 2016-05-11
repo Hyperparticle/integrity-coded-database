@@ -15,19 +15,20 @@ import main.args.ExecuteQueryCommand;
 public class ICDBTool {
 
     public static void main(String[] args) {
-        JCommander jCommander = new JCommander(new ICDBTool());
+        JCommander jCommander = new JCommander();
 
         ConvertDataCommand convertDataCommand = new ConvertDataCommand();
         ConvertQueryCommand convertQueryCommand = new ConvertQueryCommand();
         ExecuteQueryCommand executeQueryCommand = new ExecuteQueryCommand();
 
-        jCommander.addCommand("convert-data", convertDataCommand);
-        jCommander.addCommand("convert-query", convertQueryCommand);
-        jCommander.addCommand("execute-query", executeQueryCommand);
+        jCommander.addCommand(convertDataCommand);
+        jCommander.addCommand(convertQueryCommand);
+        jCommander.addCommand(executeQueryCommand);
+
+        jCommander.usage();
 
         jCommander.parse(args);
 
-        System.out.println(convertDataCommand.verify);
     }
 
 }
