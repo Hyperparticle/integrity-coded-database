@@ -1,22 +1,60 @@
 package cipher;
 
+import java.math.BigInteger;
+import java.nio.file.Path;
+
 /**
  * <p>
- *      An RSACipher uses RSA as its backing cipher mechanism to encrypt and verify messages.
+ * An RSACipher uses RSA as its backing cipher mechanism to encrypt and verify
+ * messages.
  * </p>
  * Created 5/8/2016
+ * 
  * @author Dan Kondratyuk
  * @see CodeCipher
  */
 public class RSACipher implements CodeCipher {
+	private BigInteger privateKey;
+	private BigInteger modulus;
 
-    @Override
-    public String encode(String message) {
-        return null;
-    }
+	public RSACipher(Path dataPath, String databaseName) {
+		RSAKeyGenerator keyGenerator = new RSAKeyGenerator(dataPath, databaseName);
+		keyGenerator.getKeys();
+		privateKey = RSAKeyGenerator.getPrivateKey();
+		modulus = RSAKeyGenerator.getModulus();
+	}
 
-    @Override
-    public boolean verify(String message, String encoded) {
-        return false;
-    }
+	@Override
+	public String encrypt(String message) {
+		BigInteger encrypt = null;
+		BigInteger Bigmessage = convertToInt(message);
+		encrypt = Bigmessage.modPow(privateKey, modulus);
+		return encrypt.toString(16);
+	}
+
+	@Override
+	public boolean verify(String message, String encoded) {
+		if (encrypt(message).equals(encoded))
+			return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Method to convert an input to integer
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static BigInteger convertToInt(String input) {
+		StringBuilder sBuilder = new StringBuilder();
+		if (!input.equals("")) {
+			for (char c : input.toCharArray()) {
+				sBuilder.append((int) c);
+			}
+			return new BigInteger(sBuilder.toString());
+		}
+		return null;
+	}
+
 }

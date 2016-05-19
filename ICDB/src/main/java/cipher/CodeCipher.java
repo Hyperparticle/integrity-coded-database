@@ -14,7 +14,7 @@ public interface CodeCipher {
      * @param message the message
      * @return A ciphertext String of the message
      */
-    String encode(String message);
+    String encrypt(String message);
 
     /**
      * Encodes the given message and compares it with its encoded counterpart to verify that they match
