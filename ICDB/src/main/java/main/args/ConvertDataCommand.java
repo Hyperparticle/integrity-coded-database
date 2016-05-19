@@ -12,22 +12,22 @@ import java.util.List;
  *
  * @author Dan Kondratyuk
  */
-@Parameters(commandNames = { "convert-data" }, commandDescription = "Convert data tuples to ICDB data tuples")
+@Parameters(commandNames = { CommandLineArgs.CONVERT_DATA }, commandDescription = "Convert data tuples to ICDB data tuples")
 public class ConvertDataCommand {
 
-    @Parameter(names = { "-t" }, description = "Convert one or more tuples as arguments")
+//    @Parameter(names = { "-f" }, variableArity = true, description = "Convert one or more files containing comma separated values")
+//    public List<String> files;
+
+    @Parameter(names = { "-t" }, variableArity = true, required = true, description = "Convert one or more tuples as arguments")
     public List<String> tuples;
 
-    @Parameter(names = { "-f" }, description = "Convert one or more files containing comma separated values")
-    public List<String> files;
+    @Parameter(names = { "-c" }, description = "The type of cipher to use (RSA, AES, or SHA)")
+    public String cipherType = "SHA";
 
-    @Parameter(names = { "--verify" }, description = "Verify that the generated checksums are correct")
-    public Boolean verify = false;
+    @Parameter(names = { "-g" }, description = "The granularity to use (per tuple or per field)")
+    public String granularity = "tuple";
 
-    @Parameter(names = { "--cipher" }, description = "The cipher to use")
-    public String cipher = "AES";
-
-    @Parameter(names = { "--granularity" }, description = "OCF or OCT conversion")
-    public String granularity = "Field";
+    @Parameter(names = { "-h", "--help" }, help = true)
+    public boolean help;
 
 }

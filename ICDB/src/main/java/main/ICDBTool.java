@@ -1,33 +1,46 @@
 package main;
 
-import com.beust.jcommander.JCommander;
+import convert.DataConverter;
+import main.args.CommandLineArgs;
 import main.args.ConvertDataCommand;
-import main.args.ConvertQueryCommand;
-import main.args.ExecuteQueryCommand;
 
 /**
  * <p>
  *     A tool for performing ICDB-related tasks.
  * </p>
  * Created on 5/10/2016
+ *
  * @author Dan Kondratyuk
  */
 public class ICDBTool {
 
     public static void main(String[] args) {
-        JCommander jCommander = new JCommander();
+        CommandLineArgs cmd = new CommandLineArgs(args);
 
-        ConvertDataCommand convertDataCommand = new ConvertDataCommand();
-        ConvertQueryCommand convertQueryCommand = new ConvertQueryCommand();
-        ExecuteQueryCommand executeQueryCommand = new ExecuteQueryCommand();
+        if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
+            if (cmd.convertDataCommand.help) {
+                cmd.jCommander.usage(CommandLineArgs.CONVERT_DATA);
+                System.exit(0);
+            }
 
-        jCommander.addCommand(convertDataCommand);
-        jCommander.addCommand(convertQueryCommand);
-        jCommander.addCommand(executeQueryCommand);
+            parseConvertData(cmd.convertDataCommand);
+        } else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
+            // TODO
+        } else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
+            // TODO
+        }
+    }
 
-        jCommander.usage();
+    private static void parseConvertData(ConvertDataCommand params) {
+        DataConverter converter = new DataConverter(params.cipherType, params.granularity);
+        converter.parse(params.tuples);
+    }
 
-        jCommander.parse(args);
+    private static void parseConvertQuery() {
+
+    }
+
+    private static void parseExecuteQuery() {
 
     }
 

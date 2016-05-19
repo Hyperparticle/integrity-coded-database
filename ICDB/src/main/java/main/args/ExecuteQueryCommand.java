@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Dan Kondratyuk
  */
-@Parameters(commandNames = { "execute-query" }, commandDescription = "Execute queries on an ICDB Server")
+@Parameters(commandNames = { CommandLineArgs.EXECUTE_QUERY }, commandDescription = "Execute queries on an ICDB Server")
 public class ExecuteQueryCommand {
 
     @Parameter(names = { "-q" }, description = "Execute one or more queries as arguments")

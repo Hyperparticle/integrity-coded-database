@@ -1,9 +1,6 @@
 package main.args;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
-
-import java.util.List;
+import com.beust.jcommander.JCommander;
 
 /**
  * <p>
@@ -14,18 +11,36 @@ import java.util.List;
  */
 public class CommandLineArgs {
 
-    @Parameters(commandDescription = "Convert data tuples to ICDB data tuples")
-    public class ConvertDataCommand {
+    public static final String CONVERT_DATA  = "convert-data";
+    public static final String CONVERT_QUERY = "convert-query";
+    public static final String EXECUTE_QUERY = "execute-query";
 
-        @Parameter(description = "Convert one or more queries as arguments")
-        public List<String> queries;
+    public final JCommander jCommander;
+    public final ConvertDataCommand convertDataCommand;
+    public final ConvertQueryCommand convertQueryCommand;
+    public final ExecuteQueryCommand executeQueryCommand;
 
-        @Parameter(names = { "-f" }, description = "Convert one or more files containing comma separated values")
-        public List<String> files;
+    public CommandLineArgs(String[] args) {
+        jCommander = new JCommander();
 
-        @Parameter(names = { "--verify" }, description = "Verify that the generated checksums are correct")
-        public Boolean verify = false;
+        convertDataCommand  = new ConvertDataCommand();
+        convertQueryCommand = new ConvertQueryCommand();
+        executeQueryCommand = new ExecuteQueryCommand();
 
+        jCommander.addCommand(convertDataCommand);
+        jCommander.addCommand(convertQueryCommand);
+        jCommander.addCommand(executeQueryCommand);
+
+        try {
+            jCommander.parse(args);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    public boolean isCommand(String command) {
+        return jCommander.getParsedCommand().equals(command);
     }
 
 }

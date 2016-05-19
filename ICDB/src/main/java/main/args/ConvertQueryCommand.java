@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Dan Kondratyuk
  */
-@Parameters(commandNames = { "convert-query" }, commandDescription = "Convert queries to ICDB queries")
+@Parameters(commandNames = { CommandLineArgs.CONVERT_QUERY }, commandDescription = "Convert queries to ICDB queries")
 public class ConvertQueryCommand {
 
     @Parameter(names = { "-q" }, description = "Convert one or more queries as arguments")
