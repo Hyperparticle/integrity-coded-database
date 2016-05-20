@@ -12,14 +12,14 @@ BEGIN
   # Creates a .unl file for each table in the database
 	DECLARE done int default false;
     DECLARE t_name CHAR(255);		# Table name
-    DECLARE dir VARCHAR(30);		# Directory to save the files to
+    DECLARE dir TEXT;		# Directory to save the files to
 
     DECLARE cur1 cursor for SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
                   WHERE table_schema = DATABASE()
                   AND TABLE_TYPE LIKE 'BASE TABLE';
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
-	SET dir = '~/IntegrityCodedDatabase/ICDB/tmp/database-files/data';
+	SET dir = '~/IntegrityCodedDatabase/ICDB/tmp/db-files/data';
     
 	open cur1;
     
@@ -48,4 +48,4 @@ DELIMITER ;
 ## Call the procedure ##
 call export_db();
 
-DROP procedure IF EXISTS `create_db_files`;
+DROP procedure IF EXISTS `export_db`;

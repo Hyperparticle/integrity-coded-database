@@ -72,4 +72,4 @@ DELIMITER ;
 ## Call the procedure ##
 call convert_icdb_oct();
 
-DROP procedure IF EXISTS `create_icdb_aes`;
+DROP procedure IF EXISTS `convert_icdb_oct`;
