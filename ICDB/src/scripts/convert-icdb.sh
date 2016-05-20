@@ -5,18 +5,18 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
+dir=./src/scripts
+
 echo "Generating ICDB from '$1'"
 
-# Create directories (to keep the files) if they don't exist
-mkdir -p ./tmp/database-files/schema
-mkdir -p ./tmp/database-files/data
-#mkdir -p ICDB
+# Create directories if they don't exist
+# They will keep temporary files generated
 
 make clean
-time bash ./src/scripts/export-db.sh $1
-#time bash $dir/mysql-convert.sh $1
-#time bash $dir/mysql-create.sh $1
-#time bash $dir/mysql-load.sh $1
-#time bash $dir/mysql-verify.sh
+time bash ${dir}/export-db.sh $1
+time bash ${dir}/convert-db-files.sh $1
+#time bash ${dir}/mysql-create.sh $1
+#time bash ${dir}/mysql-load.sh $1
+#time bash ${dir}/mysql-verify.sh
 
 echo "Conversion complete."

@@ -8,6 +8,9 @@ fi
 export_script=./src/scripts/sql/export-db.sql
 export_path=./tmp/database-files
 
+mkdir -p ./tmp/db-files/schema
+mkdir -p ./tmp/db-files/data
+
 # Call the procedure to export schema and data (.unl) files
 echo "Exporting Database '$1'"
 mysqldump --no-data --skip-comments $1 > ${export_path}/schema/$1-schema.sql

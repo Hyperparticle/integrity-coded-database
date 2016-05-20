@@ -11,6 +11,7 @@ $ bash ./src/scripts/export-db.sh <db-name>
 ```
 where `<db-name>` is the name of the database you wish to export.
 
+### Running the ICDB tool
 
 There are several options available:
 
