@@ -1,5 +1,8 @@
 package convert;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * <p>
  * A FileConverter takes an input DB data file and generates a converted ICDB
@@ -11,4 +14,7 @@ package convert;
  */
 public class FileConverter {
 
+
+    public void convert(File file) throws IOException {
+    }
 }

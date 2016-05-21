@@ -34,8 +34,15 @@ public class ICDBTool {
     }
 
     private static void parseConvertData(ConvertDataCommand params) {
-        DataConverter converter = new DataConverter(params.cipherType, params.granularity);
+        DataConverter converter = new DataConverter(params.cipherType, params.granularity, params.delimiter);
+
+        if (params.tuples == null && params.files == null) {
+            System.err.println("No data was converted because no data was specified.");
+            System.exit(1);
+        }
+
         converter.parse(params.tuples);
+        converter.parseFiles(params.files);
     }
 
     private static void parseConvertQuery() {

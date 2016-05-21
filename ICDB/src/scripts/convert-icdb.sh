@@ -13,6 +13,8 @@ echo "Generating ICDB from '$1'"
 # They will keep temporary files generated
 
 make clean
+make
+
 time bash ${dir}/export-db.sh $1
 time bash ${dir}/convert-db-files.sh $1
 #time bash ${dir}/mysql-create.sh $1

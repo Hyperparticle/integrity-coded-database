@@ -11,9 +11,17 @@ files=./tmp/db-files/data/*
 # Convert all files to ICDB
 echo "Converting Database '$1'"
 
-make
+mkdir -p ./tmp/converted-db-files/schema
+mkdir -p ./tmp/converted-db-files/data
 
-java -jar ${jar} convert-data -t < ./tmp/db-files/data/actor.unl
+rm -f ./tmp/db-files/schema/*.unl
+rm -f ./tmp/db-files/data/*.unl
+
+if [ -ne ${jar} ]; then
+    make
+fi
+
+java -jar ${jar} convert-data -f ./tmp/db-files/data
 
 # Move converted files to a new directory
 #mv $db/*_ICDB.unl $icdb

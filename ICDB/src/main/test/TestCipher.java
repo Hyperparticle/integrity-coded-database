@@ -9,8 +9,6 @@
  * @see CodeCipher
  */
 
-package Test;
-
 import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
