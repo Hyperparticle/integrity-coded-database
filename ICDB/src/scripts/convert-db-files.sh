@@ -13,7 +13,7 @@ echo "Converting Database '$1'"
 
 make
 
-java -jar ${jar} -t < ./tmp/db-files/data/actor.unl
+java -jar ${jar} convert-data -t < ./tmp/db-files/data/actor.unl
 
 # Move converted files to a new directory
 #mv $db/*_ICDB.unl $icdb

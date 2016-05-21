@@ -40,7 +40,8 @@ public class CommandLineArgs {
     }
 
     public boolean isCommand(String command) {
-        return jCommander.getParsedCommand().equals(command);
+        String parsedCommand = jCommander.getParsedCommand();
+        return parsedCommand != null && parsedCommand.equals(command);
     }
 
 }

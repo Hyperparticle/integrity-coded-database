@@ -1,6 +1,11 @@
 # Integrity Coded Database (ICDB)
 
-## Commands
+## Prerequisites
+
+To be able to run all functionality in this repo, the following must be installed:
+
+
+## Available Commands
 
 ### Exporting an existing database
 

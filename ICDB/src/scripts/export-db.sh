@@ -11,6 +11,9 @@ export_path=./tmp/database-files
 mkdir -p ./tmp/db-files/schema
 mkdir -p ./tmp/db-files/data
 
+rm -f ./tmp/db-files/schema/*.unl
+rm -f ./tmp/db-files/data/*.unl
+
 # Call the procedure to export schema and data (.unl) files
 echo "Exporting Database '$1'"
 mysqldump --no-data --skip-comments $1 > ${export_path}/schema/$1-schema.sql

@@ -28,6 +28,8 @@ public class ICDBTool {
             // TODO
         } else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
             // TODO
+        } else {
+            cmd.jCommander.usage();
         }
     }
 
