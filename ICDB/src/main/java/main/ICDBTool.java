@@ -23,7 +23,8 @@ public class ICDBTool {
                 System.exit(0);
             }
 
-            parseConvertData(cmd.convertDataCommand);
+            DataConverter converter = new DataConverter(cmd.convertDataCommand);
+            converter.parse();
         } else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
             // TODO
         } else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
@@ -31,26 +32,6 @@ public class ICDBTool {
         } else {
             cmd.jCommander.usage();
         }
-    }
-
-    private static void parseConvertData(ConvertDataCommand params) {
-        DataConverter converter = new DataConverter(params.cipherType, params.granularity, params.delimiter);
-
-        if (params.tuples == null && params.files == null) {
-            System.err.println("No data was converted because no data was specified.");
-            System.exit(1);
-        }
-
-        converter.parse(params.tuples);
-        converter.parseFiles(params.files);
-    }
-
-    private static void parseConvertQuery() {
-
-    }
-
-    private static void parseExecuteQuery() {
-
     }
 
 }
