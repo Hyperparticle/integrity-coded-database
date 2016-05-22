@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,18 +25,18 @@ import java.util.stream.Stream;
  */
 public class DataConverter {
 
-    private final String dataPath;
-    private final String keyPath;
-    private final String convertPath;
+    private final Path dataPath;
+    private final File keyFile;
+    private final Path convertPath;
 
     private final CipherType cipherType;
     private final Granularity granularity;
     private final String delimiter;
 
     public DataConverter(ConvertDataCommand command) {
-        this.dataPath = command.dataPath;
-        this.keyPath = command.keyPath;
-        this.convertPath = command.convertPath;
+        this.dataPath = Paths.get(command.dataPath);
+        this.keyFile = Paths.get(command.keyPath).toFile();
+        this.convertPath = Paths.get(command.convertPath);
 
         this.cipherType = command.cipherType;
         this.granularity = command.granularity;
@@ -43,30 +44,37 @@ public class DataConverter {
     }
 
     public void parse() {
+        System.out.println("Converting data...");
+        List<File> dataFiles = getFiles(dataPath);
+        String key = getKey(keyFile);
+
+        System.out.println("Conversion complete.");
     }
 
-//    public void parseFiles() {
-//        if (dirs == null) { return; }
-//
-//        FileConverter converter = new FileConverter();
-//
-//        List<File> fileList = fileList(dirs);
-//        System.out.println();
-//    }
-//
-//    private static List<File> fileList(List<String> dirs) {
-//        return dirs.stream()
-//                .map(Paths::get)
-//                .flatMap(path -> {
-//                    try {
-//                        return Files.walk(path);
-//                    } catch (IOException e) {
-//                        return Stream.empty();
-//                    }
-//                })
-//                .filter(Files::isRegularFile)
-//                .map(Path::toFile)
-//                .collect(Collectors.toList());
-//    }
+    private static List<File> getFiles(Path path) {
+        try {
+            return Files.walk(path)
+                    .filter(Files::isRegularFile)
+                    .map(Path::toFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            System.err.println("Unable to obtain files under path " + path);
+            System.exit(1);
+        }
+
+        return null;
+    }
+
+    private static String getKey(File keyFile) {
+        try {
+            Scanner fileScan = new Scanner(keyFile);
+            return fileScan.nextLine();
+        } catch (IOException e) {
+            System.err.println("Error: unable to open keyfile " + keyFile);
+            System.exit(1);
+        }
+
+        return null;
+    }
 
 }

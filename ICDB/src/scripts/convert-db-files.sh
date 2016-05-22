@@ -21,7 +21,7 @@ if [ -ne ${jar} ]; then
     make
 fi
 
-java -jar ${jar} convert-data -f ./tmp/db-files/data
+java -jar ${jar} convert-data -p ./tmp/db-files/data -k ./src/main/resources/keyfile-sample -d ./tmp/converted-db-files/data
 
 # Move converted files to a new directory
 #mv $db/*_ICDB.unl $icdb
