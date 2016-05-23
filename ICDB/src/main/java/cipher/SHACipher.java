@@ -1,5 +1,7 @@
 package cipher;
 
+import sun.security.provider.SHA;
+
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
