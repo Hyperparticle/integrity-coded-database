@@ -29,7 +29,6 @@ public class SHACipher implements CodeCipher {
 	}
 
 	@Override
-    @NotNull
 	public String encrypt(String message) {
         return Hashing.sha256()
                 .hashString(message + salt, StandardCharsets.UTF_8)
