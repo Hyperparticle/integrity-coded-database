@@ -6,6 +6,7 @@ import cipher.RSACipher;
 import cipher.SHACipher;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * <p>
@@ -17,22 +18,22 @@ import java.nio.file.Path;
 public enum CipherType {
     RSA {
         @Override
-        public CodeCipher getCipher(Path dataPath, String databaseName) {
-            return new RSACipher(dataPath, databaseName);
+        public CodeCipher getCipher(String key) {
+            return new RSACipher(Paths.get("."), "");
         }
     },
     AES {
         @Override
-        public CodeCipher getCipher(Path dataPath, String databaseName) {
-            return new AESCipher(dataPath, databaseName);
+        public CodeCipher getCipher(String key) {
+            return new AESCipher(Paths.get("."), "");
         }
     },
     SHA {
         @Override
-        public CodeCipher getCipher(Path dataPath, String databaseName) {
-            return new SHACipher(dataPath, databaseName);
+        public CodeCipher getCipher(String salt) {
+            return new SHACipher(salt);
         }
     };
 
-    public abstract CodeCipher getCipher(Path dataPath, String databaseName);
+    public abstract CodeCipher getCipher(String key);
 }

@@ -51,7 +51,7 @@ public class TestCipher {
 	@Test
 	public void testSHACipher() {
 		Path path = Paths.get("/Users/ujwal-mac/Desktop/TEST/SHA");
-		SHACipher shacipher = new SHACipher(path, "world");
+		SHACipher shacipher = new SHACipher("");
 		String encoded = shacipher.encrypt("testmessage");
 		System.out.println("SHA::" + encoded);
 		assertTrue(shacipher.verify("testmessage", encoded));

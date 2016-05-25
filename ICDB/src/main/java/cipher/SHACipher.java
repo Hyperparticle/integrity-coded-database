@@ -1,7 +1,10 @@
 package cipher;
 
+import com.google.common.hash.Hashing;
+import com.sun.istack.internal.NotNull;
 import sun.security.provider.SHA;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,36 +20,24 @@ import java.security.NoSuchAlgorithmException;
  * @see CodeCipher
  */
 public class SHACipher implements CodeCipher {
-	private byte[] salt = new byte[16];
 
-	public SHACipher(Path dataPath, String databaseName) {
-		SHAKeyGenerator shakeygenerator = new SHAKeyGenerator(dataPath, databaseName);
-		salt = shakeygenerator.getKey().getBytes();
-		System.out.println(salt.toString());
+	private final String salt;
+
+    // TODO: Auto-generate salt and store it with the message
+	public SHACipher(String salt) {
+        this.salt = salt;
 	}
 
 	@Override
+    @NotNull
 	public String encrypt(String message) {
-		try {
-			MessageDigest mDigest = MessageDigest.getInstance("SHA-256");
-			mDigest.update(salt);
-			byte[] result = mDigest.digest(message.getBytes());
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < result.length; i++) {
-				sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-			}
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return null;
+        return Hashing.sha256()
+                .hashString(message + salt, StandardCharsets.UTF_8)
+                .toString();
 	}
 
 	@Override
 	public boolean verify(String message, String encoded) {
-		if (encrypt(message).equals(encoded))
-			return true;
-		else
-			return false;
+		return encrypt(message).equals(encoded);
 	}
 }

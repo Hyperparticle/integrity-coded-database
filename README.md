@@ -21,8 +21,13 @@ where `<db-name>` is the name of the database you wish to export.
 There are several options available:
 
 ```
-convert-data  [-f <path-to-file>] [-q <arg-list>] [--verify]
-convert-query [-f <path-to-file>] [-q <arg-list>]
-execute-query [-f <path-to-file>] [-q <arg-list>] [--convert] [--skip-verify]
+convert-data  [-i <input-directory>] [-k <keyfile-path>] [-o <output-directory>] 
+[-c <cipher-type>] [-g <granularity>] [-d <delimiter>]
+```
+
+### Example Commands
+
+```
+convert-data -i ./tmp/db-files/data -k ./src/main/resources/keyfile-sample -o ./tmp/converted-db-files/data
 ```
 

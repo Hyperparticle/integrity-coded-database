@@ -16,14 +16,14 @@ import java.util.List;
 @Parameters(commandNames = { CommandLineArgs.CONVERT_DATA }, commandDescription = "Convert data tuples to ICDB data tuples")
 public class ConvertDataCommand {
 
-    @Parameter(names = { "-p", "--path" }, required = true, variableArity = true, description = "Convert all data files under the given path")
-    public String dataPath;
+    @Parameter(names = { "-i", "--input" }, variableArity = true, description = "Convert all data files under the given directory")
+    public String dataPath = "./tmp/db-files/data";
 
     @Parameter(names = { "-k", "--key" }, required = true, description = "The key file path")
     public String keyPath;
 
-    @Parameter(names = { "-d", "--dest" }, required = true, description = "The destination path")
-    public String convertPath;
+    @Parameter(names = { "-o", "--output" }, description = "The output destination path")
+    public String outputPath = "./tmp/converted-db-files/data";
 
     // TODO: add direct passing of data
 //    @Parameter(names = { "-t", "--tuple" }, variableArity = true, description = "Convert one or more tuples as arguments")
@@ -35,7 +35,7 @@ public class ConvertDataCommand {
     @Parameter(names = { "-g", "--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
     public Granularity granularity = Granularity.TUPLE;
 
-    @Parameter(names = { "-dl", "--delimiter" }, description = "The delimiter between each data field")
+    @Parameter(names = { "-d", "--delimiter" }, description = "The delimiter between each data field")
     public String delimiter = Delimiters.DEFAULT;
 
     @Parameter(names = { "-h", "--help" }, help = true)
