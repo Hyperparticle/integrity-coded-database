@@ -1,13 +1,8 @@
 package cipher;
 
 import com.google.common.hash.Hashing;
-import com.sun.istack.internal.NotNull;
-import sun.security.provider.SHA;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * <p>
