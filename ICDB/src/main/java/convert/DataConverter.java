@@ -43,7 +43,7 @@ public class DataConverter {
 
         // TODO: give correct data to cipher
         String key = getKey(keyFile);
-        codeCipher = command.cipherType.getCipher(key);
+        codeCipher = null;//command.cipherType.getCipher(key);
     }
 
     public void parse() {
@@ -75,11 +75,11 @@ public class DataConverter {
 
                 if (granularity.equals(Granularity.TUPLE)) {
                     String line = dataScan.nextLine();
-                    String code = codeCipher.encrypt(line);
+//                    String code = codeCipher.encrypt(line);
 
                     builder.append(line)
                             .append(delimiter)
-                            .append(code)
+//                            .append(code)
                             .append("\n");
 
                     writer.append(builder);
@@ -88,11 +88,11 @@ public class DataConverter {
 
                     while (tokenizer.hasMoreTokens()) {
                         String next = tokenizer.nextToken();
-                        String code = codeCipher.encrypt(next);
+//                        String code = codeCipher.encrypt(next);
 
                         builder.append(next)
                                 .append(delimiter)
-                                .append(code)
+//                                .append(code)
                                 .append(delimiter);
                     }
 

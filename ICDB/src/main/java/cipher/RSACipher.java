@@ -13,7 +13,7 @@ import java.nio.file.Path;
  * @author Dan Kondratyuk
  * @see CodeCipher
  */
-public class RSACipher implements CodeCipher {
+public class RSACipher {
 	private BigInteger privateKey;
 	private BigInteger modulus;
 
@@ -24,7 +24,6 @@ public class RSACipher implements CodeCipher {
 		modulus = RSAKeyGenerator.getModulus();
 	}
 
-	@Override
 	public String encrypt(String message) {
 		BigInteger encrypt = null;
 		BigInteger Bigmessage = convertToInt(message);
@@ -32,7 +31,6 @@ public class RSACipher implements CodeCipher {
 		return encrypt.toString(16);
 	}
 
-	@Override
 	public boolean verify(String message, String encoded) {
 		if (encrypt(message).equals(encoded))
 			return true;

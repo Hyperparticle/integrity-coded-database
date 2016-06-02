@@ -1,8 +1,10 @@
 package cipher;
 
 import com.google.common.hash.Hashing;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 /**
  * <p>
@@ -14,24 +16,43 @@ import java.nio.charset.StandardCharsets;
  * @author Dan Kondratyuk
  * @see CodeCipher
  */
-public class SHACipher implements CodeCipher {
+public class SHACipher {
 
-	private final String salt;
+    private static final int HASH_BYTES = 32; // 32 B = 256 b
+    private static final int SALT_BYTES = 32; // 32 B = 256 b
 
-    // TODO: Auto-generate salt and store it with the message
-	public SHACipher(String salt) {
-        this.salt = salt;
+    private static final SecureRandom random = new SecureRandom();
+
+	public static byte[] encrypt(final byte[] message) {
+        // Encrypt the message along with the salt
+        return encrypt(message, generateSalt());
 	}
 
-	@Override
-	public String encrypt(String message) {
-        return Hashing.sha256()
-                .hashString(message + salt, StandardCharsets.UTF_8)
-                .toString();
-	}
+    private static byte[] encrypt(final byte[] message, final byte[] salt) {
+        // Join message with salt
+        final byte[] saltedMessage = ArrayUtils.addAll(message, salt);
 
-	@Override
-	public boolean verify(String message, String encoded) {
-		return encrypt(message).equals(encoded);
-	}
+        // Get the hashed message
+        final byte[] hashedMessage = Hashing.sha256()
+                .hashBytes(saltedMessage)
+                .asBytes();
+
+        // Join the hashed message with the salt so that it can be verified
+        return ArrayUtils.addAll(hashedMessage, salt);
+    }
+
+
+	public static boolean verify(final byte[] message, final byte[] encodedWithSalt) {
+        // Extract the salt
+        final byte[] salt = Arrays.copyOfRange(encodedWithSalt, HASH_BYTES, HASH_BYTES + SALT_BYTES);
+
+        // Regenerate the hash and compare
+		return Arrays.equals(encrypt(message, salt), encodedWithSalt);
+    }
+
+    private static byte[] generateSalt() {
+        final byte[] salt = new byte[SALT_BYTES];
+        random.nextBytes(salt);
+        return salt;
+    }
 }

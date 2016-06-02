@@ -6,7 +6,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 export_script=./src/scripts/sql/export-db.sql
-export_path=./tmp/database-files
+export_path=./tmp/db-files
 
 mkdir -p ./tmp/db-files/schema
 mkdir -p ./tmp/db-files/data
