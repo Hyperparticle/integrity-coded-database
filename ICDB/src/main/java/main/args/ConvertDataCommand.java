@@ -4,8 +4,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import main.args.option.*;
 
-import java.util.List;
-
 /**
  * <p>
  * </p>
@@ -29,8 +27,8 @@ public class ConvertDataCommand {
 //    @Parameter(names = { "-t", "--tuple" }, variableArity = true, description = "Convert one or more tuples as arguments")
 //    public List<String> tuples;
 
-    @Parameter(names = { "-c", "--cipher" }, converter = CipherTypeConverter.class, description = "The type of cipher to use (RSA, AES, or SHA)")
-    public CipherType cipherType = CipherType.SHA;
+    @Parameter(names = { "-c", "--cipher" }, converter = MACTypeConverter.class, description = "The type of cipher to use (RSA, AES, or SHA)")
+    public MACType macType = MACType.SHA;
 
     @Parameter(names = { "-g", "--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
     public Granularity granularity = Granularity.TUPLE;

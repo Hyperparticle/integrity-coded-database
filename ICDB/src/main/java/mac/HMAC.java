@@ -7,6 +7,7 @@ import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.util.Arrays;
+
 //import javax.crypto.spec.SecretKeySpec;
 //import java.security.InvalidKeyException;
 //import java.security.NoSuchAlgorithmException;
@@ -33,11 +34,15 @@ public class HMAC {
         hmac.update(data, 0, data.length);
         final byte[] result = new byte[digest.getDigestSize()];
         hmac.doFinal(result, 0);
-        return result;
+        return truncate(result);
     }
 
     public static boolean verify(byte[] data, byte[] key, byte[] signature) {
         return Arrays.equals(generateSignature(data, key), signature);
+    }
+
+    private static byte[] truncate(byte[] array) {
+        return Arrays.copyOf(array, array.length - array.length % 16);
     }
 
     // JAVAX HMAC

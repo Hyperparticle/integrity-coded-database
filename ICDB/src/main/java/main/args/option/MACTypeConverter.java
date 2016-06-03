@@ -10,12 +10,12 @@ import com.beust.jcommander.ParameterException;
  *
  * @author Dan Kondratyuk
  */
-public class CipherTypeConverter implements IStringConverter<CipherType> {
+public class MACTypeConverter implements IStringConverter<MACType> {
 
     @Override
-    public CipherType convert(String value) {
+    public MACType convert(String value) {
         try {
-            return CipherType.valueOf(value.toUpperCase());
+            return MACType.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new ParameterException("Value " + value + " is not valid. Available values are: RSA, AES, SHA");
         }
