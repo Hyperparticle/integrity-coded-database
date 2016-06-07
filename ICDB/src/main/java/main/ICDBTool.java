@@ -1,8 +1,14 @@
 package main;
 
+import convert.DBConnection;
 import convert.DataConverter;
+import convert.SchemaConverter;
 import main.args.CommandLineArgs;
 import main.args.ConvertDataCommand;
+import main.args.option.Granularity;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * <p>
@@ -16,6 +22,8 @@ public class ICDBTool {
 
     public static void main(String[] args) {
         CommandLineArgs cmd = new CommandLineArgs(args);
+
+        connectDB();
 
         if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
             if (cmd.convertDataCommand.help) {
@@ -31,6 +39,18 @@ public class ICDBTool {
             // TODO
         } else {
             cmd.jCommander.usage();
+        }
+    }
+
+    private static void connectDB() {
+        try {
+            DBConnection dbConnection = new DBConnection("localhost", 3306, "root", "");
+            Connection connection = dbConnection.connect("sakila");
+
+            SchemaConverter converter = new SchemaConverter(connection, Granularity.TUPLE);
+            converter.convert();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

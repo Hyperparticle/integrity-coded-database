@@ -31,3 +31,8 @@ convert-data  [-i <input-directory>] [-k <keyfile-path>] [-o <output-directory>]
 convert-data -i ./tmp/db-files/data -k ./src/main/resources/keyfile-sample -o ./tmp/converted-db-files/data
 ```
 
+## TODO
+1. Dump existing DB Schema to a SQL file using mysqldump
+2. Duplicate the DB with the SQL file, replacing an existing instance if it exists
+3. Alter the duplicate DB to conform to ICDB Schema standards (Extra columns in each table)
+4. 

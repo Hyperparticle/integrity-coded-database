@@ -15,6 +15,7 @@
     <build>
         <plugins>
             <plugin>
+                <!-- Compiler Plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
@@ -39,6 +40,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- Builds a standalone JAR -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>
@@ -51,6 +53,59 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--<plugin>-->
+                <!--&lt;!&ndash; JOOQ Code Autogeneration Plugin &ndash;&gt;-->
+
+                <!--&lt;!&ndash; Specify the maven code generator plugin &ndash;&gt;-->
+                <!--<groupId>org.jooq</groupId>-->
+                <!--<artifactId>jooq-codegen-maven</artifactId>-->
+                <!--<version>3.8.2</version>-->
+
+                <!--&lt;!&ndash; The plugin should hook into the generate goal &ndash;&gt;-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>generate</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+
+                <!--&lt;!&ndash; Manage the plugin's dependency. &ndash;&gt;-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>postgresql</groupId>-->
+                        <!--<artifactId>postgresql</artifactId>-->
+                        <!--<version>8.4-702.jdbc4</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+
+                <!--&lt;!&ndash; Specify the plugin configuration.-->
+                     <!--The configuration format is the same as for the standalone code generator &ndash;&gt;-->
+                <!--<configuration>-->
+
+                    <!--&lt;!&ndash; JDBC connection parameters &ndash;&gt;-->
+                    <!--<jdbc>-->
+                        <!--<driver>org.postgresql.Driver</driver>-->
+                        <!--<url>jdbc:postgresql:postgres</url>-->
+                        <!--<user>postgres</user>-->
+                        <!--<password>test</password>-->
+                    <!--</jdbc>-->
+
+                    <!--&lt;!&ndash; Generator parameters &ndash;&gt;-->
+                    <!--<generator>-->
+                        <!--<database>-->
+                            <!--<name>org.jooq.util.postgres.PostgresDatabase</name>-->
+                            <!--<includes>.*</includes>-->
+                            <!--<excludes></excludes>-->
+                            <!--<inputSchema>public</inputSchema>-->
+                        <!--</database>-->
+                        <!--<target>-->
+                            <!--<packageName>org.jooq.util.maven.example</packageName>-->
+                            <!--<directory>target/generated-sources/jooq</directory>-->
+                        <!--</target>-->
+                    <!--</generator>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
@@ -76,16 +131,6 @@
             <version>1.48</version>
         </dependency>
         <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.8.11.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-core</artifactId>
-            <version>4.48</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -95,13 +140,26 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
-        <!-- http://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.54</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.8.2</version>
+        </dependency>
     </dependencies>
 
     <profiles>

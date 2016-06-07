@@ -16,6 +16,8 @@ import java.util.Arrays;
 
 /**
  * <p>
+ *      A Hashing Message Authentication Code (HMAC) is a fast way to generate a
+ *      code designed to detect code tampering
  * </p>
  * Created on 6/2/2016
  *
@@ -34,7 +36,7 @@ public class HMAC {
         hmac.update(data, 0, data.length);
         final byte[] result = new byte[digest.getDigestSize()];
         hmac.doFinal(result, 0);
-        return truncate(result);
+        return truncate(result);    // Truncate to the nearest 128 bits (SHA1 outputs 160 bits)
     }
 
     public static boolean verify(byte[] data, byte[] key, byte[] signature) {

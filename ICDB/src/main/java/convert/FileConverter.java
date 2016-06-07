@@ -78,11 +78,11 @@ public class FileConverter {
 
                 if (granularity.equals(Granularity.TUPLE)) {
                     String line = dataScan.nextLine();
-                    byte[] signature = macType.generateSignature()
+//                    byte[] signature = macType.generateSignature();
 
                     builder.append(line)
                             .append(delimiter)
-                            .append(signature)
+//                            .append(signature)
                             .append("\n");
 
                     writer.append(builder);
