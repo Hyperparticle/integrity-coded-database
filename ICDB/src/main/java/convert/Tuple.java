@@ -1,12 +1,10 @@
 package convert;
 
 import com.google.common.base.Charsets;
-import main.args.option.MACType;
+import main.args.option.AlgorithmType;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * <p>
@@ -28,17 +26,17 @@ public class Tuple {
         this.delimiter = delimiter;
     }
 
-    public void convert(MACType macType, byte[] key, boolean perField) {
+    public void convert(AlgorithmType algorithmType, byte[] key, boolean perField) {
         if (perField) {
             String[] fields = tuple.split(delimiter);
             for (String field : fields) {
                 byte[] data = field.getBytes(Charsets.UTF_8);
-                byte[] signature = macType.generateSignature(data, key);
+                byte[] signature = algorithmType.generateSignature(data, key);
                 signatures.add(signature);
             }
         } else {
             byte[] data = tuple.getBytes(Charsets.UTF_8);
-            byte[] signature = macType.generateSignature(data, key);
+            byte[] signature = algorithmType.generateSignature(data, key);
             signatures.add(signature);
         }
     }

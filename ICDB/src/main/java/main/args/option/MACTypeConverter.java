@@ -10,12 +10,12 @@ import com.beust.jcommander.ParameterException;
  *
  * @author Dan Kondratyuk
  */
-public class MACTypeConverter implements IStringConverter<MACType> {
+public class MACTypeConverter implements IStringConverter<AlgorithmType> {
 
     @Override
-    public MACType convert(String value) {
+    public AlgorithmType convert(String value) {
         try {
-            return MACType.valueOf(value.toUpperCase());
+            return AlgorithmType.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new ParameterException("Value " + value + " is not valid. Available values are: RSA, AES, SHA");
         }

@@ -1,9 +1,18 @@
 # Integrity Coded Database (ICDB)
 
-## Prerequisites
+## Initial Setup
 
-To be able to run all functionality in this repo, the following must be installed:
+At this time, this project only supports Linux. To be able to build and run against a database, the following must be installed:
 
+1. Maven
+2. MySQL
+
+Then run the following commands to build the project:
+```
+$ git clone https://github.com/Hyperparticle/IntegrityCodedDatabase.git
+$ cd IntegrityCodedDatabase/ICDB
+$ mvn package
+```
 
 ## Available Commands
 

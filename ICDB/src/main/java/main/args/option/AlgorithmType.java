@@ -12,7 +12,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  *
  * @author Dan Kondratyuk
  */
-public enum MACType {
+public enum AlgorithmType {
     RSA {
         @Override
         public byte[] generateSignature(byte[] data, byte[] key) {

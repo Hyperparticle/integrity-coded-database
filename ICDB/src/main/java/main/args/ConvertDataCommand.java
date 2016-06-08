@@ -12,7 +12,7 @@ import main.args.option.*;
  * @author Dan Kondratyuk
  */
 @Parameters(commandNames = { CommandLineArgs.CONVERT_DATA }, commandDescription = "Convert data tuples to ICDB data tuples")
-public class ConvertDataCommand {
+public class ConvertDataCommand extends ConfigCommand {
 
     @Parameter(names = { "-i", "--input" }, variableArity = true, description = "Convert all data files under the given directory")
     public String dataPath = "./tmp/db-files/data";
@@ -28,7 +28,7 @@ public class ConvertDataCommand {
 //    public List<String> tuples;
 
     @Parameter(names = { "-c", "--cipher" }, converter = MACTypeConverter.class, description = "The type of cipher to use (RSA, AES, or SHA)")
-    public MACType macType = MACType.SHA;
+    public AlgorithmType algorithmType = AlgorithmType.SHA;
 
     @Parameter(names = { "-g", "--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
     public Granularity granularity = Granularity.TUPLE;

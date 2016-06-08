@@ -2,6 +2,7 @@ package convert;
 
 import main.args.option.Granularity;
 
+import java.io.IOException;
 import java.sql.*;
 
 /**
@@ -14,16 +15,20 @@ import java.sql.*;
  */
 public class SchemaConverter {
 
+    private final String schema;
     private final Connection connection;
     private final Granularity granularity;
 
-    public SchemaConverter(Connection connection, Granularity granularity) {
+    public SchemaConverter(String schema, Connection connection, Granularity granularity) {
+        this.schema = schema;
         this.connection = connection;
         this.granularity = granularity;
     }
 
     public void convert() throws SQLException {
-        connection.setSchema("sakila");
+        duplicateDB();
+
+        connection.setSchema(schema);
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet resultSet = metaData.getTables(null, null, "%", new String[] {"TABLE"});
 
@@ -57,6 +62,18 @@ public class SchemaConverter {
 //        } catch (SchemaCrawlerException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    /**
+     * Duplicates the schema by running a Bash script
+     */
+    private void duplicateDB() {
+        try {
+            new ProcessBuilder("bash", "./src/main/resources/scripts/duplicate-schema.sh", schema).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
 }

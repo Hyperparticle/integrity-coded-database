@@ -3,7 +3,7 @@ package convert;
 import com.google.common.base.Charsets;
 import main.args.ConvertDataCommand;
 import main.args.option.Granularity;
-import main.args.option.MACType;
+import main.args.option.AlgorithmType;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -31,7 +31,7 @@ public class FileConverter {
     private final File keyFile;
     private final Path outputPath;
 
-    private final MACType macType;
+    private final AlgorithmType algorithmType;
 
     private final Granularity granularity;
     private final String delimiter;
@@ -41,7 +41,7 @@ public class FileConverter {
         this.keyFile = Paths.get(command.keyPath).toFile();
         this.outputPath = Paths.get(command.outputPath);
 
-        this.macType = command.macType;
+        this.algorithmType = command.algorithmType;
 
         this.granularity = command.granularity;
         this.delimiter = command.delimiter;
@@ -78,7 +78,7 @@ public class FileConverter {
 
                 if (granularity.equals(Granularity.TUPLE)) {
                     String line = dataScan.nextLine();
-//                    byte[] signature = macType.generateSignature();
+//                    byte[] signature = algorithmType.generateSignature();
 
                     builder.append(line)
                             .append(delimiter)

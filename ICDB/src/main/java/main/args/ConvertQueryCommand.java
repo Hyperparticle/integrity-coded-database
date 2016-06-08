@@ -7,14 +7,13 @@ import java.util.List;
 
 /**
  * <p>
- * <p>
  * </p>
  * Created on 5/10/2016
  *
  * @author Dan Kondratyuk
  */
 @Parameters(commandNames = { CommandLineArgs.CONVERT_QUERY }, commandDescription = "Convert queries to ICDB queries")
-public class ConvertQueryCommand {
+public class ConvertQueryCommand extends ConfigCommand {
 
     @Parameter(names = { "-q" }, description = "Convert one or more queries as arguments")
     public List<String> queries;

@@ -13,7 +13,7 @@ import java.util.List;
  * @author Dan Kondratyuk
  */
 @Parameters(commandNames = { CommandLineArgs.EXECUTE_QUERY }, commandDescription = "Execute queries on an ICDB Server")
-public class ExecuteQueryCommand {
+public class ExecuteQueryCommand extends ConfigCommand {
 
     @Parameter(names = { "-q" }, description = "Execute one or more queries as arguments")
     public List<String> queries;

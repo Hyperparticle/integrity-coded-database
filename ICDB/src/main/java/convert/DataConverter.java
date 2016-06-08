@@ -1,21 +1,12 @@
 package convert;
 
-import com.google.common.base.Charsets;
 import main.args.ConvertDataCommand;
 import main.args.option.Granularity;
-import main.args.option.MACType;
+import main.args.option.AlgorithmType;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -31,7 +22,7 @@ public class DataConverter {
     private final File keyFile;
     private final Path outputPath;
 
-    private final MACType macType;
+    private final AlgorithmType algorithmType;
 
     private final Granularity granularity;
     private final String delimiter;
@@ -41,7 +32,7 @@ public class DataConverter {
         this.keyFile = Paths.get(command.keyPath).toFile();
         this.outputPath = Paths.get(command.outputPath);
 
-        this.macType = command.macType;
+        this.algorithmType = command.algorithmType;
 
         this.granularity = command.granularity;
         this.delimiter = command.delimiter;

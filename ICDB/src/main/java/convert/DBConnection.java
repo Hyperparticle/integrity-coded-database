@@ -18,14 +18,14 @@ public class DBConnection {
 
     private static final MysqlDataSource dataSource = new MysqlDataSource();
 
-    public DBConnection(String serverName, int portNumber, String user, String password) {
+    public static void set(String serverName, int portNumber, String user, String password) {
         dataSource.setServerName(serverName);
         dataSource.setPortNumber(portNumber);
         dataSource.setUser(user);
         dataSource.setPassword(password);
     }
 
-    public Connection connect(String databaseName) throws SQLException {
+    public static Connection connect(String databaseName) throws SQLException {
         dataSource.setDatabaseName(databaseName);
         return dataSource.getConnection();
     }
