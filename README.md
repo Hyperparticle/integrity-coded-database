@@ -11,7 +11,7 @@ Then run the following commands to build the project:
 ```
 $ git clone https://github.com/Hyperparticle/IntegrityCodedDatabase.git
 $ cd IntegrityCodedDatabase/ICDB
-$ mvn package
+$ make
 ```
 
 ## Available Commands
