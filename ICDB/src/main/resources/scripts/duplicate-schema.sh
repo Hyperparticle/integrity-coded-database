@@ -2,14 +2,15 @@
 
 # This script will export a DB schema and generate a duplicate DB with -icdb appended to it
 
-if [ "$#" -ne 1 ]; then
-    echo "A database name must be specified as an argument"
+if [ "$#" -ne 2 ]; then
+    echo "A db name must be specified as an argument"
+    echo "An icdb target name must be specified as an argument"
     exit 1
 fi
 
 export_path=./tmp/db-files
 schema_file=${export_path}/schema/$1-schema.sql
-icdb_name=$1_icdb
+icdb_name=$2
 
 mkdir -p ${export_path}/schema
 

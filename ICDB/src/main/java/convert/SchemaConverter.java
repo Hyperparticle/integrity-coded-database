@@ -1,9 +1,27 @@
 package convert;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import main.ICDBTool;
+import main.args.config.Config;
+import main.args.option.AlgorithmType;
 import main.args.option.Granularity;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jooq.*;
+import org.jooq.conf.RenderNameStyle;
+import org.jooq.conf.Settings;
+import org.jooq.impl.*;
+import org.jooq.tools.StringUtils;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <p>
@@ -15,65 +33,119 @@ import java.sql.*;
  */
 public class SchemaConverter {
 
-    private final String schema;
-    private final Connection connection;
-    private final Granularity granularity;
+    private final Schema dbSchema;
+    private final Schema icdbSchema;
 
-    public SchemaConverter(String schema, Connection connection, Granularity granularity) {
-        this.schema = schema;
-        this.connection = connection;
-        this.granularity = granularity;
+    private final Connection db;
+    private final Granularity granularity;
+    private final AlgorithmType algorithm;
+    private final byte[] key;
+
+    public SchemaConverter(Connection db, Config config) {
+        this.dbSchema = new SchemaImpl(config.schema, new CatalogImpl(""));
+        this.db = db;
+        this.granularity = config.granularity;
+        this.algorithm = config.algorithm;
+        this.key = config.key.getBytes(Charsets.UTF_8);
+
+        this.icdbSchema = new SchemaImpl(config.schema + ICDB.SUFFIX, new CatalogImpl(""));
     }
 
     public void convert() throws SQLException {
-        duplicateDB();
+        // Begin conversion by duplicating the original DB
+        final Connection icdb = duplicateDB();
 
-        connection.setSchema(schema);
-        DatabaseMetaData metaData = connection.getMetaData();
-        ResultSet resultSet = metaData.getTables(null, null, "%", new String[] {"TABLE"});
+        Settings settings = new Settings();
+//        settings.setRenderNameStyle(RenderNameStyle.AS_IS);
 
-//        Statement statement = connection.createStatement();
-//        ResultSet resultSet = statement.executeQuery("SELECT * FROM actor WHERE first_name = 'PENELOPE'");
+        // Grab the DB context
+        final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL, settings);
+        final DSLContext icdbCreate = DSL.using(icdb, SQLDialect.MYSQL, settings);
 
-        while (resultSet.next()) {
-            System.out.println(resultSet.getString(3));
+        // Add extra columns and convert all data
+        if (granularity.equals(Granularity.TUPLE)) {        // OCT conversion
+            convertOCT(dbCreate, icdbCreate);
+        } else if (granularity.equals(Granularity.FIELD)) { // OCF conversion
+            convertOCF(dbCreate);
+        } else {
+            throw new InvalidParameterException(granularity.toString() + " is not a recognized granularity level");
         }
-
-        resultSet.close();
-//        statement.close();
-        connection.close();
-
-//        try {
-//            final SchemaCrawlerOptions options = new SchemaCrawlerOptions();
-//
-//            final Catalog catalog = SchemaCrawlerUtility.getCatalog(connection, options);
-//            for (final Schema schema: catalog.getSchemas())
-//            {
-//                System.out.println(schema);
-//                for (final Table table: catalog.getTables(schema))
-//                {
-//                    System.out.println("o--> " + table);
-//                    for (final Column column: table.getColumns())
-//                    {
-//                        System.out.println("     o--> " + column);
-//                    }
-//                }
-//            }
-//        } catch (SchemaCrawlerException e) {
-//            e.printStackTrace();
-//        }
     }
+
+    private void convertOCT(final DSLContext dbCreate, final DSLContext icdbCreate) {
+        icdbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")     // Fetch all table names
+//                .parallelStream()
+                .map(result -> result.get(0).toString())
+                .forEach(tableName -> {                            // For each table,
+//                    icdbCreate.alterTable(table)                 // Create a svc column
+//                        .add(ICDB.SVC, SQLDataType.BLOB)
+//                        .execute();
+//                    icdbCreate.alterTable(table)                 // Create a serial column
+//                        .add(ICDB.SERIAL, SQLDataType.BLOB)
+//                        .execute();
+
+                    // TODO: pull this out
+                    Table<?> table = icdbCreate.meta().getTables().stream()
+                            .filter(t -> t.getName().equals(tableName))
+                            .findFirst().get();
+
+                    dbCreate.fetch("select * from " + tableName)
+//                        .parallelStream()
+                        .forEach(result -> {
+                            // For each tuple, generate a signature
+                            byte[] signature = algorithm.generateSignature(
+                                StringUtils.join(result.intoArray()).getBytes(Charsets.UTF_8), key
+                            );
+
+                            List<Object> icdbTuple = new ArrayList<>(result.intoList());
+                            icdbTuple.add(signature);
+                            icdbTuple.add(new byte[] { 0x10 }); // TODO: generate serial number
+
+                            icdbCreate.insertInto(table, Arrays.asList(table.fields()))
+                                    .values(icdbTuple)
+                                    .executeAsync();
+                        });
+//                    icdbCreate.execute("insert into " + table + "(svc)" + "values(" + )
+                });
+    }
+
+    // TODO: loop through each column
+    private void convertOCF(final DSLContext create) {
+        throw new NotImplementedException();
+
+//        create.fetch("show full tables where Table_type = 'BASE TABLE'")     // Fetch all table names
+//                .map(result -> result.get(0).toString())
+//                .forEach(table -> {                                          // For each table,
+//                    create.alterTable(table)
+//                            .addColumn()
+//
+//                    create.alterTable(table)                                 // Create a svc column
+//                            .add(ICDB.SVC, SQLDataType.BLOB)
+//                            .execute();
+//                    create.alterTable(table)                                 // Create a serial column
+//                            .add(ICDB.SERIAL, SQLDataType.BLOB)
+//                            .execute();
+//                });
+    }
+
 
     /**
      * Duplicates the schema by running a Bash script
      */
-    private void duplicateDB() {
-        try {
-            new ProcessBuilder("bash", "./src/main/resources/scripts/duplicate-schema.sh", schema).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+    private Connection duplicateDB() throws SQLException {
+//        try {
+//            new ProcessBuilder(
+//                "bash",
+//                "./src/main/resources/scripts/duplicate-schema.sh",
+//                dbSchema,
+//                icdbSchema
+//            ).start();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
+
+        return DBConnection.connect(icdbSchema.getName());
     }
 
 }

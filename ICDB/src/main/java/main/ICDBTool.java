@@ -21,6 +21,8 @@ import java.sql.SQLException;
  */
 public class ICDBTool {
 
+
+
     public static void main(String[] args) throws SQLException {
         // Parse the command-line arguments
         CommandLineArgs cmd = new CommandLineArgs(args);
@@ -28,11 +30,12 @@ public class ICDBTool {
 
         // Connect to the DB
         DBConnection.set(config.ip, config.port, config.user, config.password);
-        Connection connection =  DBConnection.connect(config.schema);
+
+        Connection db =  DBConnection.connect(config.schema);
 
         // Execute a command
         if (cmd.isCommand(CommandLineArgs.CONVERT_DB)) {
-            SchemaConverter schemaConverter = new SchemaConverter(config.schema, connection, config.granularity);
+            SchemaConverter schemaConverter = new SchemaConverter(db, config);
             schemaConverter.convert();
         } else if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
             DataConverter converter = new DataConverter(cmd.convertDataCommand);
