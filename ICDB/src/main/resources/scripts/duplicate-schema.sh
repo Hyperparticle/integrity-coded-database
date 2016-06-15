@@ -16,7 +16,7 @@ mkdir -p ${export_path}/schema
 
 # Use mysqldump to export the DB schema
 echo "Dumping database schema '$1'."
-mysqldump --no-data --skip-comments $1 > ${schema_file}
+mysqldump --no-data $1 > ${schema_file}
 
 # Create a new database with the same schema
 echo "Creating Database '${icdb_name}'"

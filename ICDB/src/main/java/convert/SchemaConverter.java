@@ -15,13 +15,11 @@ import org.jooq.impl.*;
 import org.jooq.tools.StringUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -54,6 +52,9 @@ public class SchemaConverter {
         this.icdbName = config.schema + ICDB.SUFFIX;
     }
 
+    /**
+     * TODO: just convert the schema, no data
+     */
     public void convert() throws SQLException {
         // Begin conversion by duplicating the original DB
         final Connection icdb = duplicateDB(dbName, icdbName);
@@ -83,25 +84,32 @@ public class SchemaConverter {
                 .filter(schema -> schema.getName().equals(icdbName))
                 .findFirst().get();
 
+        // Check if the schema is already converted
+        if (icdbSchema.getTables().stream()
+                .anyMatch(table -> ArrayUtils.contains(table.fields(), ICDB.SVC))) {
+            System.out.println("Already converted. Exiting.");
+            return;
+        }
+
         dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")     // Fetch all table names
                 .parallelStream()
                 .map(result -> result.get(0).toString())
                 .forEach(tableName -> {                            // For each table,
-                    Table<?> dbTable = dbSchema.getTable(tableName);
+//                    Table<?> dbTable = dbSchema.getTable(tableName);
                     Table<?> icdbTable = icdbSchema.getTable(tableName);
 
                     addOCTColumns(dbCreate, icdbTable);
-                    insertOCTData(dbCreate, dbTable, icdbTable);
+//                    insertOCTData(dbCreate, dbTable, icdbTable);
                 });
     }
 
     private void addOCTColumns(final DSLContext dbCreate, final Table<?> table) {
         dbCreate.alterTable(table)                 // Create a svc column
             .add(ICDB.SVC, SQLDataType.BLOB)
-            .execute();
+            .executeAsync();
         dbCreate.alterTable(table)                 // Create a serial column
             .add(ICDB.SERIAL, SQLDataType.BLOB)
-            .execute();
+            .executeAsync();
     }
 
     private void insertOCTData(final DSLContext dbCreate, final Table<?> dbTable, final Table<?> icdbTable) {

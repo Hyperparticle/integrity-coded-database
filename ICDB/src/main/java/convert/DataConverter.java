@@ -38,7 +38,24 @@ public class DataConverter {
         this.delimiter = command.delimiter;
     }
 
+    // TODO
     public void parse() {
+        // Assumptions: duplicate icdb schema already exists
+        // Steps:
+        // 1. Export data outfile -> .unl files
+        // 2. Filereader -> generate signature -> filewriter
+        // 3. Load data infile -> icdb
+    }
+
+    private void exportData() {
+
+    }
+
+    private void convertData() {
+
+    }
+
+    private void loadData() {
 
     }
 }
