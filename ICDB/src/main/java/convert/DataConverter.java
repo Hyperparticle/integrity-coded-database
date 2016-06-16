@@ -8,17 +8,20 @@ import main.args.option.AlgorithmType;
 import org.apache.commons.csv.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.*;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.tools.StringUtils;
+import org.jooq.util.derby.sys.Sys;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -81,7 +84,7 @@ public class DataConverter {
             convertData();
 
             // 3. Load data infile -> icdb
-            loadData();
+            importData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,39 +95,25 @@ public class DataConverter {
 
         // Fetch all table names
         dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
-                .map(result -> result.get(0).toString())
-                .forEach(tableName -> {
-                    // For each table
-                    Table<?> icdbTable = dbSchema.getTable(tableName);
+            .map(result -> result.get(0).toString())
+            .forEach(tableName -> {
+                // For each table
+                Table<?> icdbTable = dbSchema.getTable(tableName);
 
-                    File outputFile = Paths.get(dataPath.toString(), tableName + ICDB.DATA_EXT)
-                            .toAbsolutePath().toFile();
+                // Get the output file path
+                File outputFile = Paths.get(dataPath.toString(), tableName + ICDB.DATA_EXT)
+                        .toAbsolutePath().toFile();
 
-                    try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
-                        dbCreate.selectFrom(icdbTable)
-                                .fetch().formatCSV(output);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-//                    // Convert all BLOB types to HEX
-//                    String fields = StringUtils.join(Arrays.asList(icdbTable.fields()).stream()
-//                            .map(field -> {
-//                                DataType<?> dataType = field.getDataType();
-//                                boolean isBlob = field.getDataType().equals(SQLDataType.OTHER);
-//                                return isBlob ? "HEX(" + field.getName() + ")" : field.getName();
-//                            }).toArray(), ",");
-//
-//                    // Construct the query
-//                    String query = "SELECT " + fields + " INTO OUTFILE '" + path + "' " +
-//                        "FIELDS TERMINATED BY '" + ICDB.DELIMITER + "' " +
-//                        "ENCLOSED BY '" + ICDB.ENCLOSING + "' " +
-//                        "LINES TERMINATED BY '\\n' " +
-//                        "FROM " + dbName + "." + tableName;
-//
-//                    // Export the table to a csv file
-//                    dbCreate.execute(query);
-                });
+                try (
+                    OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))
+                ) {
+                    // Output to a csv file
+                    dbCreate.selectFrom(icdbTable)
+                        .fetch().formatCSV(output);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
     }
 
     private void convertData() throws IOException {
@@ -137,44 +126,34 @@ public class DataConverter {
             });
     }
 
-    private static void convertFile(File input, File output) {
-        try {
+    private void convertFile(File input, File output) {
+        StringBuilder builder = new StringBuilder();
+
+        try (
             BufferedReader reader = new BufferedReader(new FileReader(input));
             BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+        ) {
+            // Parse the csv
+            // TODO: use opencsv?
+            Iterable<CSVRecord> records = CSVFormat.MYSQL.parse(reader);
+            for (CSVRecord record : records) {
+                builder.setLength(0);
+                record.forEach(builder::append);
 
-//            Iterable<CSVRecord> records = CSVFormat.MYSQL;
-//            for (CSVRecord record : records) {
-//                String lastName = record.get("Last Name");
-//                String firstName = record.get("First Name");
-//            }
-
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                StringTokenizer tokenizer = new StringTokenizer(line, ICDB.DELIMITER);
-//
-//                while (tokenizer.hasMoreTokens()) {
-//                    String next = tokenizer.nextToken();
-////                        String code = codeCipher.encrypt(next);
-//
-////                    builder.append(next)
-////                            .append(delimiter)
-//////                                .append(code)
-////                            .append(delimiter);
-//                }
-//
-////                builder.setLength(builder.length() - delimiter.length());
-////                builder.append("\n");
-////
-////                writer.append(builder);
-//            }
+                byte[] signature = algorithm.generateSignature(
+                    builder.toString().getBytes(Charsets.UTF_8), key
+                );
+                System.out.println();
+            }
 
             reader.close();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadData() {
+    private void importData() {
 
     }
 
