@@ -35,11 +35,15 @@ public class ICDBTool {
 
         // Execute a command
         if (cmd.isCommand(CommandLineArgs.CONVERT_DB)) {
-            SchemaConverter schemaConverter = new SchemaConverter(db, config);
-            schemaConverter.convert();
+            // Create a new schema
+//            SchemaConverter schemaConverter = new SchemaConverter(db, config);
+//            schemaConverter.convert();
+
+            // Convert all data
+            DataConverter dataConverter = new DataConverter(db, config);
+            dataConverter.convert();
         } else if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
-            DataConverter converter = new DataConverter(cmd.convertDataCommand);
-            converter.parse();
+            // TODO
         } else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
             // TODO
         } else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {

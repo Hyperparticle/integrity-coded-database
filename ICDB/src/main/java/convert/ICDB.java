@@ -9,8 +9,14 @@ package convert;
  */
 public class ICDB {
 
-    public static String SUFFIX = "_icdb";
+    public static String ICDB_SUFFIX = "_icdb";
+    public static String SVC_SUFFIX = "_svc";
+    public static String SERIAL_SUFFIX = "_serial";
+
     public static String SVC = "svc";
     public static String SERIAL = "serial";
 
+    public static String DATA_EXT = ".csv";
+    public static String DELIMITER = ",";
+    public static String ENCLOSING = "\"";
 }

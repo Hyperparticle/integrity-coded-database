@@ -1,12 +1,28 @@
 package convert;
 
+import com.google.common.base.Charsets;
 import main.args.ConvertDataCommand;
+import main.args.config.Config;
 import main.args.option.Granularity;
 import main.args.option.AlgorithmType;
+import org.apache.commons.csv.*;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.io.FileUtils;
+import org.jooq.*;
+import org.jooq.conf.Settings;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.tools.StringUtils;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -18,44 +34,167 @@ import java.nio.file.Paths;
  */
 public class DataConverter {
 
-    private final Path dataPath;
-    private final File keyFile;
-    private final Path outputPath;
+    private final String dbName;
+    private final String icdbName;
 
-    private final AlgorithmType algorithmType;
-
+    private final Connection db;
     private final Granularity granularity;
-    private final String delimiter;
+    private final AlgorithmType algorithm;
+    private final byte[] key;
 
-    public DataConverter(ConvertDataCommand command) {
-        this.dataPath = Paths.get(command.dataPath);
-        this.keyFile = Paths.get(command.keyPath).toFile();
-        this.outputPath = Paths.get(command.outputPath);
+    private final Path dataPath;
+    private final Path convertedDataPath;
 
-        this.algorithmType = command.algorithmType;
+    public DataConverter(Connection db, Config config) {
+        this.db = db;
+        this.granularity = config.granularity;
+        this.algorithm = config.algorithm;
+        this.key = config.key.getBytes(Charsets.UTF_8);
 
-        this.granularity = command.granularity;
-        this.delimiter = command.delimiter;
+        this.dbName = config.schema;
+        this.icdbName = config.schema + ICDB.ICDB_SUFFIX;
+
+        this.dataPath = Paths.get("./tmp/db-files/data");
+        this.convertedDataPath = Paths.get("./tmp/converted-db-files/data");
     }
 
     // TODO
-    public void parse() {
+    public void convert() {
         // Assumptions: duplicate icdb schema already exists
-        // Steps:
-        // 1. Export data outfile -> .unl files
-        // 2. Filereader -> generate signature -> filewriter
-        // 3. Load data infile -> icdb
+
+        // Grab the DB context
+        final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
+
+        // Find the schemas
+        final Schema dbSchema = dbCreate.meta().getSchemas().stream()
+                .filter(schema -> schema.getName().equals(dbName))
+                .findFirst().get();
+        final Schema icdbSchema = dbCreate.meta().getSchemas().stream()
+            .filter(schema -> schema.getName().equals(icdbName))
+            .findFirst().get();
+
+        try {
+            // 1. Export data outfile -> .csv files
+            exportData(dbCreate, dbSchema);
+
+            // 2. Read from file -> generate signature -> Write to file
+            convertData();
+
+            // 3. Load data infile -> icdb
+            loadData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void exportData() {
+    private void exportData(final DSLContext dbCreate, final Schema dbSchema) throws IOException {
+        FileUtils.cleanDirectory(dataPath.toFile());
 
+        // Fetch all table names
+        dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
+                .map(result -> result.get(0).toString())
+                .forEach(tableName -> {
+                    // For each table
+                    Table<?> icdbTable = dbSchema.getTable(tableName);
+
+                    File outputFile = Paths.get(dataPath.toString(), tableName + ICDB.DATA_EXT)
+                            .toAbsolutePath().toFile();
+
+                    try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+                        dbCreate.selectFrom(icdbTable)
+                                .fetch().formatCSV(output);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+//                    // Convert all BLOB types to HEX
+//                    String fields = StringUtils.join(Arrays.asList(icdbTable.fields()).stream()
+//                            .map(field -> {
+//                                DataType<?> dataType = field.getDataType();
+//                                boolean isBlob = field.getDataType().equals(SQLDataType.OTHER);
+//                                return isBlob ? "HEX(" + field.getName() + ")" : field.getName();
+//                            }).toArray(), ",");
+//
+//                    // Construct the query
+//                    String query = "SELECT " + fields + " INTO OUTFILE '" + path + "' " +
+//                        "FIELDS TERMINATED BY '" + ICDB.DELIMITER + "' " +
+//                        "ENCLOSED BY '" + ICDB.ENCLOSING + "' " +
+//                        "LINES TERMINATED BY '\\n' " +
+//                        "FROM " + dbName + "." + tableName;
+//
+//                    // Export the table to a csv file
+//                    dbCreate.execute(query);
+                });
     }
 
-    private void convertData() {
+    private void convertData() throws IOException {
+        // Walk data path
+        Files.walk(dataPath)
+            .filter(Files::isRegularFile)
+            .forEach(path -> {
+                File output = Paths.get(convertedDataPath.toString(), path.getFileName().toString()).toFile();
+                convertFile(path.toFile(), output);
+            });
+    }
 
+    private static void convertFile(File input, File output) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(input));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+
+//            Iterable<CSVRecord> records = CSVFormat.MYSQL;
+//            for (CSVRecord record : records) {
+//                String lastName = record.get("Last Name");
+//                String firstName = record.get("First Name");
+//            }
+
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                StringTokenizer tokenizer = new StringTokenizer(line, ICDB.DELIMITER);
+//
+//                while (tokenizer.hasMoreTokens()) {
+//                    String next = tokenizer.nextToken();
+////                        String code = codeCipher.encrypt(next);
+//
+////                    builder.append(next)
+////                            .append(delimiter)
+//////                                .append(code)
+////                            .append(delimiter);
+//                }
+//
+////                builder.setLength(builder.length() - delimiter.length());
+////                builder.append("\n");
+////
+////                writer.append(builder);
+//            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadData() {
 
     }
+
+//    private void insertOCTData(final DSLContext dbCreate, final Table<?> dbTable, final Table<?> icdbTable) {
+//        dbCreate.fetch("select * from " + dbName + "." + dbTable.getName())
+//                .parallelStream()
+//                .forEach(result -> {
+//                    // For each tuple, generate a signature
+//                    byte[] signature = algorithm.generateSignature(
+//                            StringUtils.join(result.intoArray()).getBytes(Charsets.UTF_8), key
+//                    );
+//
+//                    List<Object> icdbTuple = new ArrayList<>(result.intoList());
+//                    icdbTuple.add(signature);
+//                    icdbTuple.add(new byte[] { 0x10 }); // TODO: generate serial number
+//
+//                    dbCreate.insertInto(icdbTable, Arrays.asList(icdbTable.fields()))
+//                            .values(icdbTuple)
+//                            .executeAsync();
+//                });
+////                    icdbCreate.execute("insert into " + table + "(svc)" + "values(" + )
+//    }
 }
