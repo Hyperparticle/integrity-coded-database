@@ -1,20 +1,20 @@
 package convert;
 
 import com.google.common.base.Charsets;
-import main.args.ConvertDataCommand;
+import mac.Signature;
 import main.args.config.Config;
 import main.args.option.Granularity;
 import main.args.option.AlgorithmType;
-import org.apache.commons.csv.*;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.*;
-import org.jooq.conf.Settings;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.tools.StringUtils;
-import org.jooq.util.derby.sys.Sys;
+import org.jooq.util.mysql.MySQLDataType;
+import org.supercsv.io.CsvListReader;
+import org.supercsv.io.CsvListWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -23,9 +23,8 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -40,7 +39,10 @@ public class DataConverter {
     private final String dbName;
     private final String icdbName;
 
+    private final List<String> dbTableNames = new ArrayList<>();
+
     private final Connection db;
+    private final Connection icdb;
     private final Granularity granularity;
     private final AlgorithmType algorithm;
     private final byte[] key;
@@ -48,8 +50,10 @@ public class DataConverter {
     private final Path dataPath;
     private final Path convertedDataPath;
 
-    public DataConverter(Connection db, Config config) {
+    public DataConverter(Connection db, Connection icdb, Config config) {
         this.db = db;
+        this.icdb = icdb;
+
         this.granularity = config.granularity;
         this.algorithm = config.algorithm;
         this.key = config.key.getBytes(Charsets.UTF_8);
@@ -67,6 +71,7 @@ public class DataConverter {
 
         // Grab the DB context
         final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
+        final DSLContext icdbCreate = DSL.using(icdb, SQLDialect.MYSQL);
 
         // Find the schemas
         final Schema dbSchema = dbCreate.meta().getSchemas().stream()
@@ -76,6 +81,8 @@ public class DataConverter {
             .filter(schema -> schema.getName().equals(icdbName))
             .findFirst().get();
 
+        dbTableNames.addAll(getTables(dbCreate));
+
         try {
             // 1. Export data outfile -> .csv files
             exportData(dbCreate, dbSchema);
@@ -84,19 +91,22 @@ public class DataConverter {
             convertData();
 
             // 3. Load data infile -> icdb
-            importData();
+            importData(icdbCreate, icdbSchema);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private Collection<String> getTables(final DSLContext dbCreate) {
+        return dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
+            .map(result -> result.get(0).toString());
+    }
+
+    // TODO: move this to the fileconverter class
     private void exportData(final DSLContext dbCreate, final Schema dbSchema) throws IOException {
         FileUtils.cleanDirectory(dataPath.toFile());
 
-        // Fetch all table names
-        dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
-            .map(result -> result.get(0).toString())
-            .forEach(tableName -> {
+        dbTableNames.forEach(tableName -> {
                 // For each table
                 Table<?> icdbTable = dbSchema.getTable(tableName);
 
@@ -104,12 +114,10 @@ public class DataConverter {
                 File outputFile = Paths.get(dataPath.toString(), tableName + ICDB.DATA_EXT)
                         .toAbsolutePath().toFile();
 
-                try (
-                    OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))
-                ) {
+                try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     // Output to a csv file
                     dbCreate.selectFrom(icdbTable)
-                        .fetch().formatCSV(output);
+                        .fetch().formatCSV(output, ',', "\\N");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -117,6 +125,8 @@ public class DataConverter {
     }
 
     private void convertData() throws IOException {
+        FileUtils.cleanDirectory(convertedDataPath.toFile());
+
         // Walk data path
         Files.walk(dataPath)
             .filter(Files::isRegularFile)
@@ -126,26 +136,39 @@ public class DataConverter {
             });
     }
 
-    private void convertFile(File input, File output) {
-        StringBuilder builder = new StringBuilder();
-
+    private void convertFile(final File input, final File output) {
         try (
-            BufferedReader reader = new BufferedReader(new FileReader(input));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+            final Reader reader = new FileReader(input);
+            final Writer writer = new FileWriter(output)
         ) {
             // Parse the csv
-            // TODO: use opencsv?
-            Iterable<CSVRecord> records = CSVFormat.MYSQL.parse(reader);
-            for (CSVRecord record : records) {
-                builder.setLength(0);
-                record.forEach(builder::append);
+            final CsvPreference preference = CsvPreference.STANDARD_PREFERENCE;
+            final CsvListReader csvReader = new CsvListReader(reader, preference);
+            final CsvListWriter csvWriter = new CsvListWriter(writer, preference);
 
-                byte[] signature = algorithm.generateSignature(
-                    builder.toString().getBytes(Charsets.UTF_8), key
-                );
-                System.out.println();
+            // Discard the first line
+            List<String> nextLine = csvReader.read();
+            while ((nextLine = csvReader.read()) != null) {
+                // Combine the list into a string
+                final String data = StringUtils.join(nextLine);
+                final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
+
+                // Generate the signature
+                final byte[] signature = algorithm.generateSignature(dataBytes, key);
+                final String signatureString = Signature.toBase64(signature);
+
+                // TODO: add a serial
+                final String serial = Signature.toBase64(new byte[] {0x33});
+
+                // Write the line
+                nextLine.add(signatureString);
+                nextLine.add(serial);
+                csvWriter.write(nextLine);
             }
 
+
+            csvReader.close();
+            csvWriter.close();
             reader.close();
             writer.close();
         } catch (IOException e) {
@@ -153,8 +176,86 @@ public class DataConverter {
         }
     }
 
-    private void importData() {
+    private void importData(final DSLContext icdbCreate, final Schema icdbSchema) {
+        // Ignore foreign key constraints when migrating
+        icdbCreate.execute("set FOREIGN_KEY_CHECKS = 0;");
 
+        dbTableNames.forEach(tableName -> {
+            // For each table
+            Table<?> icdbTable = icdbSchema.getTable(tableName);
+
+            // Get the output file path
+            File inputFile = Paths.get(convertedDataPath.toString(), tableName + ICDB.DATA_EXT)
+                    .toAbsolutePath().toFile();
+
+//            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
+                String query = "load data infile '" + inputFile.getAbsolutePath().replace("\\", "/") + "' " +
+                        "into table `" + tableName + "` " +
+                        "fields terminated by ',' " +
+                        "optionally enclosed by '\"' " +
+                        "lines terminated by '\n' " +
+                        convertToBlob(icdbTable);
+
+
+                icdbCreate.execute("truncate " + tableName + ";");
+
+                try {
+                    icdbCreate.execute(query);
+                } catch (DataAccessException e) {
+                    System.err.println(e.getMessage());
+                }
+
+
+//                icdbCreate.loadInto(icdbTable)
+//                    .loadCSV(input, Charsets.UTF_8)
+//                    .fields(icdbTable.fields())
+//                    .execute();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        });
+
+        // Don't forget to set foreign key checks back
+        icdbCreate.execute("set FOREIGN_KEY_CHECKS = 1;");
+    }
+
+    /**
+     * We need to augment the load query because MySQL is too stupid to be able to load blob types in any encoding :(
+     */
+    private static String convertToBlob(Table<?> table) {
+        StringBuilder builder = new StringBuilder();
+        Field<?>[] fields = table.fields();
+
+        List<String> setValues = new ArrayList<>(fields.length);
+
+        builder.append("(");
+
+        Arrays.stream(table.fields())
+                .forEach(field -> {
+                    DataType<?> dataType = field.getDataType().getSQLDataType();
+
+                    if (dataType.equals(SQLDataType.BLOB) || dataType.equals(SQLDataType.OTHER)) {
+                        builder.append("@");
+                        setValues.add(field.getName());
+                    }
+                    builder.append(field.getName())
+                        .append(",");
+                });
+
+        builder.setLength(builder.length()-1);
+        builder.append(") SET ");
+
+        setValues.stream()
+                .forEach(set -> builder.append(set)
+                        .append("=FROM_BASE64(@")
+                        .append(set)
+                        .append("),")
+                );
+
+        builder.setLength(builder.length()-1);
+        builder.append(";");
+
+        return builder.toString(); // TODO
     }
 
 //    private void insertOCTData(final DSLContext dbCreate, final Table<?> dbTable, final Table<?> icdbTable) {

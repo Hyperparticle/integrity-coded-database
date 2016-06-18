@@ -37,8 +37,8 @@ public class ICDBTool {
         // Execute a command
         if (cmd.isCommand(CommandLineArgs.CONVERT_DB)) {
             // Create a new schema
-//            SchemaConverter schemaConverter = new SchemaConverter(db, config);
-//            schemaConverter.convert();
+            SchemaConverter schemaConverter = new SchemaConverter(db, config);
+            schemaConverter.convert();
 
             Connection icdb =  DBConnection.connect(config.schema + ICDB.ICDB_SUFFIX);
 
