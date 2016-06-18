@@ -29,7 +29,7 @@ public class AESKeyGenerator {
 //		AESCipher cipher = new AESCipher();
 //		SecretKey key = cipher.generateKey();
 //
-//		keyFile = new File(dataPath.toString() + Symbol.SLASH_DELIMITER + databaseName
+//		keyFile = new File(dataPath.toBase64() + Symbol.SLASH_DELIMITER + databaseName
 //				+ FileEndings.SCHEMA_FILE_EXTENSION + FileEndings.AES_KEY_FILE_EXTENSION);
 //		if (keyFile.exists())
 //			keyFile.delete();
@@ -54,7 +54,7 @@ public class AESKeyGenerator {
 //	 */
 //	public String getKey() {
 //		String Key = null;
-//		keyFile = new File(dataPath.toString() + Symbol.SLASH_DELIMITER + databaseName
+//		keyFile = new File(dataPath.toBase64() + Symbol.SLASH_DELIMITER + databaseName
 //				+ FileEndings.SCHEMA_FILE_EXTENSION + FileEndings.AES_KEY_FILE_EXTENSION);
 //		try {
 //			if (keyFile.exists()) {

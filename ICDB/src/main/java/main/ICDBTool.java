@@ -2,6 +2,7 @@ package main;
 
 import convert.DBConnection;
 import convert.DataConverter;
+import convert.ICDB;
 import convert.SchemaConverter;
 import main.args.CommandLineArgs;
 import main.args.config.Config;
@@ -39,8 +40,10 @@ public class ICDBTool {
 //            SchemaConverter schemaConverter = new SchemaConverter(db, config);
 //            schemaConverter.convert();
 
+            Connection icdb =  DBConnection.connect(config.schema + ICDB.ICDB_SUFFIX);
+
             // Convert all data
-            DataConverter dataConverter = new DataConverter(db, config);
+            DataConverter dataConverter = new DataConverter(db, icdb, config);
             dataConverter.convert();
         } else if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
             // TODO

@@ -45,3 +45,7 @@ convert-data -i ./tmp/db-files/data -k ./src/main/resources/keyfile-sample -o ./
 2. Duplicate the DB with the SQL file, replacing an existing instance if it exists
 3. Alter the duplicate DB to conform to ICDB Schema standards (Extra columns in each table)
 4. 
+
+## Sources
+
+- Employees DB: https://github.com/datacharmer/test_db

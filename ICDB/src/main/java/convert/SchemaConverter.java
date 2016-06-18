@@ -7,6 +7,7 @@ import main.args.option.Granularity;
 import org.jooq.*;
 import org.jooq.conf.Settings;
 import org.jooq.impl.*;
+import org.jooq.util.mysql.MySQLDataType;
 
 import java.io.IOException;
 import java.sql.*;
@@ -78,12 +79,12 @@ public class SchemaConverter {
     private void addOCTColumns(final DSLContext dbCreate, final Table<?> table) {
         // Create a svc column
         dbCreate.alterTable(table)
-            .add(ICDB.SVC, SQLDataType.BLOB)
+            .add(ICDB.SVC, MySQLDataType.TINYBLOB)
             .executeAsync();
 
         // Create a serial column
         dbCreate.alterTable(table)
-            .add(ICDB.SERIAL, SQLDataType.BLOB)
+            .add(ICDB.SERIAL, MySQLDataType.TINYBLOB)
             .executeAsync();
     }
 
@@ -108,17 +109,17 @@ public class SchemaConverter {
      * Duplicates the schema by running a Bash script
      */
     private static Connection duplicateDB(String dbName, String icdbName) throws SQLException {
-        try {
-            new ProcessBuilder(
-                "bash",
-                "./src/main/resources/scripts/duplicate-schema.sh",
-                dbName,
-                icdbName
-            ).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+//        try {
+//            new ProcessBuilder(
+//                "bash",
+//                "./src/main/resources/scripts/duplicate-schema.sh",
+//                dbName,
+//                icdbName
+//            ).start();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
 
         return DBConnection.connect(dbName);
     }

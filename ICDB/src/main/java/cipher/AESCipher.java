@@ -155,7 +155,7 @@ public class AESCipher {
 //			// // Return the delimited string codes
 //			// builder = new
 //			// StringBuilder(ivText).append(DELIMITER).append(encryptedText);
-//			// return builder.toString();
+//			// return builder.toBase64();
 //			return encryptedText;
 //		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
 //				| UnsupportedEncodingException e) {
