@@ -1,9 +1,13 @@
 package convert;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Stopwatch;
+import main.args.ConvertDBCommand;
 import main.args.config.Config;
 import main.args.option.AlgorithmType;
 import main.args.option.Granularity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.conf.Settings;
 import org.jooq.impl.*;
@@ -23,35 +27,48 @@ import java.util.Arrays;
  */
 public class SchemaConverter {
 
-//    private final Schema dbSchema;
-//    private final Schema icdbSchema;
-
     private final String dbName;
     private final String icdbName;
 
     private final Connection db;
     private final Granularity granularity;
 
-    public SchemaConverter(Connection db, Config config) {
+    private final boolean skipDuplicate;
+    private final boolean skipSchema;
+
+    private static final Logger logger = LogManager.getLogger();
+
+    public SchemaConverter(Connection db, Config config, ConvertDBCommand convertConfig) {
+        this.dbName = config.schema;
+        this.icdbName = config.schema + ICDB.ICDB_SUFFIX;
+
         this.db = db;
         this.granularity = config.granularity;
 
-        this.dbName = config.schema;
-        this.icdbName = config.schema + ICDB.ICDB_SUFFIX;
+        this.skipDuplicate = convertConfig.skipDuplicate;
+        this.skipSchema = convertConfig.skipSchema;
     }
 
-    /**
-     * TODO: just convert the schema, no data
-     */
     public void convert() throws SQLException {
-        // Begin conversion by duplicating the original DB
-        duplicateDB(dbName, icdbName);
+        if (!skipDuplicate) {
+            logger.debug("Duplicating database");
+            // Begin conversion by duplicating the original DB
+            duplicateDB(dbName, icdbName);
+        } else {
+            logger.debug("Schema duplication skipped");
+        }
 
-        // Grab the DB context
-        final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
+        if (!skipSchema) {
+            logger.debug("Converting schema to icdb");
 
-        // Add extra columns and convert all data
-        convert(dbCreate, granularity.equals(Granularity.TUPLE));
+            // Grab the DB context
+            final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
+
+            // Add extra columns and convert all data
+            convert(dbCreate, granularity.equals(Granularity.TUPLE));
+        } else {
+            logger.debug("Schema conversion skipped");
+        }
     }
 
     private void convert(final DSLContext dbCreate, final boolean oct) {
@@ -61,6 +78,7 @@ public class SchemaConverter {
             .findFirst().get();
 
         // Fetch all table names
+        // TODO: create service
         dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
             .map(result -> result.get(0).toString())
             .forEach(tableName -> {
@@ -108,20 +126,22 @@ public class SchemaConverter {
     /**
      * Duplicates the schema by running a Bash script
      */
-    private static Connection duplicateDB(String dbName, String icdbName) throws SQLException {
-//        try {
-//            new ProcessBuilder(
-//                "bash",
-//                "./src/main/resources/scripts/duplicate-schema.sh",
-//                dbName,
-//                icdbName
-//            ).start();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.exit(1);
-//        }
+    private static void duplicateDB(String dbName, String icdbName) throws SQLException {
+        Stopwatch duplicationTime = Stopwatch.createStarted();
 
-        return DBConnection.connect(dbName);
+        try {
+            new ProcessBuilder(
+                "bash",
+                "./src/main/resources/scripts/duplicate-schema.sh",
+                dbName,
+                icdbName
+            ).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        logger.debug("Schema duplication time: {}", duplicationTime);
     }
 
 }

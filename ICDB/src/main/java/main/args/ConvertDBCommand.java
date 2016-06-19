@@ -5,7 +5,7 @@ import com.beust.jcommander.Parameters;
 
 /**
  * <p>
- * <p>
+ *     JCommander Command for converting an existing database
  * </p>
  * Created on 6/8/2016
  *
@@ -14,7 +14,13 @@ import com.beust.jcommander.Parameters;
 @Parameters(commandNames = { CommandLineArgs.CONVERT_DB }, commandDescription = "Convert an existing DB to ICDB")
 public class ConvertDBCommand {
 
-    @Parameter(names = { "--export" }, description = "Whether to export the DB")
-    public Boolean export;
+    @Parameter(names = { "--skip-duplicate" }, description = "If set, the duplicate DB step will be skipped")
+    public Boolean skipDuplicate = false;
+
+    @Parameter(names = { "--skip-schema" }, description = "If set, the schema conversion step will be skipped")
+    public Boolean skipSchema = false;
+
+    @Parameter(names = { "--skip-data" }, description = "If set, the data conversion step will be skipped")
+    public Boolean skipData = false;
 
 }

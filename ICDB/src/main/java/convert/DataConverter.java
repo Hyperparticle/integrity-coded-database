@@ -1,17 +1,19 @@
 package convert;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Stopwatch;
 import mac.Signature;
 import main.args.config.Config;
 import main.args.option.Granularity;
 import main.args.option.AlgorithmType;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.tools.StringUtils;
-import org.jooq.util.mysql.MySQLDataType;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -50,6 +52,8 @@ public class DataConverter {
     private final Path dataPath;
     private final Path convertedDataPath;
 
+    private static final Logger logger = LogManager.getLogger();
+
     public DataConverter(Connection db, Connection icdb, Config config) {
         this.db = db;
         this.icdb = icdb;
@@ -61,12 +65,13 @@ public class DataConverter {
         this.dbName = config.schema;
         this.icdbName = config.schema + ICDB.ICDB_SUFFIX;
 
-        this.dataPath = Paths.get("./tmp/db-files/data");
-        this.convertedDataPath = Paths.get("./tmp/converted-db-files/data");
+        this.dataPath = Paths.get(ICDB.DB_DATA_PATH);
+        this.convertedDataPath = Paths.get(ICDB.ICDB_DATA_PATH);
     }
 
-    // TODO
     public void convert() {
+        Stopwatch dataConvertTime = Stopwatch.createStarted();
+
         // Assumptions: duplicate icdb schema already exists
 
         // Grab the DB context
@@ -95,8 +100,11 @@ public class DataConverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        logger.debug("Total data conversion time: {}", dataConvertTime);
     }
 
+    // TODO: pull this out into a service
     private Collection<String> getTables(final DSLContext dbCreate) {
         return dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
             .map(result -> result.get(0).toString());
@@ -117,8 +125,9 @@ public class DataConverter {
                 try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     // Output to a csv file
                     dbCreate.selectFrom(icdbTable)
-                        .fetch().formatCSV(output, ',', "\\N");
+                        .fetch().formatCSV(output, ICDB.FILE_DELIMITER_CHAR, ICDB.MYSQL_NULL);
                 } catch (IOException e) {
+                    // TODO
                     e.printStackTrace();
                 }
             });
@@ -172,7 +181,7 @@ public class DataConverter {
             reader.close();
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO
         }
     }
 
@@ -185,24 +194,25 @@ public class DataConverter {
             Table<?> icdbTable = icdbSchema.getTable(tableName);
 
             // Get the output file path
-            File inputFile = Paths.get(convertedDataPath.toString(), tableName + ICDB.DATA_EXT)
-                    .toAbsolutePath().toFile();
+            String filePath = Paths.get(convertedDataPath.toString(), tableName + ICDB.DATA_EXT)
+                    .toAbsolutePath().toFile()
+                    .getAbsolutePath().replace("\\", "/");
 
 //            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
-                String query = "load data infile '" + inputFile.getAbsolutePath().replace("\\", "/") + "' " +
+                String query = "load data infile '" + filePath + "' " +
                         "into table `" + tableName + "` " +
                         "fields terminated by ',' " +
                         "optionally enclosed by '\"' " +
                         "lines terminated by '\n' " +
                         convertToBlob(icdbTable);
 
-
+                // Truncate the table before loading the data
                 icdbCreate.execute("truncate " + tableName + ";");
 
                 try {
                     icdbCreate.execute(query);
                 } catch (DataAccessException e) {
-                    System.err.println(e.getMessage());
+                    System.err.println(e.getMessage());// TODO
                 }
 
 
@@ -255,7 +265,7 @@ public class DataConverter {
         builder.setLength(builder.length()-1);
         builder.append(";");
 
-        return builder.toString(); // TODO
+        return builder.toString();
     }
 
 //    private void insertOCTData(final DSLContext dbCreate, final Table<?> dbTable, final Table<?> icdbTable) {

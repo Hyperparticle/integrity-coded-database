@@ -11,11 +11,11 @@ import com.google.common.io.BaseEncoding;
  */
 public class Signature {
 
-    public static String toBase64(byte[] signature) {
+    public static String toBase64(final byte[] signature) {
         return BaseEncoding.base64().encode(signature);
     }
 
-    public static byte[] toBytes(String signature) {
+    public static byte[] toBytes(final String signature) {
         return BaseEncoding.base64().decode(signature);
     }
 
