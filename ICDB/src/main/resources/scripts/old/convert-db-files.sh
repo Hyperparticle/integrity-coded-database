@@ -14,10 +14,10 @@ echo "Converting Database '$1'"
 mkdir -p ./tmp/converted-db-files/schema
 mkdir -p ./tmp/converted-db-files/data
 
-rm -f ./tmp/db-files/schema/*.unl
-rm -f ./tmp/db-files/data/*.unl
+rm -f ./tmp/converted-db-files/schema/*.unl
+rm -f ./tmp/converted-db-files/data/*.unl
 
-if [ -ne ${jar} ]; then
+if [ ! -f ${jar} ]; then
     make
 fi
 

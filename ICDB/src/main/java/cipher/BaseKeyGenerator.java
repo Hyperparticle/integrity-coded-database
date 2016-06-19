@@ -14,7 +14,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.security.SecureRandom;
 
-import helper.FileEndings;
+import convert.FileEndings;
 
 public class BaseKeyGenerator {
 	private long serialNumber;

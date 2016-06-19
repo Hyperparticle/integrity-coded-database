@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/src/scripts/sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/tmp/db-files/schema/sakila-schema.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/../../../Summer_2015/aes_icdb/scripts/create-icdb-aes.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/scripts/old/sql" dialect="MySQL" />
   </component>
 </project>

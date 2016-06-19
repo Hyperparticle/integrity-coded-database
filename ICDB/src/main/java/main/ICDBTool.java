@@ -1,8 +1,18 @@
 package main;
 
+import com.google.common.base.Stopwatch;
+import convert.DBConnection;
 import convert.DataConverter;
+import convert.ICDB;
+import convert.SchemaConverter;
 import main.args.CommandLineArgs;
-import main.args.ConvertDataCommand;
+import main.args.ConvertDBCommand;
+import main.args.config.Config;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * <p>
@@ -14,23 +24,85 @@ import main.args.ConvertDataCommand;
  */
 public class ICDBTool {
 
+    private static final Logger logger = LogManager.getLogger();
+
     public static void main(String[] args) {
+        Stopwatch totalTime = Stopwatch.createStarted();
+
+        // Parse the command-line arguments
         CommandLineArgs cmd = new CommandLineArgs(args);
+        Config dbConfig = cmd.getConfig();
 
-        if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
-            if (cmd.convertDataCommand.help) {
-                cmd.jCommander.usage(CommandLineArgs.CONVERT_DATA);
-                System.exit(0);
-            }
+        // Connect to the DB
+        DBConnection dbConnection = new DBConnection(dbConfig.ip, dbConfig.port, dbConfig.user, dbConfig.password);
+        Connection db = null;
 
-            DataConverter converter = new DataConverter(cmd.convertDataCommand);
-            converter.parse();
+        try {
+            logger.info("Connecting to DB {} at {}:{}", dbConfig.schema, dbConfig.ip, dbConfig.port);
+            db = dbConnection.connect(dbConfig.schema);
+        } catch (SQLException e) {
+            logger.error("Unable to connect to {}: {}", dbConfig.schema, e.getMessage());
+            logger.debug(e.getStackTrace());
+            System.exit(1);
+        }
+
+        if (db == null) { return; }
+
+        // Execute a command
+        if (cmd.isCommand(CommandLineArgs.CONVERT_DB)) {
+            convertDB(cmd, dbConfig, dbConnection, db);
+        } else if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
+            // TODO
         } else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
             // TODO
         } else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
             // TODO
         } else {
             cmd.jCommander.usage();
+            System.exit(0);
+        }
+
+        logger.info("Total time elapsed: {}", totalTime);
+    }
+
+    /**
+     * Converts the specified DB to an ICDB
+     */
+    private static void convertDB(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection, Connection db) {
+        ConvertDBCommand convertConfig = cmd.convertDBCommand;
+
+        // Duplicate the DB, and add additional columns
+        try {
+            SchemaConverter schemaConverter = new SchemaConverter(db, dbConfig, convertConfig);
+            schemaConverter.convert();
+        } catch (SQLException e) {
+            logger.error("There was an error attempting to convert the schema: {}", e.getMessage());
+            logger.debug(e.getStackTrace());
+            System.exit(1);
+        }
+
+        if (!convertConfig.skipData) {
+            // Connect to the newly created DB
+            String icdbSchema = dbConfig.schema + ICDB.ICDB_SUFFIX;
+            Connection icdb = null;
+
+            try {
+                logger.debug("Connecting to icdb {}", icdbSchema);
+                icdb = dbConnection.connect(icdbSchema);
+            } catch (SQLException e) {
+                logger.error("Unable to connect to icdb: {}",  e.getMessage());
+                logger.debug(e.getStackTrace());
+                System.exit(1);
+            }
+
+            if (icdb == null) { return; }
+
+            // Convert all data
+            logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
+            DataConverter dataConverter = new DataConverter(db, icdb, dbConfig);
+            dataConverter.convert();
+        } else {
+            logger.debug("Data conversion skipped");
         }
     }
 

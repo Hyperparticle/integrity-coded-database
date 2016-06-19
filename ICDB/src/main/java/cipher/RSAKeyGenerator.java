@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import java.nio.file.Path;
 import java.security.SecureRandom;
 
-import helper.FileEndings;
+import convert.FileEndings;
 
 public class RSAKeyGenerator extends BaseKeyGenerator {
 

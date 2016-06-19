@@ -1,0 +1,1 @@
+java -classpath jooq-3.8.2.jar;jooq-meta-3.8.2.jar;jooq-codegen-3.8.2.jar;mysql-connector-java-5.1.39-bin.jar;. org.jooq.util.GenerationTool sakila.xml
