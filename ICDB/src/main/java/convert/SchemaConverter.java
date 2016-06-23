@@ -1,15 +1,12 @@
 package convert;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import main.args.ConvertDBCommand;
 import main.args.config.Config;
-import main.args.option.AlgorithmType;
 import main.args.option.Granularity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
-import org.jooq.conf.Settings;
 import org.jooq.impl.*;
 import org.jooq.util.mysql.MySQLDataType;
 
@@ -40,7 +37,7 @@ public class SchemaConverter {
 
     public SchemaConverter(Connection db, Config config, ConvertDBCommand convertConfig) {
         this.dbName = config.schema;
-        this.icdbName = config.schema + ICDB.ICDB_SUFFIX;
+        this.icdbName = config.schema + Format.ICDB_SUFFIX;
 
         this.db = db;
         this.granularity = config.granularity;
@@ -49,7 +46,11 @@ public class SchemaConverter {
         this.skipSchema = convertConfig.skipSchema;
     }
 
-    public void convert() throws SQLException {
+    /**
+     * Creates an ICDB schema from an existing one. There are 2 steps, both of which are skippable: duplicating an
+     * existing database schema (no data), and converting the database schema to comply with ICDB standards
+     */
+    public void convertSchema() throws SQLException {
         if (!skipDuplicate) {
             logger.debug("Duplicating database");
             // Begin conversion by duplicating the original DB
@@ -65,20 +66,20 @@ public class SchemaConverter {
             final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
 
             // Add extra columns and convert all data
-            convert(dbCreate, granularity.equals(Granularity.TUPLE));
+            convertSchema(dbCreate, granularity.equals(Granularity.TUPLE));
         } else {
             logger.debug("Schema conversion skipped");
         }
     }
 
-    private void convert(final DSLContext dbCreate, final boolean oct) {
+    private void convertSchema(final DSLContext dbCreate, final boolean oct) {
         // Find the ICDB schema
         final Schema icdbSchema = dbCreate.meta().getSchemas().stream()
             .filter(schema -> schema.getName().equals(icdbName))
             .findFirst().get();
 
         // Fetch all table names
-        // TODO: create service
+        // TODO: cache all table names per DB
         dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
             .map(result -> result.get(0).toString())
             .forEach(tableName -> {
@@ -97,12 +98,12 @@ public class SchemaConverter {
     private void addOCTColumns(final DSLContext dbCreate, final Table<?> table) {
         // Create a svc column
         dbCreate.alterTable(table)
-            .add(ICDB.SVC, MySQLDataType.TINYBLOB)
+            .add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB)
             .executeAsync();
 
         // Create a serial column
         dbCreate.alterTable(table)
-            .add(ICDB.SERIAL, MySQLDataType.TINYBLOB)
+            .add(Format.SERIAL_COLUMN, MySQLDataType.TINYBLOB)
             .executeAsync();
     }
 
@@ -112,12 +113,12 @@ public class SchemaConverter {
             .forEach(field -> {
                 // Create a svc column
                 dbCreate.alterTable(table)
-                    .add(field.getName() + ICDB.SVC_SUFFIX, SQLDataType.BLOB)
+                    .add(field.getName() + Format.SVC_SUFFIX, SQLDataType.BLOB)
                     .executeAsync();
 
                 // Create a serial column
                 dbCreate.alterTable(table)
-                    .add(field.getName() + ICDB.SERIAL_SUFFIX, SQLDataType.BLOB)
+                    .add(field.getName() + Format.SERIAL_SUFFIX, SQLDataType.BLOB)
                     .executeAsync();
             });
     }

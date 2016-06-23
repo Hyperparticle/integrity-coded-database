@@ -2,8 +2,8 @@ package main;
 
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;
-import convert.DataConverter;
-import convert.ICDB;
+import convert.DBConverter;
+import convert.Format;
 import convert.SchemaConverter;
 import main.args.CommandLineArgs;
 import main.args.ConvertDBCommand;
@@ -74,7 +74,7 @@ public class ICDBTool {
         // Duplicate the DB, and add additional columns
         try {
             SchemaConverter schemaConverter = new SchemaConverter(db, dbConfig, convertConfig);
-            schemaConverter.convert();
+            schemaConverter.convertSchema();
         } catch (SQLException e) {
             logger.error("There was an error attempting to convert the schema: {}", e.getMessage());
             logger.debug(e.getStackTrace());
@@ -83,7 +83,7 @@ public class ICDBTool {
 
         if (!convertConfig.skipData) {
             // Connect to the newly created DB
-            String icdbSchema = dbConfig.schema + ICDB.ICDB_SUFFIX;
+            String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
             Connection icdb = null;
 
             try {
@@ -99,8 +99,8 @@ public class ICDBTool {
 
             // Convert all data
             logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
-            DataConverter dataConverter = new DataConverter(db, icdb, dbConfig);
-            dataConverter.convert();
+            DBConverter DBConverter = new DBConverter(db, icdb, dbConfig);
+            DBConverter.convert();
         } else {
             logger.debug("Data conversion skipped");
         }

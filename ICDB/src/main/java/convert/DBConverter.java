@@ -2,7 +2,7 @@ package convert;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
-import mac.Signature;
+import cipher.mac.Signature;
 import main.args.config.Config;
 import main.args.option.Granularity;
 import main.args.option.AlgorithmType;
@@ -30,13 +30,14 @@ import java.util.List;
 
 /**
  * <p>
- *     A DataConverter takes an input tuple and converts it into an ICDB tuple.
+ *      A DBConverter exports data to a file from an existing database, converts it to an icdb-compliant data file (by
+ *      generating signatures in the appropriate columns), and loads the data into a new icdb.
  * </p>
  * Created 5/8/2016
  *
  * @author Dan Kondratyuk
  */
-public class DataConverter {
+public class DBConverter {
 
     private final String dbName;
     private final String icdbName;
@@ -54,7 +55,7 @@ public class DataConverter {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public DataConverter(Connection db, Connection icdb, Config config) {
+    public DBConverter(Connection db, Connection icdb, Config config) {
         this.db = db;
         this.icdb = icdb;
 
@@ -63,16 +64,17 @@ public class DataConverter {
         this.key = config.key.getBytes(Charsets.UTF_8);
 
         this.dbName = config.schema;
-        this.icdbName = config.schema + ICDB.ICDB_SUFFIX;
+        this.icdbName = config.schema + Format.ICDB_SUFFIX;
 
-        this.dataPath = Paths.get(ICDB.DB_DATA_PATH);
-        this.convertedDataPath = Paths.get(ICDB.ICDB_DATA_PATH);
+        this.dataPath = Paths.get(Format.DB_DATA_PATH);
+        this.convertedDataPath = Paths.get(Format.ICDB_DATA_PATH);
     }
 
+    /**
+     * Begin the DB conversion process, with the assumption that a converted schema already exists on the DB server.
+     */
     public void convert() {
         Stopwatch dataConvertTime = Stopwatch.createStarted();
-
-        // Assumptions: duplicate icdb schema already exists
 
         // Grab the DB context
         final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
@@ -119,13 +121,13 @@ public class DataConverter {
                 Table<?> icdbTable = dbSchema.getTable(tableName);
 
                 // Get the output file path
-                File outputFile = Paths.get(dataPath.toString(), tableName + ICDB.DATA_EXT)
+                File outputFile = Paths.get(dataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
                         .toAbsolutePath().toFile();
 
                 try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     // Output to a csv file
                     dbCreate.selectFrom(icdbTable)
-                        .fetch().formatCSV(output, ICDB.FILE_DELIMITER_CHAR, ICDB.MYSQL_NULL);
+                        .fetch().formatCSV(output, Format.FILE_DELIMITER_CHAR, Format.MYSQL_NULL);
                 } catch (IOException e) {
                     // TODO
                     e.printStackTrace();
@@ -194,15 +196,15 @@ public class DataConverter {
             Table<?> icdbTable = icdbSchema.getTable(tableName);
 
             // Get the output file path
-            String filePath = Paths.get(convertedDataPath.toString(), tableName + ICDB.DATA_EXT)
+            String filePath = Paths.get(convertedDataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
                     .toAbsolutePath().toFile()
                     .getAbsolutePath().replace("\\", "/");
 
 //            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
                 String query = "load data infile '" + filePath + "' " +
                         "into table `" + tableName + "` " +
-                        "fields terminated by ',' " +
-                        "optionally enclosed by '\"' " +
+                        "fields terminated by '" + Format.FILE_DELIMITER + "' " +
+                        "optionally enclosed by '"  + Format.ENCLOSING + "' " +
                         "lines terminated by '\n' " +
                         convertToBlob(icdbTable);
 
@@ -214,7 +216,6 @@ public class DataConverter {
                 } catch (DataAccessException e) {
                     System.err.println(e.getMessage());// TODO
                 }
-
 
 //                icdbCreate.loadInto(icdbTable)
 //                    .loadCSV(input, Charsets.UTF_8)
@@ -230,7 +231,7 @@ public class DataConverter {
     }
 
     /**
-     * We need to augment the load query because MySQL is too stupid to be able to load blob types in any encoding :(
+     * We need to augment the load query because MySQL is not smart enough to be able to load blob types in other encodings :(
      */
     private static String convertToBlob(Table<?> table) {
         StringBuilder builder = new StringBuilder();

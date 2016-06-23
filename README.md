@@ -42,11 +42,24 @@ An example config file is located under `src/main/resources/config-sample.json`.
 There are a few commands available:
 
 ```
-convert-db      - Converts an existing DB to an ICDB (both schema and data)
-convert-data    - (Coming Soon) Generates integrity codes for existing DB data
-convert-query   - (Coming Soon) Converts a DB query to an ICDB query
-execute-query   - (Coming Soon) Executes an ICDB query and verifies all returned data
+1. convert-db      - Converts an existing DB to an ICDB (both schema and data)
+2. convert-data    - (Coming Soon) Generates integrity codes for existing DB data
+3. convert-query   - (Coming Soon) Converts a DB query to an ICDB query
+4. execute-query   - (Coming Soon) Executes an ICDB query and verifies all returned data
 ```
+
+There are also additional options for each command.
+
+### Convert DB Command
+
+```
+convert-db [--skip-duplicate] [--skip-schema] [--skip-data]
+```
+
+The `convert-db` command has 3 phases, any of which can be skipped:
+--skip-duplicate - If set, the duplicate DB step will be skipped
+--skip-schema - If set, the schema conversion step will be skipped
+--skip-data - If set, the data conversion step will be skipped
 
 ### Example Commands
 

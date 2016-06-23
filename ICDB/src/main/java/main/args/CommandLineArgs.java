@@ -3,7 +3,6 @@ package main.args;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.google.gson.Gson;
-import convert.DataConverter;
 import main.args.config.Config;
 import main.args.option.ReaderConverter;
 

@@ -1,6 +1,6 @@
 import com.google.common.base.Charsets;
-import mac.CMAC;
-import mac.HMAC;
+import cipher.mac.CMAC;
+import cipher.mac.HMAC;
 import org.junit.Assert;
 import org.junit.Test;
 
