@@ -1,7 +1,7 @@
 package main.args.option;
 
-import mac.CMAC;
-import mac.HMAC;
+import cipher.mac.CMAC;
+import cipher.mac.HMAC;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 

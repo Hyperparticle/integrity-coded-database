@@ -1,5 +1,5 @@
 /**
-* @author ujwal-mac
+* @author ujwal-cipher.mac
 *   <p>
 *     A Generates the key and stores in the file for AES algorithm
 *   </p>

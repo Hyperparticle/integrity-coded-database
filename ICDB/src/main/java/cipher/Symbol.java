@@ -1,5 +1,5 @@
 /**
-ujwal-mac
+ujwal-cipher.mac
 */
 package cipher;
 

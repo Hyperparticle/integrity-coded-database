@@ -1,4 +1,4 @@
-package mac;
+package cipher.mac;
 
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
@@ -61,9 +61,9 @@ public class HMAC {
 //    public static byte[] generateSignature(final byte[] data, final byte[] key, String algorithm)
 //            throws SignatureException, NoSuchAlgorithmException, InvalidKeyException {
 //        final SecretKeySpec signingKey = new SecretKeySpec(key, algorithm);
-//        final Mac mac = Mac.getInstance(algorithm);
-//        mac.init(signingKey);
-//        return mac.doFinal(data);
+//        final Mac cipher.mac = Mac.getInstance(algorithm);
+//        cipher.mac.init(signingKey);
+//        return cipher.mac.doFinal(data);
 //    }
 
 }

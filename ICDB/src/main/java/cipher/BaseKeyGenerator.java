@@ -1,5 +1,5 @@
 /**
- * @author ujwal-mac
+ * @author ujwal-cipher.mac
  * 
  */
 package cipher;
@@ -12,9 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.security.SecureRandom;
-
-import convert.FileEndings;
 
 public class BaseKeyGenerator {
 	private long serialNumber;
@@ -39,28 +36,28 @@ public class BaseKeyGenerator {
 	 * Method to generate the first valid serial Number.
 	 */
 	public long generateSerialNum() {
-		try {
-			icrlFile = new File(
-					dataPath.toString() + Symbol.SLASH_DELIMITER + databaseName + FileEndings.ICRL_FILE_EXTENSION);
-
-			if (icrlFile.exists())
-				icrlFile.delete();
-			icrlFile.createNewFile();
-
-			SecureRandom rand = new SecureRandom();
-			serialNumber = new Integer(rand.nextInt(Integer.MAX_VALUE));
-
-			Writer icrlFileOutput = new BufferedWriter(new FileWriter(icrlFile));
-			icrlFileOutput.write("First Valid Serial Number: ");
-			icrlFileOutput.write(Long.toString(serialNumber));
-			icrlFileOutput.write(System.lineSeparator());
-			icrlFileOutput.close();
-
-			return serialNumber;
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(2);
-		}
+//		try {
+//			icrlFile = new File(
+//					dataPath.toString() + Symbol.SLASH_DELIMITER + databaseName + FileEndings.ICRL_FILE_EXTENSION);
+//
+//			if (icrlFile.exists())
+//				icrlFile.delete();
+//			icrlFile.createNewFile();
+//
+//			SecureRandom rand = new SecureRandom();
+//			serialNumber = new Integer(rand.nextInt(Integer.MAX_VALUE));
+//
+//			Writer icrlFileOutput = new BufferedWriter(new FileWriter(icrlFile));
+//			icrlFileOutput.write("First Valid Serial Number: ");
+//			icrlFileOutput.write(Long.toString(serialNumber));
+//			icrlFileOutput.write(System.lineSeparator());
+//			icrlFileOutput.close();
+//
+//			return serialNumber;
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			System.exit(2);
+//		}
 
 		return 0;
 	}

@@ -1,4 +1,4 @@
-package mac;
+package cipher.mac;
 
 
 import org.bouncycastle.crypto.BlockCipher;

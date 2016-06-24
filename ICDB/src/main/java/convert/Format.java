@@ -8,16 +8,16 @@ package convert;
  *
  * @author Dan Kondratyuk
  */
-public class ICDB {
+public class Format {
 
     public static final String ICDB_SUFFIX = "_icdb";
     public static final String SVC_SUFFIX = "_svc";
     public static final String SERIAL_SUFFIX = "_serial";
 
-    public static final String SVC = "svc";
-    public static final String SERIAL = "serial";
+    public static final String SVC_COLUMN = "svc";
+    public static final String SERIAL_COLUMN = "serial";
 
-    public static final String DATA_EXT = ".csv";
+    public static final String DATA_FILE_EXTENSION = ".csv";
     public static final String FILE_DELIMITER = ",";
     public static final char FILE_DELIMITER_CHAR = ',';
     public static final String ENCLOSING = "\"";
