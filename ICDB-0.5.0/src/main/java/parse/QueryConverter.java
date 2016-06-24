@@ -42,12 +42,12 @@ public class QueryConverter {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public QueryConverter(ConvertQueryCommand command) {
+	public QueryConverter(ConvertQueryCommand command, Config config, Connection icdb) {
 		this.queries = command.queries;
 		this.files = command.files;
 		this.granularity = command.granularity;
-		this.Schema = null;
-		this.icdb = null;
+		this.Schema = config.schema;
+		this.icdb = icdb;
 	}
 
 	public QueryConverter(String Query, Granularity granularity, Config config, Connection icdb) {
