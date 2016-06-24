@@ -1,7 +1,6 @@
 package parse;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,8 +69,9 @@ public class QueryConverter {
 		try {
 
 			String outputName = "ICDBquery.sql";
-			File outputFile = Paths.get(outputPath.toString(), outputName).toFile();
-			FileWriter writer = new FileWriter(outputFile);
+			// File outputFile = Paths.get(outputPath.toString(),
+			// outputName).toFile();
+			// FileWriter writer = new FileWriter(outputFile);
 			StringBuilder builder = new StringBuilder();
 			String Schema = "";
 			if (this.queries.size() != 0) {
@@ -83,30 +83,21 @@ public class QueryConverter {
 
 					while (tokenizer.hasMoreTokens()) {
 						String next = tokenizer.nextToken();
-						if (next.contains("USE")) {
 
-							Schema = (next.substring(next.indexOf(" ")).trim() + "_ICDB").toUpperCase();
-							builder.append((next + "_ICDB").toUpperCase()).append(";").append("\n");
+						SQLParser parser;
+						if (granularity == Granularity.TUPLE) {
+							parser = new OCTparser(next, Schema, this.granularity, this.icdb);
 						} else {
-							if (Schema == "") {
-								System.out.println("No Database used for the Query provided.");
-								break;
-							}
-							SQLParser parser;
-							if (granularity == Granularity.TUPLE) {
-								parser = new OCTparser(next, Schema, this.granularity, this.icdb);
-							} else {
-								parser = new OCFparser(next, Schema, this.granularity, this.icdb);
-							}
-							// SQLParser parser = new SQLParser(next, Schema,
-							// this.granularity, this.icdb);
-							builder.append(parser.parse()).append(";").append("\n");
-
+							parser = new OCFparser(next, Schema, this.granularity, this.icdb);
 						}
+						// SQLParser parser = new SQLParser(next, Schema,
+						// this.granularity, this.icdb);
+						builder.append(parser.parse()).append(";").append("\n");
+
 					}
-					writer.append(builder);
+					// writer.append(builder);
 				}
-				writer.close();
+				// writer.close();
 			} else {
 				for (String file : files) {
 					// Each queries in the files should include USE SCHEMA
@@ -114,8 +105,9 @@ public class QueryConverter {
 
 					this.queryFile = Paths.get(file).toFile();
 					outputName = queryFile.getName() + "-icdb";
-					outputFile = Paths.get(outputPath.toString(), outputName).toFile();
-					writer = new FileWriter(outputFile);
+					// outputFile = Paths.get(outputPath.toString(),
+					// outputName).toFile();
+					// writer = new FileWriter(outputFile);
 					Scanner queryScan = new Scanner(this.queryFile);
 
 					while (queryScan.hasNextLine()) {
@@ -143,13 +135,14 @@ public class QueryConverter {
 							builder.append(parser.parse()).append(";").append("\n");
 						}
 
-						writer.append(builder);
+						// writer.append(builder);
 					}
-					writer.close();
+					// writer.close();
 					queryScan.close();
 				}
 
 			}
+			System.out.println(builder.toString());
 		} catch (IOException e) {
 			// TODO: handle exception
 			System.err.println("Failed to convert query ");
