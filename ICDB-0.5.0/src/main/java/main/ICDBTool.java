@@ -17,8 +17,8 @@ import convert.ICDB;
 import convert.SchemaConverter;
 import main.args.CommandLineArgs;
 import main.args.ConvertDBCommand;
+import main.args.ConvertQueryCommand;
 import main.args.config.Config;
-import main.args.option.Granularity;
 import net.sf.jsqlparser.JSQLParserException;
 import parse.QueryConverter;
 
@@ -67,7 +67,7 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
 			// TODO
 		} else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
-			convertQuery(dbConfig, dbConnection);
+			convertQuery(cmd, dbConfig, dbConnection);
 			// TODO
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			// TODO
@@ -128,8 +128,9 @@ public class ICDBTool {
 	 * 
 	 * @throws JSQLParserException
 	 */
-	public static void convertQuery(Config dbConfig, DBConnection dbConnection) throws JSQLParserException {
-
+	public static void convertQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
+			throws JSQLParserException {
+		ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
 		// Connect to the newly created DB
 		String icdbSchema = (dbConfig.schema + ICDB.ICDB_SUFFIX).toUpperCase();
 		Connection icdb = null;
@@ -146,8 +147,7 @@ public class ICDBTool {
 		if (icdb == null) {
 			return;
 		}
-		QueryConverter converter = new QueryConverter("USE employees; SELECT from_date FROM  dept_emp ;",
-				Granularity.FIELD, dbConfig, icdb);
+		QueryConverter converter = new QueryConverter(convertQueryCmd, dbConfig, icdb);
 		converter.convert();
 	}
 
