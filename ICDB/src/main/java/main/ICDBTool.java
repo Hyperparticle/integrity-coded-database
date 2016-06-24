@@ -32,7 +32,7 @@ public class ICDBTool {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JSQLParserException {
 		Stopwatch totalTime = Stopwatch.createStarted();
 
 		// Parse the command-line arguments
@@ -62,6 +62,7 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.CONVERT_DATA)) {
 			// TODO
 		} else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
+			convertQuery(cmd, dbConfig, dbConnection);
 			// TODO
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			// TODO
