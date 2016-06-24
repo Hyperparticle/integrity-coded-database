@@ -68,6 +68,24 @@ $ cd <project-root>/ICDB
 $ ICDBTool -f ./src/main/resources/config-sample.json convert-db
 ```
 
+### Convert Query Command
+
+The `convert-query` command takes the SQL query as an input and converts it to an ICDB query. The converion requires:
+-f 'the config file path' 
+-q 'the SQL query'
+-g 'the granularity of the ICDB query, by default TUPLE'
+
+### Example Commands
+
+```
+$ cd <project-root>/ICDB
+$ ICDBTool -f ./src/main/resources/config-sample.json convert-query -q "SELECT * FROM employees;" -g "FIELD"
+```
+
+
+
+
+
 ## Sources
 
 This project uses example databases generated for MySQL use.
