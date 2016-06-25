@@ -44,7 +44,7 @@ There are a few commands available:
 ```
 1. convert-db      - Converts an existing DB to an ICDB (both schema and data)
 2. convert-data    - (Coming Soon) Generates integrity codes for existing DB data
-3. convert-query   - (Coming Soon) Converts a DB query to an ICDB query
+3. convert-query   - Converts a DB query to an ICDB query
 4. execute-query   - (Coming Soon) Executes an ICDB query and verifies all returned data
 ```
 
@@ -61,30 +61,38 @@ The `convert-db` command has 3 phases, any of which can be skipped:
 --skip-schema - If set, the schema conversion step will be skipped
 --skip-data - If set, the data conversion step will be skipped
 
-### Example Commands
-
+Example:
 ```
 $ cd <project-root>/ICDB
-$ ICDBTool -f ./src/main/resources/config-sample.json convert-db
+$ ICDBTool -f ./src/main/resources/config-sample.json convert-db --skip-duplicate
 ```
 
 ### Convert Query Command
 
-The `convert-query` command takes the SQL query as an input and converts it to an ICDB query. The converion requires:
--f 'the config file path' 
--q 'the SQL query'
--g 'the granularity of the ICDB query, by default TUPLE'
+```
+convert-query [-q query] [-g granularity]
+```
 
-### Example Commands
+The `convert-query` command takes the SQL query as an input and converts it to an ICDB query. The conversion requires:
+-q - The SQL query, passed in as a string
+-g - The granularity of the ICDB query (TUPLE or FIELD), by default TUPLE
 
+Example:
 ```
 $ cd <project-root>/ICDB
 $ ICDBTool -f ./src/main/resources/config-sample.json convert-query -q "SELECT * FROM employees;" -g "FIELD"
 ```
 
+### Execute Query Command
 
+```
+execute-query [-q query] [-g granularity] [--convert]
+```
 
-
+The `convert-data` command takes a SQL query as input, executes, then verifies any returned data.
+-q - The SQL query, passed in as a string
+-g - The granularity of the ICDB query (TUPLE or FIELD), by default TUPLE
+--convert - Convert the query to ICDB before executing, false by default
 
 ## Sources
 
