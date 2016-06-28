@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import main.args.ExecuteQueryCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,26 +36,30 @@ public class QueryConverter {
 
 	private final List<String> queries;
 	private final List<String> files;
-	private final String Schema;
 	private final Connection icdb;
 	private final Granularity granularity;
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public QueryConverter(ConvertQueryCommand command, Config config, Connection icdb) {
+	public QueryConverter(ConvertQueryCommand command, Connection icdb) {
 		this.queries = command.queries;
 		this.files = command.files;
 		this.granularity = command.granularity;
-		this.Schema = config.schema;
 		this.icdb = icdb;
 	}
 
-	public QueryConverter(String Query, Granularity granularity, Config config, Connection icdb) {
+    public QueryConverter(ExecuteQueryCommand command, Connection icdb) {
+        this.queries = command.queries;
+        this.files = command.files;
+        this.granularity = command.granularity;
+        this.icdb = icdb;
+    }
+
+	public QueryConverter(String Query, Granularity granularity, Connection icdb) {
 		this.queries = new ArrayList<String>();
 		queries.add(Query);
 		this.files = new ArrayList<String>();
 		this.granularity = granularity;
-		this.Schema = config.schema;
 		this.icdb = icdb;
 	}
 
@@ -65,7 +70,7 @@ public class QueryConverter {
 	 * 
 	 * @throws JSQLParserException
 	 */
-	public void convert() throws JSQLParserException {
+	public String convert() throws JSQLParserException {
 		try {
 
 			String outputName = "ICDBquery.sql";
@@ -142,12 +147,14 @@ public class QueryConverter {
 				}
 
 			}
-			System.out.println(builder.toString());
+
+            return builder.toString();
 		} catch (IOException e) {
 			// TODO: handle exception
 			System.err.println("Failed to convert query ");
 		}
 
+		return null;
 	}
 
 }

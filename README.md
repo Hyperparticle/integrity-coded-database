@@ -21,7 +21,7 @@ $ make
 The arguments for interacting with the ICDB tool is as follows:
 
 ```
-$ ICDBTool [-f <config-file>] [command] [options]
+$ ICDBTool [-c config-file] [command] [options]
 ```
 
 All interactions with the tool will require a config file containing a JSON object with several parameters:
@@ -64,7 +64,7 @@ The `convert-db` command has 3 phases, any of which can be skipped:
 Example:
 ```
 $ cd <project-root>/ICDB
-$ ICDBTool -f ./src/main/resources/config-sample.json convert-db --skip-duplicate
+$ ICDBTool -c ./src/main/resources/config-sample.json convert-db --skip-duplicate
 ```
 
 ### Convert Query Command

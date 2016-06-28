@@ -3,6 +3,7 @@ package main;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import main.args.ExecuteQueryCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,7 @@ import main.args.ConvertQueryCommand;
 import main.args.config.Config;
 import net.sf.jsqlparser.JSQLParserException;
 import parse.QueryConverter;
+import verify.QueryVerifier;
 
 /**
  * <p>
@@ -41,16 +43,7 @@ public class ICDBTool {
 
 		// Connect to the DB
 		DBConnection dbConnection = new DBConnection(dbConfig.ip, dbConfig.port, dbConfig.user, dbConfig.password);
-		Connection db = null;
-
-		try {
-			logger.info("Connecting to DB {} at {}:{}", dbConfig.schema, dbConfig.ip, dbConfig.port);
-			db = dbConnection.connect(dbConfig.schema);
-		} catch (SQLException e) {
-			logger.error("Unable to connect to {}: {}", dbConfig.schema, e.getMessage());
-			logger.debug(e.getStackTrace());
-			System.exit(1);
-		}
+		Connection db = connect(dbConfig, dbConnection);
 
 		if (db == null) {
 			return;
@@ -63,9 +56,8 @@ public class ICDBTool {
 			// TODO
 		} else if (cmd.isCommand(CommandLineArgs.CONVERT_QUERY)) {
 			convertQuery(cmd, dbConfig, dbConnection);
-			// TODO
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
-			// TODO
+			executeQuery(cmd, dbConfig, dbConnection);
 		} else {
 			cmd.jCommander.usage();
 			System.exit(0);
@@ -73,6 +65,19 @@ public class ICDBTool {
 
 		logger.info("Total time elapsed: {}", totalTime);
 	}
+
+	private static Connection connect(Config dbConfig, DBConnection dbConnection) {
+        try {
+            logger.info("Connecting to DB {} at {}:{}", dbConfig.schema, dbConfig.ip, dbConfig.port);
+            return dbConnection.connect(dbConfig.schema);
+        } catch (SQLException e) {
+            logger.error("Unable to connect to {}: {}", dbConfig.schema, e.getMessage());
+            logger.debug(e.getStackTrace());
+            System.exit(1);
+        }
+
+        return null;
+    }
 
 	/**
 	 * Converts the specified DB to an ICDB
@@ -93,16 +98,7 @@ public class ICDBTool {
 		if (!convertConfig.skipData) {
 			// Connect to the newly created DB
 			String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
-			Connection icdb = null;
-
-			try {
-				logger.debug("Connecting to icdb {}", icdbSchema);
-				icdb = dbConnection.connect(icdbSchema);
-			} catch (SQLException e) {
-				logger.error("Unable to connect to icdb: {}", e.getMessage());
-				logger.debug(e.getStackTrace());
-				System.exit(1);
-			}
+			Connection icdb = connect(dbConfig, dbConnection);
 
 			if (icdb == null) {
 				return;
@@ -118,31 +114,40 @@ public class ICDBTool {
 	}
 
 	/**
-	 * Converts the Query to ICDB Query
-	 * 
-	 * @throws JSQLParserException
+	 * Converts the Query to an ICDB Query
 	 */
-	public static void convertQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
+	private static void convertQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
 			throws JSQLParserException {
 		ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
-		// Connect to the newly created DB
-		String icdbSchema = (dbConfig.schema + ICDB.ICDB_SUFFIX).toUpperCase();
-		Connection icdb = null;
-
-		try {
-			logger.debug("Connecting to icdb {}", icdbSchema);
-			icdb = dbConnection.connect(icdbSchema);
-		} catch (SQLException e) {
-			logger.error("Unable to connect to icdb: {}", e.getMessage());
-			logger.debug(e.getStackTrace());
-			System.exit(1);
-		}
+		Connection icdb = connect(dbConfig, dbConnection);
 
 		if (icdb == null) {
 			return;
 		}
-		QueryConverter converter = new QueryConverter(convertQueryCmd, dbConfig, icdb);
-		converter.convert();
+
+		QueryConverter converter = new QueryConverter(convertQueryCmd, icdb);
+		String result = converter.convert();
+        System.out.println(result);
 	}
+
+    /**
+     * Executes the query
+     */
+    private static void executeQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
+            throws JSQLParserException {
+        ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
+        Connection icdb = connect(dbConfig, dbConnection);
+
+        if (icdb == null) {
+            return;
+        }
+
+        QueryConverter converter = new QueryConverter(executeQueryCommand, icdb);
+        String result = converter.convert();
+        System.out.println(result);
+
+        QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb);
+        verifier.execute();
+    }
 
 }
