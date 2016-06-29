@@ -146,7 +146,7 @@ public class ICDBTool {
         String result = converter.convert();
         System.out.println(result);
 
-        QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb);
+        QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, result);
         verifier.execute();
     }
 

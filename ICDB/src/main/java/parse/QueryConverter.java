@@ -148,6 +148,7 @@ public class QueryConverter {
 
 			}
 
+            // TODO: use streams to return multiple queries
             return builder.toString();
 		} catch (IOException e) {
 			// TODO: handle exception
