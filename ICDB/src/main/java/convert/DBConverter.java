@@ -1,11 +1,10 @@
 package convert;
 
+import cipher.mac.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
-import cipher.mac.Signature;
 import main.args.config.Config;
 import main.args.option.Granularity;
-import cipher.mac.AlgorithmType;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,10 +12,6 @@ import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
-import org.jooq.tools.StringUtils;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -47,8 +42,7 @@ public class DBConverter {
     private final Connection db;
     private final Connection icdb;
     private final Granularity granularity;
-    private final AlgorithmType algorithm;
-    private final byte[] key;
+    private final CodeGen codeGen;
 
     private final Path dataPath;
     private final Path convertedDataPath;
@@ -60,8 +54,7 @@ public class DBConverter {
         this.icdb = icdb;
 
         this.granularity = config.granularity;
-        this.algorithm = config.algorithm;
-        this.key = config.key.getBytes(Charsets.UTF_8);
+        this.codeGen = new CodeGen(config.algorithm, config.key.getBytes(Charsets.UTF_8));
 
         this.dbName = config.schema;
         this.icdbName = config.schema + Format.ICDB_SUFFIX;
@@ -138,88 +131,15 @@ public class DBConverter {
     private void convertData() throws IOException {
         FileUtils.cleanDirectory(convertedDataPath.toFile());
 
+        FileConverter converter = new FileConverter(codeGen, granularity);
+
         // Walk data path
         Files.walk(dataPath)
             .filter(Files::isRegularFile)
             .forEach(path -> {
                 File output = Paths.get(convertedDataPath.toString(), path.getFileName().toString()).toFile();
-                convertFile(path.toFile(), output);
+                converter.convertFile(path.toFile(), output);
             });
-    }
-
-    private void convertFile(final File input, final File output) {
-        try (
-            final Reader reader = new FileReader(input);
-            final Writer writer = new FileWriter(output)
-        ) {
-            // Parse the csv
-            final CsvPreference preference = CsvPreference.STANDARD_PREFERENCE;
-            final CsvListReader csvReader = new CsvListReader(reader, preference);
-            final CsvListWriter csvWriter = new CsvListWriter(writer, preference);
-
-            if (granularity.equals(Granularity.TUPLE)) {
-                convertLineOCT(csvReader, csvWriter);
-            } else {
-                convertLineOCF(csvReader, csvWriter);
-            }
-
-            csvReader.close();
-            csvWriter.close();
-            reader.close();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace(); // TODO
-        }
-    }
-
-    // TODO: pull this into fileconverter
-    private void convertLineOCT(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
-        // Discard the first line
-        List<String> nextLine = csvReader.read();
-        while ((nextLine = csvReader.read()) != null) {
-            // Combine the list into a string
-            final String data = StringUtils.join(nextLine);
-            final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
-
-            // Generate the signature
-            final byte[] signature = algorithm.generateSignature(dataBytes, key);
-            final String signatureString = Signature.toBase64(signature);
-
-            // TODO: add a serial
-            final String serial = Signature.toBase64(new byte[] {0x33});
-
-            // Write the line
-            nextLine.add(signatureString);
-            nextLine.add(serial);
-            csvWriter.write(nextLine);
-        }
-    }
-
-    private void convertLineOCF(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
-        // Discard the first line
-        List<String> nextLine = csvReader.read();
-        List<String> collector = new ArrayList<>(nextLine.size() * 3);
-
-        while ((nextLine = csvReader.read()) != null) {
-            collector.clear();
-            for (String field : nextLine) {
-                final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
-
-                // Generate the signature
-                final byte[] signature = algorithm.generateSignature(dataBytes, key);
-                final String signatureString = Signature.toBase64(signature);
-
-                // TODO: add a serial
-                final String serial = Signature.toBase64(new byte[] {0x33});
-
-                // Write the line
-                collector.add(field);
-                collector.add(signatureString);
-                collector.add(serial);
-            }
-
-            csvWriter.write(collector);
-        }
     }
 
     private void importData(final DSLContext icdbCreate, final Schema icdbSchema) {
