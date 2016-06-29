@@ -23,4 +23,8 @@ public class ConvertDBCommand {
     @Parameter(names = { "--skip-data" }, description = "If set, the data conversion step will be skipped")
     public Boolean skipData = false;
 
+    // TODO
+    @Parameter(names = { "--skip-load" }, description = "If set, the data loading step will be skipped")
+    public Boolean skipLoad = false;
+
 }

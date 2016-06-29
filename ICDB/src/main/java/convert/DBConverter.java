@@ -5,7 +5,7 @@ import com.google.common.base.Stopwatch;
 import cipher.mac.Signature;
 import main.args.config.Config;
 import main.args.option.Granularity;
-import main.args.option.AlgorithmType;
+import cipher.mac.AlgorithmType;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -157,12 +157,53 @@ public class DBConverter {
             final CsvListReader csvReader = new CsvListReader(reader, preference);
             final CsvListWriter csvWriter = new CsvListWriter(writer, preference);
 
-            // Discard the first line
-            List<String> nextLine = csvReader.read();
-            while ((nextLine = csvReader.read()) != null) {
-                // Combine the list into a string
-                final String data = StringUtils.join(nextLine);
-                final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
+            if (granularity.equals(Granularity.TUPLE)) {
+                convertLineOCT(csvReader, csvWriter);
+            } else {
+                convertLineOCF(csvReader, csvWriter);
+            }
+
+            csvReader.close();
+            csvWriter.close();
+            reader.close();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace(); // TODO
+        }
+    }
+
+    // TODO: pull this into fileconverter
+    private void convertLineOCT(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
+        // Discard the first line
+        List<String> nextLine = csvReader.read();
+        while ((nextLine = csvReader.read()) != null) {
+            // Combine the list into a string
+            final String data = StringUtils.join(nextLine);
+            final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
+
+            // Generate the signature
+            final byte[] signature = algorithm.generateSignature(dataBytes, key);
+            final String signatureString = Signature.toBase64(signature);
+
+            // TODO: add a serial
+            final String serial = Signature.toBase64(new byte[] {0x33});
+
+            // Write the line
+            nextLine.add(signatureString);
+            nextLine.add(serial);
+            csvWriter.write(nextLine);
+        }
+    }
+
+    private void convertLineOCF(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
+        // Discard the first line
+        List<String> nextLine = csvReader.read();
+        List<String> collector = new ArrayList<>(nextLine.size() * 3);
+
+        while ((nextLine = csvReader.read()) != null) {
+            collector.clear();
+            for (String field : nextLine) {
+                final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
 
                 // Generate the signature
                 final byte[] signature = algorithm.generateSignature(dataBytes, key);
@@ -172,18 +213,12 @@ public class DBConverter {
                 final String serial = Signature.toBase64(new byte[] {0x33});
 
                 // Write the line
-                nextLine.add(signatureString);
-                nextLine.add(serial);
-                csvWriter.write(nextLine);
+                collector.add(field);
+                collector.add(signatureString);
+                collector.add(serial);
             }
 
-
-            csvReader.close();
-            csvWriter.close();
-            reader.close();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace(); // TODO
+            csvWriter.write(collector);
         }
     }
 

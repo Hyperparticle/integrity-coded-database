@@ -1,5 +1,6 @@
 package main.args;
 
+import cipher.mac.AlgorithmType;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import main.args.option.*;

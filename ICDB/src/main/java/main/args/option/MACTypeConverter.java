@@ -1,5 +1,6 @@
 package main.args.option;
 
+import cipher.mac.AlgorithmType;
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.ParameterException;
 

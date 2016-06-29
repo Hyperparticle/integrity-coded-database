@@ -1,6 +1,6 @@
 package main.args.config;
 
-import main.args.option.AlgorithmType;
+import cipher.mac.AlgorithmType;
 import main.args.option.Granularity;
 
 /**

@@ -106,8 +106,8 @@ public class ICDBTool {
 
 			// Convert all data
 			logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
-			DBConverter DBConverter = new DBConverter(db, icdb, dbConfig);
-			DBConverter.convert();
+			DBConverter dbConverter = new DBConverter(db, icdb, dbConfig);
+			dbConverter.convert();
 		} else {
 			logger.debug("Data conversion skipped");
 		}

@@ -113,12 +113,12 @@ public class SchemaConverter {
             .forEach(field -> {
                 // Create a svc column
                 dbCreate.alterTable(table)
-                    .add(field.getName() + Format.SVC_SUFFIX, SQLDataType.BLOB)
+                    .add(field.getName() + Format.SVC_SUFFIX, MySQLDataType.TINYBLOB)
                     .executeAsync();
 
                 // Create a serial column
                 dbCreate.alterTable(table)
-                    .add(field.getName() + Format.SERIAL_SUFFIX, SQLDataType.BLOB)
+                    .add(field.getName() + Format.SERIAL_SUFFIX, MySQLDataType.TINYBLOB)
                     .executeAsync();
             });
     }
