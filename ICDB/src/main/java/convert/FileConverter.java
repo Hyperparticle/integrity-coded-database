@@ -9,12 +9,15 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jooq.tools.StringUtils;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Stopwatch;
 
 import cipher.mac.CodeGen;
 import cipher.mac.Signature;
@@ -34,12 +37,16 @@ public class FileConverter {
 	private final CodeGen codeGen;
 	private final Granularity granularity;
 
+	private static final Logger logger = LogManager.getLogger();
+
 	public FileConverter(CodeGen codeGen, Granularity granularity) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
 	}
 
 	public void convertFile(final File input, final File output) {
+		Stopwatch convertTime = Stopwatch.createStarted();
+
 		try (final Reader reader = new FileReader(input); final Writer writer = new FileWriter(output)) {
 			// Parse the csv
 			final CsvPreference preference = CsvPreference.STANDARD_PREFERENCE;
@@ -60,8 +67,10 @@ public class FileConverter {
 			reader.close();
 			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace(); // TODO
+			logger.error("Unable to convert file {}: {}", input.getName(), e.getMessage());
 		}
+
+		logger.debug("Converted table {} in {}", input.getName(), convertTime);
 	}
 
 	private void convertLineOCT(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {

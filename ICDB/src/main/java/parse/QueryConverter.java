@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import convert.DBConnection;
 import main.args.ExecuteQueryCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,31 +32,31 @@ import net.sf.jsqlparser.JSQLParserException;
 // TODO ICDB query output file path.//Database name to fetch the metadata.
 public class QueryConverter {
 
-	private Path outputPath = Paths.get("/Users/ujwal-mac/Desktop/queries");;
+	private Path outputPath = Paths.get("/Users/ujwal-mac/Desktop/queries");
 	private File queryFile;
 
 	private final List<String> queries;
 	private final List<String> files;
-	private final Connection icdb;
+	private final DBConnection icdb;
 	private final Granularity granularity;
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public QueryConverter(ConvertQueryCommand command, Connection icdb) {
+	public QueryConverter(ConvertQueryCommand command, DBConnection icdb) {
 		this.queries = command.queries;
 		this.files = command.files;
 		this.granularity = command.granularity;
 		this.icdb = icdb;
 	}
 
-    public QueryConverter(ExecuteQueryCommand command, Connection icdb) {
+    public QueryConverter(ExecuteQueryCommand command, DBConnection icdb) {
         this.queries = command.queries;
         this.files = command.files;
         this.granularity = command.granularity;
         this.icdb = icdb;
     }
 
-	public QueryConverter(String Query, Granularity granularity, Connection icdb) {
+	public QueryConverter(String Query, Granularity granularity, DBConnection icdb) {
 		this.queries = new ArrayList<String>();
 		queries.add(Query);
 		this.files = new ArrayList<String>();
@@ -91,9 +92,9 @@ public class QueryConverter {
 
 						SQLParser parser;
 						if (granularity == Granularity.TUPLE) {
-							parser = new OCTparser(next, Schema, this.granularity, this.icdb);
+							parser = new OCTparser(next, Schema, this.granularity, this.icdb.getConnection());
 						} else {
-							parser = new OCFparser(next, Schema, this.granularity, this.icdb);
+							parser = new OCFparser(next, Schema, this.granularity, this.icdb.getConnection());
 						}
 						// SQLParser parser = new SQLParser(next, Schema,
 						// this.granularity, this.icdb);
@@ -131,9 +132,9 @@ public class QueryConverter {
 
 							SQLParser parser;
 							if (granularity == Granularity.TUPLE) {
-								parser = new OCTparser(Query, Schema, this.granularity, this.icdb);
+								parser = new OCTparser(Query, Schema, this.granularity, this.icdb.getConnection());
 							} else {
-								parser = new OCFparser(Query, Schema, this.granularity, this.icdb);
+								parser = new OCFparser(Query, Schema, this.granularity, this.icdb.getConnection());
 							}
 							// SQLParser parser = new SQLParser(Query, Schema,
 							// this.granularity, this.icdb);

@@ -1,17 +1,12 @@
 package convert;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.Schema;
 import org.jooq.Table;
-import org.jooq.impl.DSL;
 import org.jooq.util.mysql.MySQLDataType;
 
 import com.google.common.base.Stopwatch;
@@ -33,23 +28,36 @@ public class SchemaConverter {
 	private final String dbName;
 	private final String icdbName;
 
-	private final Connection db;
+	private final DBConnection db;
 	private final Granularity granularity;
+	private final Config dbConfig;
 
 	private final boolean skipDuplicate;
 	private final boolean skipSchema;
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public SchemaConverter(Connection db, Config config, ConvertDBCommand convertConfig) {
-		this.dbName = config.schema;
-		this.icdbName = config.schema + Format.ICDB_SUFFIX;
+	private SchemaConverter(DBConnection db, Config dbConfig, ConvertDBCommand convertConfig) {
+		this.dbName = dbConfig.schema;
+		this.icdbName = dbConfig.schema + Format.ICDB_SUFFIX;
 
 		this.db = db;
-		this.granularity = config.granularity;
+		this.granularity = dbConfig.granularity;
+		this.dbConfig = dbConfig;
 
 		this.skipDuplicate = convertConfig.skipDuplicate;
 		this.skipSchema = convertConfig.skipSchema;
+	}
+
+	public static void convertSchema(DBConnection db, Config config, ConvertDBCommand convertConfig) {
+		try {
+			SchemaConverter converter = new SchemaConverter(db, config, convertConfig);
+			converter.convertSchema();
+		} catch (SQLException e) {
+			logger.error("There was an error attempting to convert the schema: {}", e.getMessage());
+			logger.debug(e.getStackTrace());
+			System.exit(1);
+		}
 	}
 
 	/**
@@ -57,65 +65,58 @@ public class SchemaConverter {
 	 * which are skippable: duplicating an existing database schema (no data),
 	 * and converting the database schema to comply with ICDB standards
 	 */
-	public void convertSchema() throws SQLException {
-		if (!skipDuplicate) {
-			logger.debug("Duplicating database");
-			// Begin conversion by duplicating the original DB
-			duplicateDB(dbName, icdbName);
-		} else {
-			logger.debug("Schema duplication skipped");
-		}
+	private void convertSchema() throws SQLException {
+		// Begin conversion by duplicating the original DB
+		duplicateDB(dbName, icdbName);
 
-		if (!skipSchema) {
-			logger.debug("Converting schema to icdb");
-
-			// Grab the DB context
-			final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
-
-			// Add extra columns and convert all data
-			convertSchema(dbCreate, granularity.equals(Granularity.TUPLE));
-		} else {
-			logger.debug("Schema conversion skipped");
-		}
+		// Add extra columns and convert all data
+		convertSchema(granularity.equals(Granularity.TUPLE));
 	}
 
-	private void convertSchema(final DSLContext dbCreate, final boolean oct) {
-		// Find the ICDB schema
-		final Schema icdbSchema = dbCreate.meta().getSchemas().stream()
-				.filter(schema -> schema.getName().equals(icdbName)).findFirst().get();
+	private void convertSchema(final boolean oct) {
+		if (skipSchema) {
+			logger.debug("Schema conversion skipped");
+			return;
+		}
+
+		logger.debug("Converting db schema to icdb");
+
+		// Get the ICDB
+		final DBConnection icdb = DBConnection.connect(dbName, dbConfig);
 
 		// Fetch all table names
-		// TODO: cache all table names per DB
-		dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'").map(result -> result.get(0).toString())
-				.forEach(tableName -> {
-					// For each table
-					Table<?> icdbTable = icdbSchema.getTable(tableName);
+		icdb.getTables().forEach(tableName -> {
+			// For each table
+			Table<?> icdbTable = icdb.getTable(tableName);
 
-					// Add corresponding columns
-					if (oct) {
-						addOCTColumns(dbCreate, icdbTable);
-					} else {
-						addOCFColumns(dbCreate, icdbTable);
-					}
-				});
+			// Add corresponding columns
+			if (oct) {
+				addOCTColumns(icdb, icdbTable);
+			} else {
+				addOCFColumns(icdb, icdbTable);
+			}
+		});
 	}
 
-	private void addOCTColumns(final DSLContext dbCreate, final Table<?> table) {
+	private void addOCTColumns(final DBConnection icdb, final Table<?> table) {
+		// TODO: skip if already converted
+
 		// Create a svc column
-		dbCreate.alterTable(table).add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB).executeAsync();
+		icdb.getCreate().alterTable(table).add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB).executeAsync();
 
 		// Create a serial column
-		dbCreate.alterTable(table).add(Format.SERIAL_COLUMN, MySQLDataType.TINYBLOB).executeAsync();
+		icdb.getCreate().alterTable(table).add(Format.SERIAL_COLUMN, MySQLDataType.TINYBLOB).executeAsync();
 	}
 
-	private void addOCFColumns(final DSLContext dbCreate, final Table<?> table) {
+	private void addOCFColumns(final DBConnection icdb, final Table<?> table) {
 		// Loop through each field and create a corresponding column
 		Arrays.asList(table.fields()).stream().forEach(field -> {
 			// Create a svc column
-			dbCreate.alterTable(table).add(field.getName() + Format.SVC_SUFFIX, MySQLDataType.TINYBLOB).executeAsync();
+			icdb.getCreate().alterTable(table).add(field.getName() + Format.SVC_SUFFIX, MySQLDataType.TINYBLOB)
+					.executeAsync();
 
 			// Create a serial column
-			dbCreate.alterTable(table).add(field.getName() + Format.SERIAL_SUFFIX, MySQLDataType.TINYBLOB)
+			icdb.getCreate().alterTable(table).add(field.getName() + Format.SERIAL_SUFFIX, MySQLDataType.TINYBLOB)
 					.executeAsync();
 		});
 	}
@@ -123,7 +124,13 @@ public class SchemaConverter {
 	/**
 	 * Duplicates the schema by running a Bash script
 	 */
-	private static void duplicateDB(String dbName, String icdbName) throws SQLException {
+	private void duplicateDB(String dbName, String icdbName) throws SQLException {
+		if (skipDuplicate) {
+			logger.debug("Database duplication skipped");
+			return;
+		}
+
+		logger.debug("Duplicating database");
 		Stopwatch duplicationTime = Stopwatch.createStarted();
 
 		try {
