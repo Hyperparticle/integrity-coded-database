@@ -1,9 +1,9 @@
 package main;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import main.args.ExecuteQueryCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,11 +12,11 @@ import com.google.common.base.Stopwatch;
 import convert.DBConnection;
 import convert.DBConverter;
 import convert.Format;
-import convert.ICDB;
 import convert.SchemaConverter;
 import main.args.CommandLineArgs;
 import main.args.ConvertDBCommand;
 import main.args.ConvertQueryCommand;
+import main.args.ExecuteQueryCommand;
 import main.args.config.Config;
 import net.sf.jsqlparser.JSQLParserException;
 import parse.QueryConverter;
@@ -34,7 +34,7 @@ public class ICDBTool {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public static void main(String[] args) throws JSQLParserException {
+	public static void main(String[] args) throws JSQLParserException, FileNotFoundException {
 		Stopwatch totalTime = Stopwatch.createStarted();
 
 		// Parse the command-line arguments
@@ -59,7 +59,8 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			executeQuery(cmd, dbConfig, dbConnection);
 		} else {
-			cmd.jCommander.usage();
+			// cmd.jCommander.usage();
+			convertDB(cmd, dbConfig, dbConnection, db);
 			System.exit(0);
 		}
 
@@ -67,17 +68,17 @@ public class ICDBTool {
 	}
 
 	private static Connection connect(String schema, Config dbConfig, DBConnection dbConnection) {
-        try {
-            logger.info("Connecting to DB {} at {}:{}", schema, dbConfig.ip, dbConfig.port);
-            return dbConnection.connect(schema);
-        } catch (SQLException e) {
-            logger.error("Unable to connect to {}: {}", schema, e.getMessage());
-            logger.debug(e.getStackTrace());
-            System.exit(1);
-        }
+		try {
+			logger.info("Connecting to DB {} at {}:{}", schema, dbConfig.ip, dbConfig.port);
+			return dbConnection.connect(schema);
+		} catch (SQLException e) {
+			logger.error("Unable to connect to {}: {}", schema, e.getMessage());
+			logger.debug(e.getStackTrace());
+			System.exit(1);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 	/**
 	 * Converts the specified DB to an ICDB
@@ -95,14 +96,14 @@ public class ICDBTool {
 			System.exit(1);
 		}
 
-        // Connect to the newly created DB
-        String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
-        Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
-        DBConverter dbConverter = new DBConverter(db, icdb, dbConfig);
+		// Connect to the newly created DB
+		String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+		Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
+		DBConverter dbConverter = new DBConverter(db, icdb, dbConfig);
 
-        if (icdb == null) {
-            return;
-        }
+		if (icdb == null) {
+			return;
+		}
 
 		if (!convertConfig.skipData) {
 			// Convert all data
@@ -112,13 +113,13 @@ public class ICDBTool {
 			logger.debug("Data conversion skipped");
 		}
 
-        if (!convertConfig.skipLoad) {
-            // Load all data
-            logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
-            dbConverter.load();
-        } else {
-            logger.debug("Data conversion skipped");
-        }
+		if (!convertConfig.skipLoad) {
+			// Load all data
+			logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
+			dbConverter.load();
+		} else {
+			logger.debug("Data conversion skipped");
+		}
 	}
 
 	/**
@@ -127,8 +128,8 @@ public class ICDBTool {
 	private static void convertQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
 			throws JSQLParserException {
 		ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
-        String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
-        Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
+		String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+		Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
 
 		if (icdb == null) {
 			return;
@@ -136,28 +137,28 @@ public class ICDBTool {
 
 		QueryConverter converter = new QueryConverter(convertQueryCmd, icdb);
 		String result = converter.convert();
-        System.out.println(result);
+		System.out.println(result);
 	}
 
-    /**
-     * Executes the query
-     */
-    private static void executeQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
-            throws JSQLParserException {
-        ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
-        String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
-        Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
+	/**
+	 * Executes the query
+	 */
+	private static void executeQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
+			throws JSQLParserException {
+		ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
+		String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+		Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
 
-        if (icdb == null) {
-            return;
-        }
+		if (icdb == null) {
+			return;
+		}
 
-        QueryConverter converter = new QueryConverter(executeQueryCommand, icdb);
-        String result = converter.convert();
-        System.out.println(result);
+		QueryConverter converter = new QueryConverter(executeQueryCommand, icdb);
+		String result = converter.convert();
+		System.out.println(result);
 
-        QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, result);
-        verifier.execute();
-    }
+		QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, result);
+		verifier.execute();
+	}
 
 }
