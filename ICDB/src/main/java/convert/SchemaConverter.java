@@ -97,6 +97,8 @@ public class SchemaConverter {
     }
 
     private void addOCTColumns(final DBConnection icdb, final Table<?> table) {
+        // TODO: skip if already converted
+
         // Create a svc column
         icdb.getCreate().alterTable(table)
             .add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB)

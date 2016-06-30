@@ -110,6 +110,8 @@ public class DBConverter {
         FileUtils.cleanDirectory(dataPath.toFile());
 
         db.getTables().forEach(tableName -> {
+                Stopwatch exportTime = Stopwatch.createStarted();
+
                 // For each table
                 Table<?> icdbTable = db.getTable(tableName);
 
@@ -125,6 +127,8 @@ public class DBConverter {
                     // TODO
                     e.printStackTrace();
                 }
+
+                logger.debug("Exported table {} in {}", tableName, exportTime);
             });
     }
 
