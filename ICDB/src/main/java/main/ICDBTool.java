@@ -43,7 +43,7 @@ public class ICDBTool {
 
 		// Connect to the DB
 		DBConnection dbConnection = new DBConnection(dbConfig.ip, dbConfig.port, dbConfig.user, dbConfig.password);
-		Connection db = connect(dbConfig, dbConnection);
+		Connection db = connect(dbConfig.schema, dbConfig, dbConnection);
 
 		if (db == null) {
 			return;
@@ -66,12 +66,12 @@ public class ICDBTool {
 		logger.info("Total time elapsed: {}", totalTime);
 	}
 
-	private static Connection connect(Config dbConfig, DBConnection dbConnection) {
+	private static Connection connect(String schema, Config dbConfig, DBConnection dbConnection) {
         try {
-            logger.info("Connecting to DB {} at {}:{}", dbConfig.schema, dbConfig.ip, dbConfig.port);
-            return dbConnection.connect(dbConfig.schema);
+            logger.info("Connecting to DB {} at {}:{}", schema, dbConfig.ip, dbConfig.port);
+            return dbConnection.connect(schema);
         } catch (SQLException e) {
-            logger.error("Unable to connect to {}: {}", dbConfig.schema, e.getMessage());
+            logger.error("Unable to connect to {}: {}", schema, e.getMessage());
             logger.debug(e.getStackTrace());
             System.exit(1);
         }
@@ -95,22 +95,30 @@ public class ICDBTool {
 			System.exit(1);
 		}
 
+        // Connect to the newly created DB
+        String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+        Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
+        DBConverter dbConverter = new DBConverter(db, icdb, dbConfig);
+
+        if (icdb == null) {
+            return;
+        }
+
 		if (!convertConfig.skipData) {
-			// Connect to the newly created DB
-			String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
-			Connection icdb = connect(dbConfig, dbConnection);
-
-			if (icdb == null) {
-				return;
-			}
-
 			// Convert all data
-			logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
-			DBConverter dbConverter = new DBConverter(db, icdb, dbConfig);
+			logger.info("Converting data from {}", dbConfig.schema);
 			dbConverter.convert();
 		} else {
 			logger.debug("Data conversion skipped");
 		}
+
+        if (!convertConfig.skipLoad) {
+            // Load all data
+            logger.info("Migrating data from {} to {}", dbConfig.schema, icdbSchema);
+            dbConverter.load();
+        } else {
+            logger.debug("Data conversion skipped");
+        }
 	}
 
 	/**
@@ -119,7 +127,8 @@ public class ICDBTool {
 	private static void convertQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
 			throws JSQLParserException {
 		ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
-		Connection icdb = connect(dbConfig, dbConnection);
+        String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+        Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
 
 		if (icdb == null) {
 			return;
@@ -136,7 +145,8 @@ public class ICDBTool {
     private static void executeQuery(CommandLineArgs cmd, Config dbConfig, DBConnection dbConnection)
             throws JSQLParserException {
         ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
-        Connection icdb = connect(dbConfig, dbConnection);
+        String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+        Connection icdb = connect(icdbSchema, dbConfig, dbConnection);
 
         if (icdb == null) {
             return;

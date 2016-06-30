@@ -71,15 +71,11 @@ public class DBConverter {
 
         // Grab the DB context
         final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
-        final DSLContext icdbCreate = DSL.using(icdb, SQLDialect.MYSQL);
 
         // Find the schemas
         final Schema dbSchema = dbCreate.meta().getSchemas().stream()
                 .filter(schema -> schema.getName().equals(dbName))
                 .findFirst().get();
-        final Schema icdbSchema = dbCreate.meta().getSchemas().stream()
-            .filter(schema -> schema.getName().equals(icdbName))
-            .findFirst().get();
 
         dbTableNames.addAll(getTables(dbCreate));
 
@@ -89,14 +85,27 @@ public class DBConverter {
 
             // 2. Read from file -> generate signature -> Write to file
             convertData();
-
-            // 3. Load data infile -> icdb
-            importData(icdbCreate, icdbSchema);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         logger.debug("Total data conversion time: {}", dataConvertTime);
+    }
+
+    public void load() {
+        // Grab the DB context
+        final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
+        final DSLContext icdbCreate = DSL.using(icdb, SQLDialect.MYSQL);
+        final Schema icdbSchema = dbCreate.meta().getSchemas().stream()
+                .filter(schema -> schema.getName().equals(icdbName))
+                .findFirst().get();
+
+        if (dbTableNames.isEmpty()) {
+            dbTableNames.addAll(getTables(dbCreate));
+        }
+
+        // 3. Load data infile -> icdb
+        importData(icdbCreate, icdbSchema);
     }
 
     // TODO: pull this out into a service
@@ -144,6 +153,7 @@ public class DBConverter {
 
     private void importData(final DSLContext icdbCreate, final Schema icdbSchema) {
         // Ignore foreign key constraints when migrating
+//        icdbCreate.execute("USE " + icdbName + ";"); // TODO: FIX THIS
         icdbCreate.execute("set FOREIGN_KEY_CHECKS = 0;");
 
         dbTableNames.forEach(tableName -> {
@@ -164,7 +174,7 @@ public class DBConverter {
                         convertToBlob(icdbTable);
 
                 // Truncate the table before loading the data
-                icdbCreate.execute("truncate " + tableName + ";");
+                icdbCreate.execute("truncate `" + tableName + "`;");
 
                 try {
                     icdbCreate.execute(query);
