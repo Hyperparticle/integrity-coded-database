@@ -2,7 +2,6 @@ package convert;
 
 import cipher.mac.CodeGen;
 import cipher.mac.Signature;
-import cipher.mac.AlgorithmType;
 import com.google.common.base.Charsets;
 import main.args.option.Granularity;
 import org.jooq.tools.StringUtils;

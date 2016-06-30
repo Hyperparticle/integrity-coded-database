@@ -1,6 +1,7 @@
 package verify;
 
 import com.google.common.base.Stopwatch;
+import convert.DBConnection;
 import convert.Format;
 import main.args.ExecuteQueryCommand;
 import main.args.config.Config;
@@ -27,12 +28,12 @@ public class QueryVerifier {
 //    private final List<String> files;
 //    private final String icdbName;
     private final String icdbQuery;
-    private final Connection icdb;
+    private final DBConnection icdb;
     private final Granularity granularity;
 
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(ExecuteQueryCommand command, Connection icdb, String icdbQuery) {
+    public QueryVerifier(ExecuteQueryCommand command, DBConnection icdb, String icdbQuery) {
         this.icdbQuery = icdbQuery;
 //        this.files = command.files;
         this.granularity = command.granularity;
@@ -43,7 +44,7 @@ public class QueryVerifier {
     public void execute() {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
-        final DSLContext icdbCreate = DSL.using(icdb, SQLDialect.MYSQL);
+        final DSLContext icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
 //        final Schema icdbSchema = icdbCreate.meta().getSchemas().stream()
 //                .filter(schema -> schema.getName().equals(icdbName))
 //                .findFirst().get();

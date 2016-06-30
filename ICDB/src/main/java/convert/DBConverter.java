@@ -3,6 +3,7 @@ package convert;
 import cipher.mac.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
+import main.args.ConvertDBCommand;
 import main.args.config.Config;
 import main.args.option.Granularity;
 import org.apache.commons.io.FileUtils;
@@ -36,11 +37,12 @@ public class DBConverter {
 
     private final String dbName;
     private final String icdbName;
+    private final DBConnection db;
+    private final DBConnection icdb;
 
-    private final List<String> dbTableNames = new ArrayList<>();
+    private final boolean skipData;
+    private final boolean skipLoad;
 
-    private final Connection db;
-    private final Connection icdb;
     private final Granularity granularity;
     private final CodeGen codeGen;
 
@@ -49,9 +51,12 @@ public class DBConverter {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public DBConverter(Connection db, Connection icdb, Config config) {
+    public DBConverter(DBConnection db, DBConnection icdb, Config config, ConvertDBCommand convertConfig) {
         this.db = db;
         this.icdb = icdb;
+
+        this.skipData = convertConfig.skipData;
+        this.skipLoad = convertConfig.skipLoad;
 
         this.granularity = config.granularity;
         this.codeGen = new CodeGen(config.algorithm, config.key.getBytes(Charsets.UTF_8));
@@ -67,21 +72,17 @@ public class DBConverter {
      * Begin the DB conversion process, with the assumption that a converted schema already exists on the DB server.
      */
     public void convert() {
+        if (skipData) {
+            logger.debug("Data conversion skipped");
+            return;
+        }
+
+        logger.info("Converting data from {}", dbName);
         Stopwatch dataConvertTime = Stopwatch.createStarted();
-
-        // Grab the DB context
-        final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
-
-        // Find the schemas
-        final Schema dbSchema = dbCreate.meta().getSchemas().stream()
-                .filter(schema -> schema.getName().equals(dbName))
-                .findFirst().get();
-
-        dbTableNames.addAll(getTables(dbCreate));
 
         try {
             // 1. Export data outfile -> .csv files
-            exportData(dbCreate, dbSchema);
+            exportData();
 
             // 2. Read from file -> generate signature -> Write to file
             convertData();
@@ -93,34 +94,24 @@ public class DBConverter {
     }
 
     public void load() {
-        // Grab the DB context
-        final DSLContext dbCreate = DSL.using(db, SQLDialect.MYSQL);
-        final DSLContext icdbCreate = DSL.using(icdb, SQLDialect.MYSQL);
-        final Schema icdbSchema = dbCreate.meta().getSchemas().stream()
-                .filter(schema -> schema.getName().equals(icdbName))
-                .findFirst().get();
-
-        if (dbTableNames.isEmpty()) {
-            dbTableNames.addAll(getTables(dbCreate));
+        if (skipLoad) {
+            logger.debug("Data loading skipped");
+            return;
         }
 
-        // 3. Load data infile -> icdb
-        importData(icdbCreate, icdbSchema);
-    }
+        logger.info("Migrating data to {}", icdbName);
 
-    // TODO: pull this out into a service
-    private Collection<String> getTables(final DSLContext dbCreate) {
-        return dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
-            .map(result -> result.get(0).toString());
+        // 3. Load data infile -> icdb
+        importData();
     }
 
     // TODO: move this to the fileconverter class
-    private void exportData(final DSLContext dbCreate, final Schema dbSchema) throws IOException {
+    private void exportData() throws IOException {
         FileUtils.cleanDirectory(dataPath.toFile());
 
-        dbTableNames.forEach(tableName -> {
+        db.getTables().forEach(tableName -> {
                 // For each table
-                Table<?> icdbTable = dbSchema.getTable(tableName);
+                Table<?> icdbTable = db.getTable(tableName);
 
                 // Get the output file path
                 File outputFile = Paths.get(dataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
@@ -128,7 +119,7 @@ public class DBConverter {
 
                 try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     // Output to a csv file
-                    dbCreate.selectFrom(icdbTable)
+                    db.getCreate().selectFrom(icdbTable)
                         .fetch().formatCSV(output, Format.FILE_DELIMITER_CHAR, Format.MYSQL_NULL);
                 } catch (IOException e) {
                     // TODO
@@ -151,14 +142,14 @@ public class DBConverter {
             });
     }
 
-    private void importData(final DSLContext icdbCreate, final Schema icdbSchema) {
+    private void importData() {
         // Ignore foreign key constraints when migrating
 //        icdbCreate.execute("USE " + icdbName + ";"); // TODO: FIX THIS
-        icdbCreate.execute("set FOREIGN_KEY_CHECKS = 0;");
+        icdb.getCreate().execute("set FOREIGN_KEY_CHECKS = 0;");
 
-        dbTableNames.forEach(tableName -> {
+        icdb.getTables().forEach(tableName -> {
             // For each table
-            Table<?> icdbTable = icdbSchema.getTable(tableName);
+            Table<?> icdbTable = icdb.getTable(tableName);
 
             // Get the output file path
             String filePath = Paths.get(convertedDataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
@@ -174,10 +165,10 @@ public class DBConverter {
                         convertToBlob(icdbTable);
 
                 // Truncate the table before loading the data
-                icdbCreate.execute("truncate `" + tableName + "`;");
+                icdb.getCreate().execute("truncate `" + tableName + "`;");
 
                 try {
-                    icdbCreate.execute(query);
+                    icdb.getCreate().execute(query);
                 } catch (DataAccessException e) {
                     System.err.println(e.getMessage());// TODO
                 }
@@ -192,7 +183,7 @@ public class DBConverter {
         });
 
         // Don't forget to set foreign key checks back
-        icdbCreate.execute("set FOREIGN_KEY_CHECKS = 1;");
+        icdb.getCreate().execute("set FOREIGN_KEY_CHECKS = 1;");
     }
 
     /**
