@@ -4,19 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import convert.DBConnection;
-import main.args.ExecuteQueryCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import convert.DBConnection;
 import main.args.ConvertQueryCommand;
-import main.args.config.Config;
+import main.args.ExecuteQueryCommand;
 import main.args.option.Granularity;
 import net.sf.jsqlparser.JSQLParserException;
 
@@ -44,17 +42,21 @@ public class QueryConverter {
 
 	public QueryConverter(ConvertQueryCommand command, DBConnection icdb) {
 		this.queries = command.queries;
+		// this.queries = new ArrayList<String>();
+		// queries.add("SELECT gender,first_name FROM employees;");
+		this.files = command.files;
+		this.granularity = command.granularity;
+		// this.granularity = Granularity.FIELD;
+		System.out.println(this.granularity);
+		this.icdb = icdb;
+	}
+
+	public QueryConverter(ExecuteQueryCommand command, DBConnection icdb) {
+		this.queries = command.queries;
 		this.files = command.files;
 		this.granularity = command.granularity;
 		this.icdb = icdb;
 	}
-
-    public QueryConverter(ExecuteQueryCommand command, DBConnection icdb) {
-        this.queries = command.queries;
-        this.files = command.files;
-        this.granularity = command.granularity;
-        this.icdb = icdb;
-    }
 
 	public QueryConverter(String Query, Granularity granularity, DBConnection icdb) {
 		this.queries = new ArrayList<String>();
@@ -83,6 +85,7 @@ public class QueryConverter {
 			if (this.queries.size() != 0) {
 
 				for (String query : queries) {
+					System.out.println(query);
 					builder.setLength(0);
 					// Get the database name mentioned in USE command
 					StringTokenizer tokenizer = new StringTokenizer(query, ";");
@@ -149,8 +152,8 @@ public class QueryConverter {
 
 			}
 
-            // TODO: use streams to return multiple queries
-            return builder.toString();
+			// TODO: use streams to return multiple queries
+			return builder.toString();
 		} catch (IOException e) {
 			// TODO: handle exception
 			System.err.println("Failed to convert query ");

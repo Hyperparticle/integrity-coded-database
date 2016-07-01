@@ -66,7 +66,7 @@ public class SQLParser {
 			// table_Name, null);
 
 			while (result.next()) {
-				primarykeys.add(result.getString(4).toUpperCase());
+				primarykeys.add(result.getString(4));
 			}
 
 		} catch (SQLException e) {

@@ -84,8 +84,12 @@ public class OCTparser extends SQLParser {
 					List<String> AttributeList = getTableAttributes(tbl);
 					// add each of attributes to the SELECT query
 					for (String attribute : AttributeList) {
+						if (tableList.size() > 1) {
+							SelectUtils.addExpression(selectStatement, new Column(new Table(tbl), attribute));
 
-						SelectUtils.addExpression(selectStatement, new Column(new Table(tbl), attribute));
+						} else {
+							SelectUtils.addExpression(selectStatement, new Column(attribute));
+						}
 					}
 				}
 
@@ -170,7 +174,6 @@ public class OCTparser extends SQLParser {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		System.out.println(ICDBquery);
 		return ICDBquery;
 
 	}

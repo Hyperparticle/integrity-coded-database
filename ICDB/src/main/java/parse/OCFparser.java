@@ -95,7 +95,7 @@ public class OCFparser extends SQLParser {
 						// add each of attributes to the SELECT query
 						for (String attribute : AttributeList) {
 
-							SelectUtils.addExpression(selectStatement, new Column(new Table(tbl), attribute));
+							SelectUtils.addExpression(selectStatement, new Column(attribute));
 						}
 					}
 
@@ -104,11 +104,12 @@ public class OCFparser extends SQLParser {
 					// add Column_SVC for each column in select clause
 					// Iterate through the list of select Items
 					boolean hasTblplusColumn = false;
+					if (tableList.size() > 1)
+						hasTblplusColumn = true;
 					List<String> SVCList = new ArrayList<String>();
 					for (SelectItem column : plainSelect.getSelectItems()) {
-						if (column.toString().contains("."))
-							hasTblplusColumn = true;
-						SVCList.add(column.toString().toUpperCase());
+
+						SVCList.add(column.toString());
 					}
 
 					List<SelectItem> selectlist = new ArrayList<SelectItem>();
@@ -116,7 +117,8 @@ public class OCFparser extends SQLParser {
 
 					for (String column : SVCList) {
 						SelectUtils.addExpression(selectStatement, new Column(column));
-						SelectUtils.addExpression(selectStatement, new Column(column + "_SVC"));
+						SelectUtils.addExpression(selectStatement, new Column(column + "_svc"));
+						SelectUtils.addExpression(selectStatement, new Column(column + "_serial"));
 					}
 					// add Columns from WHERE clause
 					if (plainSelect.getWhere() != null) {
@@ -129,7 +131,8 @@ public class OCFparser extends SQLParser {
 							if (!SVCList.contains(column)) {
 								SVCList.add(column);
 								SelectUtils.addExpression(selectStatement, new Column(column));
-								SelectUtils.addExpression(selectStatement, new Column(column + "_SVC"));
+								SelectUtils.addExpression(selectStatement, new Column(column + "_svc"));
+								SelectUtils.addExpression(selectStatement, new Column(column + "_serial"));
 							}
 						}
 					}
@@ -140,19 +143,18 @@ public class OCFparser extends SQLParser {
 						primarykeys = getPrimaryKeys(tbl);
 						for (String primaryKey : primarykeys) {
 							if (hasTblplusColumn) {
-								if (!SVCList.contains(tbl.toUpperCase() + "." + primaryKey)
-										&& primaryKey.length() != 0) {
+								if (!SVCList.contains(tbl + "." + primaryKey) && primaryKey.length() != 0) {
+									SelectUtils.addExpression(selectStatement, new Column(new Table(tbl), primaryKey));
 									SelectUtils.addExpression(selectStatement,
-											new Column(new Table(tbl.toUpperCase()), primaryKey));
+											new Column(new Table(tbl), primaryKey + "_svc"));
 									SelectUtils.addExpression(selectStatement,
-											new Column(new Table(tbl.toUpperCase()), primaryKey + "_SVC"));
+											new Column(new Table(tbl), primaryKey + "_serial"));
 								}
 							} else {
 								if (!SVCList.contains(primaryKey) && primaryKey.length() != 0) {
-									SelectUtils.addExpression(selectStatement,
-											new Column(new Table(tbl.toUpperCase()), primaryKey));
-									SelectUtils.addExpression(selectStatement,
-											new Column(new Table(tbl.toUpperCase()), primaryKey + "_SVC"));
+									SelectUtils.addExpression(selectStatement, new Column(primaryKey));
+									SelectUtils.addExpression(selectStatement, new Column(primaryKey + "_svc"));
+									SelectUtils.addExpression(selectStatement, new Column(primaryKey + "_serial"));
 								}
 							}
 
@@ -169,7 +171,6 @@ public class OCFparser extends SQLParser {
 				Insert insertStatement = (Insert) statement;
 				columns = insertStatement.getColumns();
 				table = insertStatement.getTable();
-				System.out.println(table.getDatabase().toString());
 				expressions = ((ExpressionList) insertStatement.getItemsList()).getExpressions();
 
 				primarykeys = getPrimaryKeys(table.getName());
@@ -177,7 +178,6 @@ public class OCFparser extends SQLParser {
 				// update the Query
 				updateColumnsAndValues(columns, expressions, primarykeys, null);
 				ICDBquery = insertStatement.toString();
-				System.out.println(insertStatement.toString());
 			}
 			////////////// DELETE///////////////////////
 			else if (statement instanceof Delete) {
@@ -263,7 +263,6 @@ public class OCFparser extends SQLParser {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		System.out.println(ICDBquery);
 		return ICDBquery;
 
 	}
@@ -312,7 +311,7 @@ public class OCFparser extends SQLParser {
 
 		for (int i = 0; i < count; i++) {
 
-			Column newColumn = new Column(columns.get(j).getColumnName() + "_SVC");
+			Column newColumn = new Column(columns.get(j).getColumnName() + "_svc");
 			SVCcolumns.add(newColumn);
 
 			// SVC message = primary key+ attribute name+ attribute
