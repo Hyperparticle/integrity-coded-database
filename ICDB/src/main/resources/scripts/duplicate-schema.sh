@@ -16,6 +16,9 @@ icdb_name=$2
 mkdir -p ${export_path}/schema
 mkdir -p ${export_path}/data
 
+mkdir -p ./tmp/icdb-files/data
+mkdir -p ./tmp/icdb-files/schema
+
 # Use mysqldump to export the DB schema
 echo "Dumping database schema '$1'."
 mysqldump -u root --no-data $1 > ${schema_file}

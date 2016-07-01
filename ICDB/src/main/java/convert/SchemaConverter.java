@@ -67,7 +67,7 @@ public class SchemaConverter {
 	 */
 	private void convertSchema() throws SQLException {
 		// Begin conversion by duplicating the original DB
-		duplicateDB(dbName, icdbName);
+		//duplicateDB(dbName, icdbName);
 
 		// Add extra columns and convert all data
 		convertSchema(granularity.equals(Granularity.TUPLE));
