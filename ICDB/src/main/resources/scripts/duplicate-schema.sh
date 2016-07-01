@@ -18,9 +18,10 @@ mkdir -p ${export_path}/db-files/data
 mkdir -p ${export_path}/icdb-files/schema
 mkdir -p ${export_path}/icdb-files/data
 
+
 # Use mysqldump to export the DB schema
 echo "Dumping database schema '$1'."
-mysqldump --no-data $1 > ${schema_file}
+mysqldump -u root --no-data $1 > ${schema_file}
 
 # Create a new database with the same schema
 echo "Creating Database '${icdb_name}'"

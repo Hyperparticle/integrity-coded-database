@@ -1,22 +1,23 @@
 package convert;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jooq.Table;
+import org.jooq.util.mysql.MySQLDataType;
+
 import com.google.common.base.Stopwatch;
+
 import main.args.ConvertDBCommand;
 import main.args.config.Config;
 import main.args.option.Granularity;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jooq.*;
-import org.jooq.impl.*;
-import org.jooq.util.mysql.MySQLDataType;
-
-import java.io.IOException;
-import java.sql.*;
-import java.util.Arrays;
 
 /**
  * <p>
- *      Converts a given DB schema to an ICDB using a JDBC connection
+ * Converts a given DB schema to an ICDB using a JDBC connection
  * </p>
  * Created on 6/3/2016
  *
