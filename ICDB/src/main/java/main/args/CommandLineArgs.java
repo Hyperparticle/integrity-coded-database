@@ -32,8 +32,7 @@ public class CommandLineArgs {
 	public final ConvertQueryCommand convertQueryCommand;
 	public final ExecuteQueryCommand executeQueryCommand;
 
-	@Parameter(names = { "-c",
-			"--config" }, required = false, converter = ReaderConverter.class, description = "The path of the JSON configuration file")
+	@Parameter(names = { "-c", "--config" }, required = true, converter = ReaderConverter.class, description = "The path of the JSON configuration file")
 	public Reader readerConfig;
 
 	private Config config;
@@ -59,7 +58,6 @@ public class CommandLineArgs {
 		}
 
 		Gson gson = new Gson();
-		readerConfig = new FileReader("/Users/ujwal-mac/Desktop/config-sample.json");
 		config = gson.fromJson(readerConfig, Config.class);
 	}
 

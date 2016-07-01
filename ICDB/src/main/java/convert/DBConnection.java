@@ -32,8 +32,8 @@ public class DBConnection {
     private static final MysqlDataSource dataSource = new MysqlDataSource();
     private static final Logger logger = LogManager.getLogger();
 
-    // Keep a map of existing DB connections
-    private static final Map<String, DBConnection> dbConnections = new HashMap<>();
+//    // Keep a map of existing DB connections
+//    private static final Map<String, DBConnection> dbConnections = new HashMap<>();
 
     /**
      * Configure a connection to a MySQL server
@@ -46,13 +46,13 @@ public class DBConnection {
     }
 
     public static DBConnection connect(String dbName, Config dbConfig) {
-        if (dbConnections.containsKey(dbName)) {
-            return dbConnections.get(dbName);
-        }
+//        if (dbConnections.containsKey(dbName)) {
+//            return dbConnections.get(dbName);
+//        }
 
         try {
             DBConnection db = new DBConnection(dbName);
-            dbConnections.put(dbName, db);
+//            dbConnections.put(dbName, db);
             logger.info("Connected to DB {} at {}:{}", dbName, dbConfig.ip, dbConfig.port);
             return db;
         } catch (SQLException | DataAccessException e) {

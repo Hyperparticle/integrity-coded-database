@@ -91,6 +91,7 @@ public class FileConverter {
 
 		while ((nextLine = csvReader.read()) != null) {
 			collector.clear();
+            collector.addAll(nextLine);
 			for (String field : nextLine) {
 				final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
 				convertLine(collector, dataBytes, codeGen);

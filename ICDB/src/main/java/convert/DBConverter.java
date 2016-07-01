@@ -152,6 +152,8 @@ public class DBConverter {
         icdb.getCreate().execute("set FOREIGN_KEY_CHECKS = 0;");
 
         icdb.getTables().forEach(tableName -> {
+            Stopwatch importTime = Stopwatch.createStarted();
+
             // For each table
             Table<?> icdbTable = icdb.getTable(tableName);
 
@@ -184,6 +186,8 @@ public class DBConverter {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
+
+            logger.debug("Imported table {} in {}", tableName, importTime);
         });
 
         // Don't forget to set foreign key checks back
@@ -201,7 +205,7 @@ public class DBConverter {
 
         builder.append("(");
 
-        Arrays.stream(table.fields())
+        Arrays.stream(fields)
                 .forEach(field -> {
                     DataType<?> dataType = field.getDataType().getSQLDataType();
 
