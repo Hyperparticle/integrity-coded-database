@@ -119,7 +119,7 @@ public class SchemaConverter {
 
     private void addOCFColumns(final DBConnection icdb, final Table<?> table) {
         boolean converted = Arrays.stream(table.fields())
-                .anyMatch(field -> field.getName().endsWith(Format.ICDB_SUFFIX));
+                .anyMatch(field -> field.getName().endsWith(Format.SVC_SUFFIX));
 
         if (converted) {
             logger.debug("Table already converted. Skipping {}", table.getName());
@@ -132,12 +132,12 @@ public class SchemaConverter {
                 // Create a svc column
                 icdb.getCreate().alterTable(table)
                     .add(field.getName() + Format.SVC_SUFFIX, MySQLDataType.TINYBLOB)
-                    .executeAsync();
+                    .execute();
 
                 // Create a serial column
                 icdb.getCreate().alterTable(table)
                     .add(field.getName() + Format.SERIAL_SUFFIX, MySQLDataType.TINYBLOB)
-                    .executeAsync();
+                    .execute();
             });
     }
 
