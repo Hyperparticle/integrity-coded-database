@@ -80,7 +80,7 @@ public class SchemaConverter {
         logger.debug("Converting db schema to icdb");
 
         // Get the ICDB
-        final DBConnection icdb = DBConnection.connect(dbName, dbConfig);
+        final DBConnection icdb = DBConnection.connect(icdbName, dbConfig);
 
         // Fetch all table names
         icdb.getTables().forEach(tableName -> {
@@ -97,20 +97,34 @@ public class SchemaConverter {
     }
 
     private void addOCTColumns(final DBConnection icdb, final Table<?> table) {
-        // TODO: skip if already converted
+        boolean converted = Arrays.stream(table.fields())
+                .anyMatch(field -> field.getName().equals(Format.SVC_COLUMN));
+
+        if (converted) {
+            logger.debug("Table already converted. Skipping {}", table.getName());
+            return;
+        }
 
         // Create a svc column
         icdb.getCreate().alterTable(table)
             .add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB)
-            .executeAsync();
+            .execute();
 
         // Create a serial column
         icdb.getCreate().alterTable(table)
             .add(Format.SERIAL_COLUMN, MySQLDataType.TINYBLOB)
-            .executeAsync();
+            .execute();
     }
 
     private void addOCFColumns(final DBConnection icdb, final Table<?> table) {
+        boolean converted = Arrays.stream(table.fields())
+                .anyMatch(field -> field.getName().endsWith(Format.ICDB_SUFFIX));
+
+        if (converted) {
+            logger.debug("Table already converted. Skipping {}", table.getName());
+            return;
+        }
+
         // Loop through each field and create a corresponding column
         Arrays.asList(table.fields()).stream()
             .forEach(field -> {
