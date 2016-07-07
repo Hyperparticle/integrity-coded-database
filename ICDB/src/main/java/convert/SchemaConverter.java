@@ -39,7 +39,7 @@ public class SchemaConverter {
 
 	private SchemaConverter(DBConnection db, Config dbConfig, ConvertDBCommand convertConfig) {
 		this.dbName = dbConfig.schema;
-		this.icdbName = dbConfig.schema + Format.ICDB_SUFFIX;
+		this.icdbName = dbConfig.icdbSchema;
 
 		this.db = db;
 		this.granularity = dbConfig.granularity;

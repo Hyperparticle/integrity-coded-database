@@ -62,7 +62,7 @@ public class DBConverter {
         this.codeGen = new CodeGen(config.algorithm, config.key.getBytes(Charsets.UTF_8));
 
         this.dbName = config.schema;
-        this.icdbName = config.schema + Format.ICDB_SUFFIX;
+        this.icdbName = config.icdbSchema;
 
         this.dataPath = Paths.get(Format.DB_DATA_PATH);
         this.convertedDataPath = Paths.get(Format.ICDB_DATA_PATH);
@@ -240,23 +240,4 @@ public class DBConverter {
         return builder.toString();
     }
 
-//    private void insertOCTData(final DSLContext dbCreate, final Table<?> dbTable, final Table<?> icdbTable) {
-//        dbCreate.fetch("select * from " + dbName + "." + dbTable.getName())
-//                .parallelStream()
-//                .forEach(result -> {
-//                    // For each tuple, generate a signature
-//                    byte[] signature = algorithm.generateSignature(
-//                            StringUtils.join(result.intoArray()).getBytes(Charsets.UTF_8), key
-//                    );
-//
-//                    List<Object> icdbTuple = new ArrayList<>(result.intoList());
-//                    icdbTuple.add(signature);
-//                    icdbTuple.add(new byte[] { 0x10 }); // TODO: generate serial number
-//
-//                    dbCreate.insertInto(icdbTable, Arrays.asList(icdbTable.fields()))
-//                            .values(icdbTuple)
-//                            .executeAsync();
-//                });
-////                    icdbCreate.execute("insert into " + table + "(svc)" + "values(" + )
-//    }
 }

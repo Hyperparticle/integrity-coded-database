@@ -17,6 +17,7 @@ public class Config {
     public String user;
     public String password;
     public String schema;
+    public String icdbSchema;
     public String key;
     public AlgorithmType algorithm;
     public Granularity granularity;

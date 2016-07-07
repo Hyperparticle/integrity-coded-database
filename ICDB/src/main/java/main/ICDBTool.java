@@ -60,14 +60,13 @@ public class ICDBTool {
 	 */
 	private static void convertDB(CommandLineArgs cmd, Config dbConfig) {
 		final ConvertDBCommand convertConfig = cmd.convertDBCommand;
-		final String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
 
 		// Duplicate the DB, and add additional columns
 		DBConnection db = DBConnection.connect(dbConfig.schema, dbConfig);
 		SchemaConverter.convertSchema(db, dbConfig, convertConfig);
 
 		// Connect to the newly created DB
-		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
+		DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
 		DBConverter dbConverter = new DBConverter(db, icdb, dbConfig, convertConfig);
 
 		// Convert all data and load it
@@ -81,7 +80,7 @@ public class ICDBTool {
 
 	private static void convertQuery(CommandLineArgs cmd, Config dbConfig) throws JSQLParserException {
 		final ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
-		final String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+		final String icdbSchema = dbConfig.icdbSchema;
 
 		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
@@ -95,7 +94,7 @@ public class ICDBTool {
 	 */
 	private static void executeQuery(CommandLineArgs cmd, Config dbConfig) throws JSQLParserException {
 		final ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
-		final String icdbSchema = dbConfig.schema + Format.ICDB_SUFFIX;
+		final String icdbSchema = dbConfig.icdbSchema;
 
 		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 

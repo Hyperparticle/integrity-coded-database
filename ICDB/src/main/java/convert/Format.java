@@ -10,7 +10,7 @@ package convert;
  */
 public class Format {
 
-    public static final String ICDB_SUFFIX = "_icdb";
+//    public static final String ICDB_SUFFIX = "_icdb";
     public static final String SVC_SUFFIX = "_svc";
     public static final String SERIAL_SUFFIX = "_serial";
 
