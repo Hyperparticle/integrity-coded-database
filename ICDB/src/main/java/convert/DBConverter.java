@@ -168,7 +168,7 @@ public class DBConverter {
                     .getAbsolutePath().replace("\\", "/");
 
 //            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
-                String query = "load data infile '" + filePath + "' " +
+                String query = "load data local infile '" + filePath + "' " +
                         "into table `" + tableName + "` " +
                         "fields terminated by '" + Format.FILE_DELIMITER + "' " +
                         "optionally enclosed by '"  + Format.ENCLOSING + "' " +
