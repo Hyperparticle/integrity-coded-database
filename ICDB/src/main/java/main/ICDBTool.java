@@ -48,7 +48,7 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			executeQuery(cmd, dbConfig);
 		} else {
-			// cmd.jCommander.usage();s
+			 cmd.jCommander.usage();
 			System.exit(0);
 		}
 
@@ -99,12 +99,15 @@ public class ICDBTool {
 
 		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
-		// TODO: conditional conversion
-		QueryConverter converter = new QueryConverter(executeQueryCommand, icdb);
-		String result = converter.convert();
-		System.out.println(result);
+		String query = executeQueryCommand.queries.get(0);
 
-		QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, result);
+        // Convert query if specified
+		if (executeQueryCommand.convert) {
+            QueryConverter converter = new QueryConverter(executeQueryCommand, icdb);
+            query = converter.convert();
+        }
+
+		QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, query);
 		verifier.execute();
 	}
 

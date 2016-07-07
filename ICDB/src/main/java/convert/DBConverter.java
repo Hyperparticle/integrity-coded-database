@@ -107,6 +107,8 @@ public class DBConverter {
 
     // TODO: move this to the fileconverter class
     private void exportData() throws IOException {
+        Stopwatch dataExportTime = Stopwatch.createStarted();
+
         FileUtils.cleanDirectory(dataPath.toFile());
 
         db.getTables().forEach(tableName -> {
@@ -130,6 +132,8 @@ public class DBConverter {
 
                 logger.debug("Exported table {} in {}", tableName, exportTime);
             });
+
+        logger.debug("Total db data export time: {}", dataExportTime);
     }
 
     private void convertData() throws IOException {
@@ -147,8 +151,9 @@ public class DBConverter {
     }
 
     private void importData() {
+        Stopwatch importDataTime = Stopwatch.createStarted();
+
         // Ignore foreign key constraints when migrating
-//        icdbCreate.execute("USE " + icdbName + ";"); // TODO: FIX THIS
         icdb.getCreate().execute("set FOREIGN_KEY_CHECKS = 0;");
 
         icdb.getTables().forEach(tableName -> {
@@ -192,6 +197,8 @@ public class DBConverter {
 
         // Don't forget to set foreign key checks back
         icdb.getCreate().execute("set FOREIGN_KEY_CHECKS = 1;");
+
+        logger.debug("Total icdb data import time: {}", importDataTime);
     }
 
     /**
