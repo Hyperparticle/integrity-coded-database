@@ -86,12 +86,11 @@ $ ICDBTool -c ./src/main/resources/config-sample.json convert-query -q "SELECT *
 ### Execute Query Command
 
 ```
-execute-query [-q query] [-g granularity] [--convert]
+execute-query [-q query] [--convert]
 ```
 
 The `convert-data` command takes a SQL query as input, executes, then verifies any returned data.
 -q - The SQL query, passed in as a string
--g - The granularity of the ICDB query (TUPLE or FIELD), by default TUPLE
 --convert - Convert the query to ICDB before executing, false by default
 
 ## Sources

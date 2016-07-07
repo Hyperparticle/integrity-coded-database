@@ -1,5 +1,6 @@
 package cipher.mac;
 
+import com.google.common.base.Preconditions;
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.crypto.digests.SHA256Digest;
@@ -39,7 +40,7 @@ public class HMAC {
         return truncate(result);    // Truncate to the nearest 128 bits (SHA1 outputs 160 bits)
     }
 
-    public static boolean verify(byte[] data, byte[] key, byte[] signature) {
+    public static boolean verify(final byte[] data, final byte[] key, final byte[] signature) {
         return Arrays.equals(generateSignature(data, key), signature);
     }
 

@@ -62,6 +62,7 @@ public class QueryVerifier {
         boolean verified = granularity.equals(Granularity.TUPLE) ?
                 verifyOCT(cursor) :
                 verifyOCF(cursor);
+        cursor.close();
 
         logger.debug("Total query verification time: {}", queryVerificationTime);
         return verified;
@@ -75,6 +76,7 @@ public class QueryVerifier {
                 builder.append(value);
             }
 
+            // TODO: serial
             byte[] serial    = (byte[]) record.get(Format.SERIAL_COLUMN);
             byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
             byte[] dataBytes = builder.toString().getBytes(Charsets.UTF_8);
@@ -92,7 +94,28 @@ public class QueryVerifier {
     }
 
     private boolean verifyOCF(Cursor<Record> cursor) {
-        return false;
+        return cursor.stream().map(record -> {
+            final int dataSize = record.size() / 3;
+            for (int i = 0; i < dataSize; i++) {
+                // TODO: serial
+                byte[] serial    = (byte[]) record.get(dataSize + 2*i + 1);
+                byte[] signature = (byte[]) record.get(dataSize + 2*i);
+                byte[] dataBytes = record.get(i).toString().getBytes(Charsets.UTF_8);
+
+                boolean verified = codeGen.verify(dataBytes, signature);
+
+                if (!verified) {
+                    errorStatus.append("\n")
+                            .append(record.field(i))
+                            .append(" : ")
+                            .append(record.get(i))
+                            .append("\n");
+                    return false;
+                }
+            }
+
+            return true;
+        }).allMatch(verified -> verified);
     }
 
     public String getError() {
