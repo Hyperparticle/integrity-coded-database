@@ -24,8 +24,8 @@ public class ExecuteQueryCommand extends ConfigCommand {
     @Parameter(names = { "-f", "--file" }, description = "Execute all queries in one or more files")
     public List<String> files;
 
-    @Parameter(names = { "-g", "--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
-    public Granularity granularity = Granularity.TUPLE;
+//    @Parameter(names = { "-g", "--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
+//    public Granularity granularity = Granularity.TUPLE;
 
     @Parameter(names = { "--convert" }, description = "Convert the query before executing")
     public Boolean convert = false;

@@ -103,12 +103,18 @@ public class ICDBTool {
 
         // Convert query if specified
 		if (executeQueryCommand.convert) {
-            QueryConverter converter = new QueryConverter(executeQueryCommand, icdb);
+            QueryConverter converter = new QueryConverter(executeQueryCommand, query, icdb, dbConfig);
             query = converter.convert();
         }
 
-		QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, query);
-		verifier.execute();
+		QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, dbConfig, query);
+
+        if (verifier.verify()) {
+            logger.info("Query verified");
+        } else {
+            logger.info("Query failed to verify");
+            logger.info(verifier.getError());
+        }
 	}
 
 }

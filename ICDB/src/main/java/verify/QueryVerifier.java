@@ -1,5 +1,9 @@
 package verify;
 
+import cipher.mac.AlgorithmType;
+import cipher.mac.CodeGen;
+import cipher.mac.Signature;
+import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;
 import convert.Format;
@@ -30,18 +34,22 @@ public class QueryVerifier {
     private final String icdbQuery;
     private final DBConnection icdb;
     private final Granularity granularity;
+    private final CodeGen codeGen;
+
+    private StringBuilder errorStatus = new StringBuilder();
 
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(ExecuteQueryCommand command, DBConnection icdb, String icdbQuery) {
+    public QueryVerifier(ExecuteQueryCommand command, DBConnection icdb, Config dbConfig, String icdbQuery) {
         this.icdbQuery = icdbQuery;
 //        this.files = command.files;
-        this.granularity = command.granularity;
+        this.granularity = dbConfig.granularity;
+        this.codeGen = new CodeGen(dbConfig.algorithm, dbConfig.key.getBytes(Charsets.UTF_8));
 //        this.icdbName = dbConfig.schema + Format.ICDB_SUFFIX;
         this.icdb = icdb;
     }
 
-    public void execute() {
+    public boolean verify() {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
         final DSLContext icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
@@ -49,14 +57,46 @@ public class QueryVerifier {
 //                .filter(schema -> schema.getName().equals(icdbName))
 //                .findFirst().get();
 
-        Result<Record> result = icdbCreate.fetch(icdbQuery);
+//        Result<Record> result = icdbCreate.fetch(icdbQuery);
+        Cursor<Record> cursor = icdbCreate.fetchLazy(icdbQuery);
+        boolean verified = granularity.equals(Granularity.TUPLE) ?
+                verifyOCT(cursor) :
+                verifyOCF(cursor);
 
         logger.debug("Total query verification time: {}", queryVerificationTime);
+        return verified;
     }
 
-    private boolean verify() {
+    private boolean verifyOCT(Cursor<Record> cursor) {
+        return cursor.stream().map(record -> {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < record.size() - 2; i++) {
+                Object value = record.get(i);
+                builder.append(value);
+            }
+
+            byte[] serial    = (byte[]) record.get(Format.SERIAL_COLUMN);
+            byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
+            byte[] dataBytes = builder.toString().getBytes(Charsets.UTF_8);
+
+            boolean verified = codeGen.verify(dataBytes, signature);
+
+            if (!verified) {
+                errorStatus.append("\n")
+                    .append(record.toString())
+                    .append("\n");
+            }
+
+            return verified;
+        }).allMatch(verified -> verified);
+    }
+
+    private boolean verifyOCF(Cursor<Record> cursor) {
         return false;
     }
 
+    public String getError() {
+        return errorStatus.toString();
+    }
 
 }

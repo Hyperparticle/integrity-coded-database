@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import main.args.config.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,18 +52,18 @@ public class QueryConverter {
 		this.icdb = icdb;
 	}
 
-	public QueryConverter(ExecuteQueryCommand command, DBConnection icdb) {
+	public QueryConverter(ConvertQueryCommand command, DBConnection icdb, Config dbConfig) {
 		this.queries = command.queries;
 		this.files = command.files;
-		this.granularity = command.granularity;
 		this.icdb = icdb;
+		this.granularity = dbConfig.granularity;
 	}
 
-	public QueryConverter(String Query, Granularity granularity, DBConnection icdb) {
-		this.queries = new ArrayList<String>();
-		queries.add(Query);
-		this.files = new ArrayList<String>();
-		this.granularity = granularity;
+	public QueryConverter(ExecuteQueryCommand executeQueryCommand, String query, DBConnection icdb, Config dbConfig) {
+		this.queries = new ArrayList<>();
+		queries.add(query);
+		this.files = new ArrayList<>();
+		this.granularity = dbConfig.granularity;
 		this.icdb = icdb;
 	}
 
