@@ -37,7 +37,9 @@ algorithm   - the encryption algorithm to use (RSA, AES, or SHA)
 granularity - use code per field or code per tuple (FIELD or TUPLE)
 ```
 
-An example config file is located under `src/main/resources/config-sample.json`.
+For convenience, a config file is given at `./ICDB/config.json`, which will be loaded by default if the `-c` option is not specified.
+
+Another example config file is located under `src/main/resources/config-sample.json`.
 
 ### Commands available
 

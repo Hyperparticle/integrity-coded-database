@@ -2,7 +2,7 @@
  * @author ujwal-cipher.mac
  * 
  */
-package cipher;
+package cipher.deprecated;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

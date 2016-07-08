@@ -1,7 +1,6 @@
 package convert;
 
-import cipher.mac.CodeGen;
-import com.google.common.base.Charsets;
+import cipher.CodeGen;
 import com.google.common.base.Stopwatch;
 import main.args.ConvertDBCommand;
 import main.args.config.Config;
@@ -11,17 +10,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
-import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,7 +55,7 @@ public class DBConverter {
         this.skipLoad = convertConfig.skipLoad;
 
         this.granularity = config.granularity;
-        this.codeGen = new CodeGen(config.algorithm, config.key.getBytes(Charsets.UTF_8));
+        this.codeGen = config.getCodeGen();
 
         this.dbName = config.schema;
         this.icdbName = config.icdbSchema;

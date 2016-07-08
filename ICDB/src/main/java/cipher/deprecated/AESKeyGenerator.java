@@ -6,7 +6,7 @@
 * Created 5/18/2016
 */
 
-package cipher;
+package cipher.deprecated;
 
 public class AESKeyGenerator {
 //	private File keyFile;

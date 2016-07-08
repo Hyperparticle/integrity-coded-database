@@ -1,5 +1,6 @@
-package cipher;
+package cipher.deprecated;
 
+import cipher.deprecated.CodeCipher;
 import com.google.common.hash.Hashing;
 import org.apache.commons.lang3.ArrayUtils;
 

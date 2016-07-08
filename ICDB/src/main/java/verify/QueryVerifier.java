@@ -1,8 +1,6 @@
 package verify;
 
-import cipher.mac.AlgorithmType;
-import cipher.mac.CodeGen;
-import cipher.mac.Signature;
+import cipher.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;
@@ -10,14 +8,13 @@ import convert.Format;
 import main.args.ExecuteQueryCommand;
 import main.args.config.Config;
 import main.args.option.Granularity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.ByteBuffer;
 
 /**
  * <p>
@@ -44,7 +41,7 @@ public class QueryVerifier {
         this.icdbQuery = icdbQuery;
 //        this.files = command.files;
         this.granularity = dbConfig.granularity;
-        this.codeGen = new CodeGen(dbConfig.algorithm, dbConfig.key.getBytes(Charsets.UTF_8));
+        this.codeGen = dbConfig.getCodeGen();
 //        this.icdbName = dbConfig.schema + Format.ICDB_SUFFIX;
         this.icdb = icdb;
     }
@@ -70,18 +67,22 @@ public class QueryVerifier {
 
     private boolean verifyOCT(Cursor<Record> cursor) {
         return cursor.stream().map(record -> {
-            StringBuilder builder = new StringBuilder();
+            final StringBuilder builder = new StringBuilder();
             for (int i = 0; i < record.size() - 2; i++) {
-                Object value = record.get(i);
+                final Object value = record.get(i);
                 builder.append(value);
             }
 
             // TODO: serial
-            byte[] serial    = (byte[]) record.get(Format.SERIAL_COLUMN);
-            byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
-            byte[] dataBytes = builder.toString().getBytes(Charsets.UTF_8);
+            final long serial    = (long) record.get(Format.SERIAL_COLUMN);
+            final byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
 
-            boolean verified = codeGen.verify(dataBytes, signature);
+            final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
+            final byte[] dataBytes = builder.toString().getBytes(Charsets.UTF_8);
+
+            final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
+
+            final boolean verified = codeGen.verify(allBytes, signature);
 
             if (!verified) {
                 errorStatus.append("\n")
@@ -98,11 +99,15 @@ public class QueryVerifier {
             final int dataSize = record.size() / 3;
             for (int i = 0; i < dataSize; i++) {
                 // TODO: serial
-                byte[] serial    = (byte[]) record.get(dataSize + 2*i + 1);
-                byte[] signature = (byte[]) record.get(dataSize + 2*i);
-                byte[] dataBytes = record.get(i).toString().getBytes(Charsets.UTF_8);
+                final long serial = (long) record.get(dataSize + 2*i + 1);
+                final byte[] signature = (byte[]) record.get(dataSize + 2*i);
 
-                boolean verified = codeGen.verify(dataBytes, signature);
+                final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
+                final byte[] dataBytes = record.get(i).toString().getBytes(Charsets.UTF_8);
+
+                final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
+
+                final boolean verified = codeGen.verify(allBytes, signature);
 
                 if (!verified) {
                     errorStatus.append("\n")

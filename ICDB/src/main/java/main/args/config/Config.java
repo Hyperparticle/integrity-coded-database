@@ -1,6 +1,8 @@
 package main.args.config;
 
-import cipher.mac.AlgorithmType;
+import cipher.AlgorithmType;
+import cipher.CodeGen;
+import com.google.common.base.Charsets;
 import main.args.option.Granularity;
 
 /**
@@ -21,4 +23,8 @@ public class Config {
     public String key;
     public AlgorithmType algorithm;
     public Granularity granularity;
+
+    public CodeGen getCodeGen() {
+        return new CodeGen(algorithm, key.getBytes(Charsets.UTF_8));
+    }
 }

@@ -32,8 +32,8 @@ public class CommandLineArgs {
 	public final ConvertQueryCommand convertQueryCommand;
 	public final ExecuteQueryCommand executeQueryCommand;
 
-	@Parameter(names = { "-c", "--config" }, required = true, converter = ReaderConverter.class, description = "The path of the JSON configuration file")
-	public Reader readerConfig;
+	@Parameter(names = { "-c", "--config" }, converter = ReaderConverter.class, description = "The path of the JSON configuration file")
+	public Reader readerConfig = new FileReader("./config.json");
 
 	private Config config;
 

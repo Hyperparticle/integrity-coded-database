@@ -1,15 +1,12 @@
-package cipher;
+package cipher.deprecated;
 
 import com.google.common.base.Charsets;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 import javax.crypto.*;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 

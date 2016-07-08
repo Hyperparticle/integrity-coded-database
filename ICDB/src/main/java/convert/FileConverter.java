@@ -6,9 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import cipher.RNG;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.tools.StringUtils;
@@ -19,8 +22,8 @@ import org.supercsv.prefs.CsvPreference;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 
-import cipher.mac.CodeGen;
-import cipher.mac.Signature;
+import cipher.CodeGen;
+import cipher.Signature;
 import main.args.option.Granularity;
 
 /**
@@ -109,16 +112,20 @@ public class FileConverter {
 	 *            the list to collect the codes
 	 */
 	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen) {
-		// Generate the signature
-		final byte[] signature = codeGen.generateSignature(data);
-		final String signatureString = Signature.toBase64(signature);
+        // TODO: add a serial
+        final long serial = RNG.randomInt();
+        final String serialString = Long.toString(serial);
 
-		// TODO: add a serial
-		final String serial = Signature.toBase64(new byte[] { 0x33 });
+		final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
+		final byte[] allData = ArrayUtils.addAll(data, serialBytes);
+
+		// Generate the signature
+		final byte[] signature = codeGen.generateSignature(allData);
+		final String signatureString = Signature.toBase64(signature);
 
 		// Write the line
 		collector.add(signatureString);
-		collector.add(serial);
+		collector.add(serialString);
 	}
 
 }

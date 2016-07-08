@@ -1,4 +1,4 @@
-package cipher;
+package cipher.deprecated;
 
 /**
  * <p>

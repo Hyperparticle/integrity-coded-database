@@ -1,4 +1,7 @@
-package cipher;
+package cipher.deprecated;
+
+import cipher.deprecated.CodeCipher;
+import cipher.deprecated.RSAKeyGenerator;
 
 import java.math.BigInteger;
 import java.nio.file.Path;

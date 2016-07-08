@@ -1,4 +1,6 @@
-package cipher.mac;
+package cipher;
+
+import cipher.AlgorithmType;
 
 /**
  * <p>

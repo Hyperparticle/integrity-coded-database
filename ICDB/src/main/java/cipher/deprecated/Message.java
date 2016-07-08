@@ -1,4 +1,6 @@
-package cipher;
+package cipher.deprecated;
+
+import cipher.deprecated.CodeCipher;
 
 /**
  * <p>

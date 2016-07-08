@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Table;
+import org.jooq.impl.SQLDataType;
 import org.jooq.util.mysql.MySQLDataType;
 
 import com.google.common.base.Stopwatch;
@@ -110,7 +111,7 @@ public class SchemaConverter {
 		icdb.getCreate().alterTable(table).add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB).execute();
 
 		// Create a serial column
-		icdb.getCreate().alterTable(table).add(Format.SERIAL_COLUMN, MySQLDataType.TINYBLOB).execute();
+		icdb.getCreate().alterTable(table).add(Format.SERIAL_COLUMN, SQLDataType.BIGINT).execute();
 	}
 
 	private void addOCFColumns(final DBConnection icdb, final Table<?> table) {
@@ -129,7 +130,7 @@ public class SchemaConverter {
 					.execute();
 
 			// Create a serial column
-			icdb.getCreate().alterTable(table).add(field.getName() + Format.SERIAL_SUFFIX, MySQLDataType.TINYBLOB)
+			icdb.getCreate().alterTable(table).add(field.getName() + Format.SERIAL_SUFFIX, SQLDataType.BIGINT)
 					.execute();
 		});
 	}

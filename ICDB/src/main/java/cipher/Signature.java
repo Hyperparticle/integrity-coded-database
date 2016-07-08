@@ -1,4 +1,4 @@
-package cipher.mac;
+package cipher;
 
 import com.google.common.io.BaseEncoding;
 

@@ -5,18 +5,9 @@
 *   </p>
 * Created 5/18/2016
 */
-package cipher;
+package cipher.deprecated;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Writer;
 import java.math.BigInteger;
 import java.nio.file.Path;
 import java.security.SecureRandom;

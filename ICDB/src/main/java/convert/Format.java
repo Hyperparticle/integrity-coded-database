@@ -18,8 +18,8 @@ public class Format {
     public static final String SERIAL_COLUMN = "serial";
 
     public static final String DATA_FILE_EXTENSION = ".csv";
-    public static final String FILE_DELIMITER = ",";
     public static final char FILE_DELIMITER_CHAR = ',';
+    public static final String FILE_DELIMITER = Character.toString(FILE_DELIMITER_CHAR);
     public static final String ENCLOSING = "\"";
 
     public static final String DB_DATA_PATH = "./tmp/db-files/data";

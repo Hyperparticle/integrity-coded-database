@@ -17,10 +17,7 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 
-import cipher.AESCipher;
-import cipher.CodeCipher;
-import cipher.RSACipher;
-import cipher.SHACipher;
+import cipher.deprecated.RSACipher;
 
 public class TestCipher {
 
