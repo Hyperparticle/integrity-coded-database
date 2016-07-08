@@ -7,5 +7,5 @@
   "icdbSchema": "employees_icdb",
   "key": "ab23d3a85acf194a71708a3db33d8c75",
   "algorithm": "SHA",
-  "granularity": "FIELD"
+  "granularity": "TUPLE"
 }
