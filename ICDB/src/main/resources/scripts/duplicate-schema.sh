@@ -9,7 +9,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 export_path=./tmp
-schema_file=${export_path}/schema/$1-schema.sql
+schema_file=${export_path}/db-files/schema/$1-schema.sql
 icdb_name=$2
 
 # Create folders if it they do not exist
