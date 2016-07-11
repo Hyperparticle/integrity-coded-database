@@ -3,6 +3,7 @@ package convert;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -148,8 +149,10 @@ public class SchemaConverter {
 		Stopwatch duplicationTime = Stopwatch.createStarted();
 
 		try {
-			new ProcessBuilder("bash", "./src/main/resources/scripts/duplicate-schema.sh", dbName, icdbName).start();
-		} catch (IOException e) {
+			new ProcessBuilder("bash", "./src/main/resources/scripts/duplicate-schema.sh", dbName, icdbName)
+					.start()
+					.waitFor(1_000, TimeUnit.MILLISECONDS);
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
