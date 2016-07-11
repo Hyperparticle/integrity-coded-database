@@ -8,8 +8,11 @@ import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,13 +25,14 @@ import java.util.Set;
  */
 public class ICRL implements Serializable {
 
+    private static final String ICRL_LOCATION = "./src/main/resources/icrl.db";
+
     private static final long start = RNG.randomInt();
     private static long current = start;
 
 //    private static Set<Long> serials = new HashSet<>(5_000_000);
-    private static DB db = DBMaker.fileDB("./src/main/resources/icrl.db")
-        .fileMmapEnable().make();
-    private static Set<Long> serials = db.hashSet("serial", Serializer.LONG).create();
+    private static DB db;
+    private static Set<Long> serials;
 
 //    private static final String DB_LOCATION = "./src/main/resources/icrl.db";
 //    private static DSLContext dbCreate;
@@ -89,4 +93,16 @@ public class ICRL implements Serializable {
         db.close();
     }
 
+    public static void init() {
+        try {
+            Files.deleteIfExists(Paths.get(ICRL_LOCATION));
+
+            db = DBMaker.fileDB(ICRL_LOCATION)
+                    .fileMmapEnable().make();
+            serials = db.hashSet("serial", Serializer.LONG).create();
+        } catch (IOException e) {
+            logger.error("Failed to initialize DB: {}", e.getMessage());
+            System.exit(1);
+        }
+    }
 }

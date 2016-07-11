@@ -76,9 +76,10 @@ public class QueryVerifier {
             // TODO: serial
             final long serial = (long) record.get(Format.SERIAL_COLUMN);
             final byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
+            final String data = builder.toString();
 
             final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
-            final byte[] dataBytes = builder.toString().getBytes(Charsets.UTF_8);
+            final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
 
             final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
 
@@ -101,9 +102,10 @@ public class QueryVerifier {
                 // TODO: serial
                 final long serial = (long) record.get(dataSize + 2*i + 1);
                 final byte[] signature = (byte[]) record.get(dataSize + 2*i);
+                final String data = record.get(i).toString();
 
                 final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
-                final byte[] dataBytes = record.get(i).toString().getBytes(Charsets.UTF_8);
+                final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
 
                 final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
 

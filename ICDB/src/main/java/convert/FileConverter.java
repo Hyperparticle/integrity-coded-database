@@ -45,6 +45,7 @@ public class FileConverter {
 	public FileConverter(CodeGen codeGen, Granularity granularity) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
+        ICRL.init();
 	}
 
 	public void convertFile(final File input, final File output) {
