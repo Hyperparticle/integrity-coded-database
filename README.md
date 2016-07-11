@@ -108,3 +108,11 @@ The `convert-data` command takes a SQL query as input, executes, then verifies a
 This project uses example databases generated for MySQL use.
 
 - Employees DB: https://github.com/datacharmer/test_db
+
+## Troubleshooting
+
+If you get the error:
+`The server time zone value 'MDT' is unrecognized or represents more than one time zone.`
+run the query in MySQL:
+`SET time_zone = 'America/Denver'; SET global time_zone = 'America/Denver';`
+or whatever timezone city you live nearby. This is a workaround for a VERY ANNOYING bug in MySQL.
