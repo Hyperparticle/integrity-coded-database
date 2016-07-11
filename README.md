@@ -16,12 +16,20 @@ $ cd IntegrityCodedDatabase/ICDB
 $ make
 ```
 
+Make will simply run the command `mvn package -DskipTests` to compile `icdb.jar` under the `target` folder.
+
 ## Running the ICDB tool
 
 The arguments for interacting with the ICDB tool is as follows:
 
 ```
-$ ICDBTool [-c config-file] [command] [options]
+$ icdb [-c config-file] [command] [options]
+```
+
+`icdb` is a bash script that simply runs the compiled jar. This can be run directly:
+
+```
+$ java -jar target/icdb.jar [-c config-file] [command] [options]
 ```
 
 All interactions with the tool will require a config file containing a JSON object with several parameters:

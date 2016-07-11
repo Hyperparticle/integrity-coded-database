@@ -3,8 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.boisestate.cs</groupId>
   <artifactId>ICDB</artifactId>
-  <version>0.5.0</version>
+  <version>1.0.0</version>
   <build>
+    <finalName>icdb</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

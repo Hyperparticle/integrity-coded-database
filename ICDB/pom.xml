@@ -6,13 +6,15 @@
 
     <groupId>edu.boisestate.cs</groupId>
     <artifactId>ICDB</artifactId>
-    <version>0.5.0</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <finalName>icdb</finalName>
+
         <plugins>
             <plugin>
                 <!-- Compiler Plugin -->

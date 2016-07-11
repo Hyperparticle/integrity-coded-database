@@ -2,7 +2,6 @@ package cipher;
 
 import cipher.mac.CMAC;
 import cipher.mac.HMAC;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -16,12 +15,12 @@ public enum AlgorithmType {
     RSA {
         @Override
         public byte[] generateSignature(final byte[] data, final byte[] key) {
-            throw new NotImplementedException();
+            throw new RuntimeException("Not implemented");
         }
 
         @Override
         public boolean verify(final byte[] data, final byte[] key, final byte[] signature) {
-            throw new NotImplementedException();
+            throw new RuntimeException("Not implemented");
         }
     },
     AES {
