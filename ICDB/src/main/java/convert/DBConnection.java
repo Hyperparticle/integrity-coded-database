@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  * <p>
@@ -102,6 +103,11 @@ public class DBConnection {
 
     public DSLContext getCreate() {
         return dbCreate;
+    }
+
+    static {
+        java.util.logging.Logger.getLogger("org.jooq.Constants")
+                .setLevel(Level.WARNING);
     }
 
 }

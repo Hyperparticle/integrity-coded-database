@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3551028113">
-    <data-source source="LOCAL" name="ICRL" uuid="7316ee28-1d49-4c66-a31e-545fc6e6ce4d">
+  <component name="DataSourceManagerImpl" format="xml" hash="913064310">
+    <data-source source="LOCAL" name="Sqlite (Xerial)" uuid="ac75ecee-9fc0-4d39-81fb-81db14a9bba4">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/main/resources/ICRL</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/main/resources/icrl.db</jdbc-url>
     </data-source>
   </component>
 </project>

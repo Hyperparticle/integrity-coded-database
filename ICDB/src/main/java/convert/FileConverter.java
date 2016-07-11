@@ -10,7 +10,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import cipher.RNG;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +24,7 @@ import com.google.common.base.Stopwatch;
 import cipher.CodeGen;
 import cipher.Signature;
 import main.args.option.Granularity;
+import verify.ICRL;
 
 /**
  * <p>
@@ -113,7 +113,7 @@ public class FileConverter {
 	 */
 	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen) {
         // TODO: add a serial
-        final long serial = RNG.randomInt();
+        final long serial = ICRL.getNext();
         final String serialString = Long.toString(serial);
 
 		final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();

@@ -74,7 +74,7 @@ public class QueryVerifier {
             }
 
             // TODO: serial
-            final long serial    = (long) record.get(Format.SERIAL_COLUMN);
+            final long serial = (long) record.get(Format.SERIAL_COLUMN);
             final byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
 
             final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
