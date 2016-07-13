@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  * <p>
- *     Maintains the Integrity Code Revocation List (ICRL).
+ *     Maintains the Integrity Code Revocation List (ICRL), storing and loading it from a file.
  * </p>
  * Created 5/8/2016
  * @author Dan Kondratyuk
@@ -30,34 +30,10 @@ public class ICRL implements Serializable {
     private static final long start = RNG.randomInt();
     private static long current = start;
 
-//    private static Set<Long> serials = new HashSet<>(5_000_000);
     private static DB db;
     private static Set<Long> serials;
 
-//    private static final String DB_LOCATION = "./src/main/resources/icrl.db";
-//    private static DSLContext dbCreate;
-//    private static Table<Record> table;
-//    private static Field<Long> field;
-
     private static final Logger logger = LogManager.getLogger();
-
-//    static {
-//        try {
-//            SQLiteDataSource dataSource = new SQLiteDataSource();
-//            dataSource.setUrl("jdbc:sqlite:" + DB_LOCATION);
-//            Connection connection = FiberDataSource.wrap(dataSource).getConnection();
-//            dbCreate = DSL.using(connection, SQLDialect.SQLITE);
-//
-//            dbCreate.execute("CREATE TABLE IF NOT EXISTS `serials` (`serial` BIGINT NOT NULL, UNIQUE (`serial`), PRIMARY KEY (`serial`))");
-//            dbCreate.truncate("serials");
-//
-//            table = DSL.table("serials");
-//            field = DSL.field("serial", Long.class);
-//        } catch (SQLException e) {
-//            logger.error("Failed to connect to local SQLite DB: {}", e.getMessage());
-//            System.exit(1);
-//        }
-//    }
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(ICRL::save));
@@ -71,16 +47,41 @@ public class ICRL implements Serializable {
         current++;
         serials.add(current);
 
-//        // Store all values to the DB
-//        dbCreate.insertInto(table, field)
-//                .values(current)
-//                .execute();
-
         return current;
     }
 
     // TODO: load into memory
     private static void save() {
+        db.close();
+    }
+
+    public static void init(boolean newDB) {
+        try {
+            // Delete the old DB if a new one is requested
+            if (newDB) {
+                Files.deleteIfExists(Paths.get(ICRL_LOCATION));
+            }
+
+            // Load the DB
+            db = DBMaker.fileDB(ICRL_LOCATION)
+                    .fileMmapEnable()
+                    .fileMmapPreclearDisable()
+                    .allocateStartSize(80L * 1024*1024) // 80 MB
+                    .make();
+            db.getStore().fileLoad();
+
+            // Generate the set
+            serials = db
+                    .treeSet("serial", Serializer.LONG)
+                    .create();
+        } catch (IOException e) {
+            logger.error("Failed to initialize ICRL DB: {}", e.getMessage());
+            System.exit(1);
+        }
+    }
+
+//    private static Set<Long> serials = new HashSet<>(5_000_000);
+
 //        try(
 //            FileOutputStream fileOutputStream = new FileOutputStream("./src/main/resources/icrl.ser");
 //            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
@@ -89,20 +90,4 @@ public class ICRL implements Serializable {
 //        } catch(Exception e) {
 //            logger.error("Failed to save ICRL to disk: " + e.getMessage());
 //        }
-
-        db.close();
-    }
-
-    public static void init() {
-        try {
-            Files.deleteIfExists(Paths.get(ICRL_LOCATION));
-
-            db = DBMaker.fileDB(ICRL_LOCATION)
-                    .fileMmapEnable().make();
-            serials = db.hashSet("serial", Serializer.LONG).create();
-        } catch (IOException e) {
-            logger.error("Failed to initialize DB: {}", e.getMessage());
-            System.exit(1);
-        }
-    }
 }

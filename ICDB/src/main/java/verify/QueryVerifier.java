@@ -6,7 +6,8 @@ import com.google.common.base.Stopwatch;
 import convert.DBConnection;
 import convert.Format;
 import main.args.ExecuteQueryCommand;
-import main.args.config.Config;
+import main.args.config.ConfigArgs;
+import main.args.config.UserConfig;
 import main.args.option.Granularity;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -37,11 +38,11 @@ public class QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(ExecuteQueryCommand command, DBConnection icdb, Config dbConfig, String icdbQuery) {
+    public QueryVerifier(ExecuteQueryCommand command, DBConnection icdb, UserConfig dbConfig, String icdbQuery) {
         this.icdbQuery = icdbQuery;
 //        this.files = command.files;
         this.granularity = dbConfig.granularity;
-        this.codeGen = dbConfig.getCodeGen();
+        this.codeGen = dbConfig.codeGen;
 //        this.icdbName = dbConfig.schema + Format.ICDB_SUFFIX;
         this.icdb = icdb;
     }

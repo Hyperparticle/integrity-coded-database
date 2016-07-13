@@ -27,7 +27,7 @@ public class TestCipher {
 
 	@Test
 	public void testAESCipher() {
-//		Path path = Paths.get("/Users/ujwal-cipher.mac/Desktop/TEST/AES");
+//		Path path = Paths.get("/Users/ujwal-cipher.signature/Desktop/TEST/AES");
 //		AESCipher aescipher = new AESCipher(path, "world");
 //		String encoded = aescipher.encrypt("testmessage");
 //		System.out.println("AES::" + encoded);
@@ -37,7 +37,7 @@ public class TestCipher {
 
 	@Test
 	public void testRSACipher() {
-		Path path = Paths.get("/Users/ujwal-cipher.mac/Desktop/TEST/RSA");
+		Path path = Paths.get("/Users/ujwal-cipher.signature/Desktop/TEST/RSA");
 		RSACipher rsacipher = new RSACipher(path, "world");
 		String encoded = rsacipher.encrypt("testmessage");
 		System.out.println("RSA::" + encoded);
@@ -47,7 +47,7 @@ public class TestCipher {
 
 	@Test
 	public void testSHACipher() {
-//		Path path = Paths.get("/Users/ujwal-cipher.mac/Desktop/TEST/SHA");
+//		Path path = Paths.get("/Users/ujwal-cipher.signature/Desktop/TEST/SHA");
 //		SHACipher shacipher = new SHACipher();
 //		String encoded = shacipher.encrypt("testmessage");
 //		System.out.println("SHA::" + encoded);

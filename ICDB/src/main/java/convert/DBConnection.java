@@ -1,7 +1,8 @@
 package convert;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import main.args.config.Config;
+import main.args.config.ConfigArgs;
+import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
@@ -12,13 +13,8 @@ import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -39,14 +35,14 @@ public class DBConnection {
     /**
      * Configure a connection to a MySQL server
      */
-    public static void configure(String serverName, int portNumber, String user, String password) {
-        dataSource.setServerName(serverName);
-        dataSource.setPortNumber(portNumber);
-        dataSource.setUser(user);
-        dataSource.setPassword(password);
+    public static void configure(UserConfig dbConfig) {
+        dataSource.setServerName(dbConfig.ip);
+        dataSource.setPortNumber(dbConfig.port);
+        dataSource.setUser(dbConfig.user);
+        dataSource.setPassword(dbConfig.password);
     }
 
-    public static DBConnection connect(String dbName, Config dbConfig) {
+    public static DBConnection connect(String dbName, UserConfig dbConfig) {
 //        if (dbConnections.containsKey(dbName)) {
 //            return dbConnections.get(dbName);
 //        }
@@ -87,6 +83,8 @@ public class DBConnection {
         // Get table metadata
         tableNames = dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
                 .map(result -> result.get(0).toString());
+
+
     }
 
     public Connection getConnection() {

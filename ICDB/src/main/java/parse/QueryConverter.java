@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import main.args.config.Config;
+import main.args.config.ConfigArgs;
+import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +32,7 @@ import net.sf.jsqlparser.JSQLParserException;
 // TODO ICDB query output file path.//Database name to fetch the metadata.
 public class QueryConverter {
 
-	private Path outputPath = Paths.get("/Users/ujwal-mac/Desktop/queries");
+	private Path outputPath = Paths.get("/Users/ujwal-signature/Desktop/queries");
 	private File queryFile;
 
 	private final List<String> queries;
@@ -52,14 +53,14 @@ public class QueryConverter {
 		this.icdb = icdb;
 	}
 
-	public QueryConverter(ConvertQueryCommand command, DBConnection icdb, Config dbConfig) {
+	public QueryConverter(ConvertQueryCommand command, DBConnection icdb, ConfigArgs dbConfig) {
 		this.queries = command.queries;
 		this.files = command.files;
 		this.icdb = icdb;
 		this.granularity = dbConfig.granularity;
 	}
 
-	public QueryConverter(ExecuteQueryCommand executeQueryCommand, String query, DBConnection icdb, Config dbConfig) {
+	public QueryConverter(ExecuteQueryCommand executeQueryCommand, String query, DBConnection icdb, UserConfig dbConfig) {
 		this.queries = new ArrayList<>();
 		queries.add(query);
 		this.files = new ArrayList<>();

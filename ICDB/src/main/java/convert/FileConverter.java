@@ -22,7 +22,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 
 import cipher.CodeGen;
-import cipher.Signature;
+import cipher.signature.Sign;
 import main.args.option.Granularity;
 import verify.ICRL;
 
@@ -45,7 +45,7 @@ public class FileConverter {
 	public FileConverter(CodeGen codeGen, Granularity granularity) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
-        ICRL.init();
+        ICRL.init(true);
 	}
 
 	public void convertFile(final File input, final File output) {
@@ -122,7 +122,7 @@ public class FileConverter {
 
 		// Generate the signature
 		final byte[] signature = codeGen.generateSignature(allData);
-		final String signatureString = Signature.toBase64(signature);
+		final String signatureString = Sign.toBase64(signature);
 
 		// Write the line
 		collector.add(signatureString);

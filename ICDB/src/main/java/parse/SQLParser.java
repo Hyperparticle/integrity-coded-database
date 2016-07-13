@@ -10,7 +10,7 @@ import main.args.option.Granularity;
 import net.sf.jsqlparser.JSQLParserException;
 
 /**
- * @author ujwal-mac
+ * @author ujwal-signature
  *
  */
 public class SQLParser {

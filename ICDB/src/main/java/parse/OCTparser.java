@@ -1,5 +1,5 @@
 /**
-ujwal-mac
+ujwal-signature
 */
 package parse;
 
@@ -86,7 +86,6 @@ public class OCTparser extends SQLParser {
 					for (String attribute : AttributeList) {
 						if (tableList.size() > 1) {
 							SelectUtils.addExpression(selectStatement, new Column(new Table(tbl), attribute));
-
 						} else {
 							SelectUtils.addExpression(selectStatement, new Column(attribute));
 						}

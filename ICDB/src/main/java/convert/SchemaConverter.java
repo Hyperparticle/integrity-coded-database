@@ -3,8 +3,8 @@ package convert;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
+import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Table;
@@ -14,7 +14,7 @@ import org.jooq.util.mysql.MySQLDataType;
 import com.google.common.base.Stopwatch;
 
 import main.args.ConvertDBCommand;
-import main.args.config.Config;
+import main.args.config.ConfigArgs;
 import main.args.option.Granularity;
 
 /**
@@ -32,14 +32,14 @@ public class SchemaConverter {
 
 	private final DBConnection db;
 	private final Granularity granularity;
-	private final Config dbConfig;
+	private final UserConfig dbConfig;
 
 	private final boolean skipDuplicate;
 	private final boolean skipSchema;
 
 	private static final Logger logger = LogManager.getLogger();
 
-	private SchemaConverter(DBConnection db, Config dbConfig, ConvertDBCommand convertConfig) {
+	private SchemaConverter(DBConnection db, UserConfig dbConfig, ConvertDBCommand convertConfig) {
 		this.dbName = dbConfig.schema;
 		this.icdbName = dbConfig.icdbSchema;
 
@@ -51,7 +51,7 @@ public class SchemaConverter {
 		this.skipSchema = convertConfig.skipSchema;
 	}
 
-	public static void convertSchema(DBConnection db, Config config, ConvertDBCommand convertConfig) {
+	public static void convertSchema(DBConnection db, UserConfig config, ConvertDBCommand convertConfig) {
 		try {
 			SchemaConverter converter = new SchemaConverter(db, config, convertConfig);
 			converter.convertSchema();
@@ -151,7 +151,7 @@ public class SchemaConverter {
 		try {
 			new ProcessBuilder("bash", "./src/main/resources/scripts/duplicate-schema.sh", dbName, icdbName)
 					.start()
-					.waitFor(1_000, TimeUnit.MILLISECONDS);
+					.waitFor();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			System.exit(1);

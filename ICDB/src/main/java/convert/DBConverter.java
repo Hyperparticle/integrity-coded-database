@@ -3,7 +3,8 @@ package convert;
 import cipher.CodeGen;
 import com.google.common.base.Stopwatch;
 import main.args.ConvertDBCommand;
-import main.args.config.Config;
+import main.args.config.ConfigArgs;
+import main.args.config.UserConfig;
 import main.args.option.Granularity;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -47,7 +48,7 @@ public class DBConverter {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public DBConverter(DBConnection db, DBConnection icdb, Config config, ConvertDBCommand convertConfig) {
+    public DBConverter(DBConnection db, DBConnection icdb, UserConfig config, ConvertDBCommand convertConfig) {
         this.db = db;
         this.icdb = icdb;
 
@@ -55,7 +56,7 @@ public class DBConverter {
         this.skipLoad = convertConfig.skipLoad;
 
         this.granularity = config.granularity;
-        this.codeGen = config.getCodeGen();
+        this.codeGen = config.codeGen;
 
         this.dbName = config.schema;
         this.icdbName = config.icdbSchema;

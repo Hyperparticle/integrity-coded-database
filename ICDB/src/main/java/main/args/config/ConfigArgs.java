@@ -1,8 +1,6 @@
 package main.args.config;
 
 import cipher.AlgorithmType;
-import cipher.CodeGen;
-import com.google.common.base.Charsets;
 import main.args.option.Granularity;
 
 /**
@@ -13,18 +11,15 @@ import main.args.option.Granularity;
  *
  * @author Dan Kondratyuk
  */
-public class Config {
+public class ConfigArgs {
     public String ip;
     public int port;
     public String user;
     public String password;
     public String schema;
     public String icdbSchema;
-    public String key;
-    public AlgorithmType algorithm;
     public Granularity granularity;
-
-    public CodeGen getCodeGen() {
-        return new CodeGen(algorithm, key.getBytes(Charsets.UTF_8));
-    }
+    public AlgorithmType algorithm;
+    public String macKey;
+    public String rsaKeyFile;
 }

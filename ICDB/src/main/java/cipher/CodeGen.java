@@ -1,7 +1,5 @@
 package cipher;
 
-import cipher.AlgorithmType;
-
 /**
  * <p>
  *     A wrapper class containing a key and an algorithm to generate a signature from a message
@@ -11,12 +9,10 @@ import cipher.AlgorithmType;
  * @author Dan Kondratyuk
  */
 public class CodeGen {
-
-    // TODO: use Key class
     private final AlgorithmType algorithm;
-    private final byte[] key;
+    private final Key key;
 
-    public CodeGen(AlgorithmType algorithm, byte[] key) {
+    public CodeGen(AlgorithmType algorithm, Key key) {
         this.algorithm = algorithm;
         this.key = key;
     }
@@ -28,5 +24,4 @@ public class CodeGen {
     public boolean verify(byte[] data, byte[] signature) {
         return algorithm.verify(data, key, signature);
     }
-
 }

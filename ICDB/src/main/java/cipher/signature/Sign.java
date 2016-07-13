@@ -1,4 +1,4 @@
-package cipher;
+package cipher.signature;
 
 import com.google.common.io.BaseEncoding;
 
@@ -9,13 +9,13 @@ import com.google.common.io.BaseEncoding;
  *
  * @author Dan Kondratyuk
  */
-public class Signature {
+public class Sign {
 
     public static String toBase64(final byte[] signature) {
         return BaseEncoding.base64().encode(signature);
     }
 
-    public static byte[] toBytes(final String signature) {
+    public static byte[] fromBase64(final String signature) {
         return BaseEncoding.base64().decode(signature);
     }
 
