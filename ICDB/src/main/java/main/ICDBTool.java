@@ -118,4 +118,8 @@ public class ICDBTool {
         }
 	}
 
+	static {
+        System.setProperty("org.jooq.no-logo", "true");
+	}
+
 }

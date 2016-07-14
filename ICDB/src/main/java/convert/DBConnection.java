@@ -103,9 +103,4 @@ public class DBConnection {
         return dbCreate;
     }
 
-    static {
-        java.util.logging.Logger.getLogger("org.jooq.Constants")
-                .setLevel(Level.WARNING);
-    }
-
 }

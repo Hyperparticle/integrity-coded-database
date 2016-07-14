@@ -5,7 +5,8 @@
   "password": "",
   "schema": "employees",
   "icdbSchema": "employees_icdb",
-  "key": "ab23d3a85acf194a71708a3db33d8c75",
   "algorithm": "SHA",
-  "granularity": "TUPLE"
+  "granularity": "TUPLE",
+  "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
+  "rsaKeyFile": "key.pem"
 }
