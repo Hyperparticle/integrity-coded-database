@@ -86,6 +86,10 @@ public class SchemaConverter {
 		// Get the ICDB
 		final DBConnection icdb = DBConnection.connect(icdbName, dbConfig);
 
+        if (icdb == null) {
+            return;
+        }
+
 		// Fetch all table names
 		icdb.getTables().forEach(tableName -> {
 			// For each table
@@ -108,6 +112,8 @@ public class SchemaConverter {
 			return;
 		}
 
+
+
 		// Create a svc column
 		icdb.getCreate().alterTable(table).add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB).execute();
 
@@ -125,7 +131,7 @@ public class SchemaConverter {
 		}
 
 		// Loop through each field and create a corresponding column
-		Arrays.asList(table.fields()).stream().forEach(field -> {
+		Arrays.stream(table.fields()).forEach(field -> {
 			// Create a svc column
 			icdb.getCreate().alterTable(table).add(field.getName() + Format.SVC_SUFFIX, MySQLDataType.TINYBLOB)
 					.execute();

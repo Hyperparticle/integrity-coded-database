@@ -1,6 +1,7 @@
 package convert;
 
 import cipher.CodeGen;
+import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import main.args.ConvertDBCommand;
 import main.args.config.ConfigArgs;
@@ -102,7 +103,6 @@ public class DBConverter {
         importData();
     }
 
-    // TODO: move this to the fileconverter class
     private void exportData() throws IOException {
         Stopwatch dataExportTime = Stopwatch.createStarted();
 
@@ -122,12 +122,11 @@ public class DBConverter {
                     // Output to a csv file
                     db.getCreate().selectFrom(icdbTable)
                         .fetch().formatCSV(output, Format.FILE_DELIMITER_CHAR, Format.MYSQL_NULL);
-                } catch (IOException e) {
-                    // TODO
-                    e.printStackTrace();
-                }
 
-                logger.debug("Exported table {} in {}", tableName, exportTime);
+                    logger.debug("Exported table {} in {}", tableName, exportTime);
+                } catch (IOException e) {
+                    logger.error("Failed to export table {}: {}", tableName, e.getMessage());
+                }
             });
 
         logger.debug("Total db data export time: {}", dataExportTime);
@@ -177,19 +176,10 @@ public class DBConverter {
 
                 try {
                     icdb.getCreate().execute(query);
+                    logger.debug("Imported table {} in {}", tableName, importTime);
                 } catch (DataAccessException e) {
-                    System.err.println(e.getMessage());// TODO
+                    logger.error("Failed to import table {}: {}", tableName, e.getMessage());
                 }
-
-//                icdbCreate.loadInto(icdbTable)
-//                    .loadCSV(input, Charsets.UTF_8)
-//                    .fields(icdbTable.fields())
-//                    .execute();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-            logger.debug("Imported table {} in {}", tableName, importTime);
         });
 
         // Don't forget to set foreign key checks back
@@ -224,12 +214,11 @@ public class DBConverter {
         builder.setLength(builder.length()-1);
         builder.append(") SET ");
 
-        setValues.stream()
-                .forEach(set -> builder.append(set)
-                        .append("=FROM_BASE64(@")
-                        .append(set)
-                        .append("),")
-                );
+        setValues.forEach(set -> builder.append(set)
+                .append("=FROM_BASE64(@")
+                .append(set)
+                .append("),")
+        );
 
         builder.setLength(builder.length()-1);
         builder.append(";");

@@ -73,7 +73,7 @@ public class ICDBTool {
 
 		// Convert all data and load it
 		dbConverter.convert();
-		dbConverter.load(); // TODO: split this into a data exporter class
+		dbConverter.load();
 	}
 
 	/**

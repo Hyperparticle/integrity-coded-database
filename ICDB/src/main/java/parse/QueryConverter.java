@@ -157,8 +157,7 @@ public class QueryConverter {
 			// TODO: use streams to return multiple queries
 			return builder.toString();
 		} catch (IOException e) {
-			// TODO: handle exception
-			System.err.println("Failed to convert query ");
+			logger.error("Failed to convert query: {}", e.getMessage());
 		}
 
 		return null;

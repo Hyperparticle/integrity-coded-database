@@ -30,7 +30,6 @@ public class OCFparser extends SQLParser {
 
 	public OCFparser(String query, String schema, Granularity granularity, Connection icdb) throws JSQLParserException {
 		super(query, schema, granularity, icdb);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

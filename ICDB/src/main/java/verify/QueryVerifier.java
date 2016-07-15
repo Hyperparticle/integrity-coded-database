@@ -34,6 +34,8 @@ public class QueryVerifier {
     private final Granularity granularity;
     private final CodeGen codeGen;
 
+    private final ICRL icrl;
+
     private StringBuilder errorStatus = new StringBuilder();
 
     private static final Logger logger = LogManager.getLogger();
@@ -45,17 +47,14 @@ public class QueryVerifier {
         this.codeGen = dbConfig.codeGen;
 //        this.icdbName = dbConfig.schema + Format.ICDB_SUFFIX;
         this.icdb = icdb;
+        this.icrl = ICRL.getInstance();
     }
 
     public boolean verify() {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
         final DSLContext icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
-//        final Schema icdbSchema = icdbCreate.meta().getSchemas().stream()
-//                .filter(schema -> schema.getName().equals(icdbName))
-//                .findFirst().get();
 
-//        Result<Record> result = icdbCreate.fetch(icdbQuery);
         Cursor<Record> cursor = icdbCreate.fetchLazy(icdbQuery);
         boolean verified = granularity.equals(Granularity.TUPLE) ?
                 verifyOCT(cursor) :
@@ -74,17 +73,11 @@ public class QueryVerifier {
                 builder.append(value);
             }
 
-            // TODO: serial
             final long serial = (long) record.get(Format.SERIAL_COLUMN);
             final byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
             final String data = builder.toString();
 
-            final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
-            final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
-
-            final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
-
-            final boolean verified = codeGen.verify(allBytes, signature);
+            final boolean verified = verifyData(serial, signature, data);
 
             if (!verified) {
                 errorStatus.append("\n")
@@ -100,17 +93,11 @@ public class QueryVerifier {
         return cursor.stream().map(record -> {
             final int dataSize = record.size() / 3;
             for (int i = 0; i < dataSize; i++) {
-                // TODO: serial
                 final long serial = (long) record.get(dataSize + 2*i + 1);
                 final byte[] signature = (byte[]) record.get(dataSize + 2*i);
                 final String data = record.get(i).toString();
 
-                final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
-                final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
-
-                final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
-
-                final boolean verified = codeGen.verify(allBytes, signature);
+                final boolean verified = verifyData(serial, signature, data);
 
                 if (!verified) {
                     errorStatus.append("\n")
@@ -124,6 +111,17 @@ public class QueryVerifier {
 
             return true;
         }).allMatch(verified -> verified);
+    }
+
+    private boolean verifyData(final long serial, final byte[] signature, final String data) {
+        final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
+        final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
+
+        final byte[] allBytes = ArrayUtils.addAll(dataBytes, serialBytes);
+
+        final boolean serialVerified = icrl.contains(serial);
+        final boolean signatureVerified = codeGen.verify(allBytes, signature);
+        return serialVerified && signatureVerified;
     }
 
     public String getError() {

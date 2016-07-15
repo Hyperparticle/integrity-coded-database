@@ -40,12 +40,14 @@ public class FileConverter {
 	private final CodeGen codeGen;
 	private final Granularity granularity;
 
+    private final ICRL icrl;
+
 	private static final Logger logger = LogManager.getLogger();
 
 	public FileConverter(CodeGen codeGen, Granularity granularity) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
-        ICRL.init(true);
+        this.icrl = ICRL.init();
 	}
 
 	public void convertFile(final File input, final File output) {
@@ -83,7 +85,7 @@ public class FileConverter {
 			// Combine the list into a string
 			final String data = StringUtils.join(nextLine.toArray());
 			final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
-			convertLine(nextLine, dataBytes, codeGen);
+			convertLine(nextLine, dataBytes, codeGen, icrl);
 
 			csvWriter.write(nextLine);
 		}
@@ -98,7 +100,7 @@ public class FileConverter {
             collector.addAll(nextLine);
 			for (String field : nextLine) {
 				final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
-				convertLine(collector, dataBytes, codeGen);
+				convertLine(collector, dataBytes, codeGen, icrl);
 			}
 
 			csvWriter.write(collector);
@@ -112,9 +114,8 @@ public class FileConverter {
 	 * @param collector
 	 *            the list to collect the codes
 	 */
-	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen) {
-        // TODO: add a serial
-        final long serial = ICRL.getNext();
+	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, ICRL icrl) {
+        final long serial = icrl.getNext();
         final String serialString = Long.toString(serial);
 
 		final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
