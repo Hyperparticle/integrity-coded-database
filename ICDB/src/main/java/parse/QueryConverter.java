@@ -22,7 +22,7 @@ import net.sf.jsqlparser.JSQLParserException;
 
 /**
  * <p>
- * Converts a SQL query into an ICDB SQL query.
+ * 		Converts a SQL query into an ICDB SQL query.
  * </p>
  * Created 5/8/2016
  * 

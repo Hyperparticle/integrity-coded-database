@@ -3,7 +3,6 @@ package cipher;
 import cipher.signature.CMAC;
 import cipher.signature.HMAC;
 import cipher.signature.RSASignature;
-import org.bouncycastle.crypto.params.RSAKeyParameters;
 
 
 /**

@@ -22,7 +22,7 @@ import verify.QueryVerifier;
 
 /**
  * <p>
- * A tool for performing ICDB-related tasks.
+ * 	A tool for performing ICDB-related tasks.
  * </p>
  * Created on 5/10/2016
  *
@@ -108,9 +108,9 @@ public class ICDBTool {
             query = converter.convert();
         }
 
-		QueryVerifier verifier = new QueryVerifier(executeQueryCommand, icdb, dbConfig, query);
+		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
 
-        if (verifier.verify()) {
+        if (verifier.verify(query)) {
             logger.info("Query verified");
         } else {
             logger.info("Query failed to verify");
