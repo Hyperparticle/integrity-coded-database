@@ -1,10 +1,9 @@
 package main.args.option;
 
 import convert.DBConnection;
-import main.args.ConvertQueryCommand;
 import main.args.config.UserConfig;
-import parse.OCFparser;
-import parse.OCTparser;
+import parse.OCFQueryConverter;
+import parse.OCTQueryConverter;
 import parse.QueryConverter;
 import verify.OCFQueryVerifier;
 import verify.OCTQueryVerifier;
@@ -21,9 +20,8 @@ import verify.QueryVerifier;
 public enum Granularity {
     TUPLE {
         @Override
-        public QueryConverter getConverter(ConvertQueryCommand command, DBConnection icdb) {
-            throw new RuntimeException("Not implemented");
-//            return new OCTparser(command, icdb);
+        public QueryConverter getConverter(DBConnection icdb) {
+            return new OCTQueryConverter(icdb);
         }
 
         @Override
@@ -33,9 +31,8 @@ public enum Granularity {
     },
     FIELD {
         @Override
-        public QueryConverter getConverter(ConvertQueryCommand command, DBConnection icdb) {
-            throw new RuntimeException("Not implemented");
-//            return new OCFparser();
+        public QueryConverter getConverter(DBConnection icdb) {
+            return new OCFQueryConverter(icdb);
         }
 
         @Override
@@ -44,6 +41,6 @@ public enum Granularity {
         }
     };
 
-    public abstract QueryConverter getConverter(ConvertQueryCommand command, DBConnection icdb);
+    public abstract QueryConverter getConverter(DBConnection icdb);
     public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig);
 }

@@ -39,15 +39,31 @@ ip          - the target MySQL database IP address
 port        - the port the database is running on
 user        - database user
 password    - database password (if any)
-schema      - database schema (for conversion and query execution)
-key         - 128-bit key encoded as a hexadecimal string
+schema      - database schema to use (for conversion)
+icdbSchema  - ICDB database schema name (for execution and verification)
 algorithm   - the encryption algorithm to use (RSA, AES, or SHA)
 granularity - use code per field or code per tuple (FIELD or TUPLE)
+macKey      - 128-bit MAC key encoded as a base64 string
+rsaKeyFile  - PEM file containing public and private RSA keys
 ```
 
 For convenience, a config file is given at `./ICDB/config.json`, which will be loaded by default if the `-c` option is not specified.
 
-Another example config file is located under `src/main/resources/config-sample.json`.
+The default config provides the following JSON object:
+```
+{
+  "ip": "localhost",
+  "port": 3306,
+  "user": "root",
+  "password": "",
+  "schema": "employees",
+  "icdbSchema": "employees_icdb",
+  "algorithm": "SHA",
+  "granularity": "TUPLE",
+  "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
+  "rsaKeyFile": "key.pem"
+}
+```
 
 ### Commands available
 

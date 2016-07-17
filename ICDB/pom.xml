@@ -153,11 +153,6 @@
             <artifactId>mapdb</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.8.11.2</version>
-        </dependency>
 
         <!-- Crypto -->
         <dependency>
@@ -176,6 +171,11 @@
             <groupId>com.beust</groupId>
             <artifactId>jcommander</artifactId>
             <version>1.48</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>0.9.5</version>
         </dependency>
         <dependency>
             <groupId>net.sf.supercsv</groupId>
@@ -215,11 +215,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
-        </dependency>
-         <dependency>
-        	<groupId>com.github.jsqlparser</groupId>
-        	<artifactId>jsqlparser</artifactId>
-        	<version>0.9.5</version>
         </dependency>
     </dependencies>
 

@@ -3,6 +3,7 @@ package main;
 import java.io.FileNotFoundException;
 
 import main.args.config.UserConfig;
+import net.sf.jsqlparser.statement.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,9 +87,16 @@ public class ICDBTool {
 
 		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
-		QueryConverter converter = new QueryConverter(convertQueryCmd, icdb);
-		String result = converter.convert();
-		System.out.println(result);
+		QueryConverter converter = dbConfig.granularity.getConverter(icdb);
+
+		convertQueryCmd.queries.forEach(query -> {
+			Statement result = converter.convert(query);
+			logger.info(result);
+		});
+
+
+
+
 	}
 
 	/**
@@ -104,8 +112,8 @@ public class ICDBTool {
 
         // Convert query if specified
 		if (executeQueryCommand.convert) {
-            QueryConverter converter = new QueryConverter(executeQueryCommand, query, icdb, dbConfig);
-            query = converter.convert();
+            QueryConverter converter = dbConfig.granularity.getConverter(icdb);
+            query = converter.convert(query).toString();
         }
 
 		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);

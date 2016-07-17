@@ -5,9 +5,7 @@ import java.util.List;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-import main.args.option.Granularity;
-import main.args.option.GranularityConverter;
-import main.args.option.QuerySPlitter;
+import main.args.option.QuerySplitter;
 
 /**
  * <p>
@@ -21,14 +19,10 @@ import main.args.option.QuerySPlitter;
 public class ConvertQueryCommand extends ConfigCommand {
 
 	@Parameter(names = { "-q",
-			"--query" }, description = "Convert one or more queries as arguments", splitter = QuerySPlitter.class)
+			"--query" }, description = "Convert one or more queries as arguments", splitter = QuerySplitter.class)
 	public List<String> queries;
 
-	@Parameter(names = { "-f", "--file" }, description = "Convert all queries in one or more files")
-	public List<String> files;
-
-	@Parameter(names = { "-g",
-			"--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
-	public Granularity granularity = Granularity.TUPLE;
+//	@Parameter(names = { "-f", "--file" }, description = "Convert all queries in one or more files")
+//	public List<String> files;
 
 }
