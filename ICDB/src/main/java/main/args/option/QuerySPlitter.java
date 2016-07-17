@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.beust.jcommander.converters.IParameterSplitter;
 
-public class QuerySPlitter implements IParameterSplitter {
+public class QuerySplitter implements IParameterSplitter {
 
 	@Override
 	public List<String> split(String value) {

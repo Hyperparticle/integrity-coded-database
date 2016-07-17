@@ -94,7 +94,7 @@ public class DBConnection {
 //                );
 
         // Get all table names
-        tableNames = dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
+        tableNames = dbCreate.fetch("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")
                 .map(result -> result.get(0).toString());
 
         // Map a table (String) to a list of columns (List<String>)

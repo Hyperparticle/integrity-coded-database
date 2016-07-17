@@ -5,12 +5,12 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;
 import main.args.config.UserConfig;
-import main.args.option.Granularity;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.impl.DSL;
+import parse.query.ICDBQuery;
 
 import java.nio.ByteBuffer;
 
@@ -24,7 +24,6 @@ import java.nio.ByteBuffer;
 public abstract class QueryVerifier {
 
     private final DBConnection icdb;
-    private final Granularity granularity;
     private final CodeGen codeGen;
 
     private final ICRL icrl;
@@ -35,7 +34,6 @@ public abstract class QueryVerifier {
 
     public QueryVerifier(DBConnection icdb, UserConfig dbConfig) {
         this.icdb = icdb;
-        this.granularity = dbConfig.granularity;
         this.codeGen = dbConfig.codeGen;
 
         this.icrl = ICRL.getInstance();
@@ -45,19 +43,24 @@ public abstract class QueryVerifier {
      * Executes and verifies a given query
      * @return true if the query is verified
      */
-    public boolean verify(String icdbQuery) {
+    public boolean verify(ICDBQuery icdbQuery) {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
         final DSLContext icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
+        Cursor<Record> cursor = icdbQuery.verify(icdbCreate);
 
-        Cursor<Record> cursor = icdbCreate.fetchLazy(icdbQuery);
         boolean verified = verify(cursor);
 
-        cursor.close();
         logger.debug("Total query verification time: {}", queryVerificationTime);
+        cursor.close();
+
         return verified;
     }
 
+    /**
+     * Executes and verifies a given query given a cursor into the data records
+     * @return true if the query is verified
+     */
     protected abstract boolean verify(Cursor<Record> cursor);
 
     /**

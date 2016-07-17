@@ -19,6 +19,7 @@ import main.args.ExecuteQueryCommand;
 import main.args.config.ConfigArgs;
 import net.sf.jsqlparser.JSQLParserException;
 import parse.QueryConverter;
+import parse.query.ICDBQuery;
 import verify.QueryVerifier;
 
 /**
@@ -110,19 +111,16 @@ public class ICDBTool {
 
 		String query = executeQueryCommand.queries.get(0);
 
-        // Convert query if specified
-		if (executeQueryCommand.convert) {
-            QueryConverter converter = dbConfig.granularity.getConverter(icdb);
-            query = converter.convert(query).toString();
-        }
+        QueryConverter converter = dbConfig.granularity.getConverter(icdb);
+        ICDBQuery icdbQuery = new ICDBQuery(query, converter);
 
 		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
 
-        if (verifier.verify(query)) {
+        if (verifier.verify(icdbQuery)) {
             logger.info("Query verified");
         } else {
             logger.info("Query failed to verify");
-            logger.info(verifier.getError());
+            logger.error(verifier.getError());
         }
 	}
 

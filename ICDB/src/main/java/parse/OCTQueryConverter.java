@@ -71,24 +71,13 @@ public class OCTQueryConverter implements QueryConverter {
      * SELECT conversion. This effectively turns any SELECT query into a SELECT * query
      */
     private Statement convert(Select select) {
-        TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-        List<String> tableList = tablesNamesFinder.getTableList(select);
-
-        // Clear any columns that exist
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+
         List<SelectItem> selectList = new ArrayList<>();
         selectList.add(new AllColumns());
-        plainSelect.setSelectItems(selectList);
 
-        // Add all columns to all tables
-//        for (String table : tableList) {
-//            // Obtain all column names from the table
-//            List<String> columns = icdb.getFields(table);
-//
-//            for (String column : columns) {
-//                SelectUtils.addExpression(select, new Column(new Table(table), column));
-//            }
-//        }
+        // Convert query to a SELECT * to obtain all tuples
+        plainSelect.setSelectItems(selectList);
 
         return select;
     }
