@@ -3,7 +3,6 @@ package main;
 import java.io.FileNotFoundException;
 
 import main.args.config.UserConfig;
-import net.sf.jsqlparser.statement.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,8 +17,7 @@ import main.args.ConvertQueryCommand;
 import main.args.ExecuteQueryCommand;
 import main.args.config.ConfigArgs;
 import net.sf.jsqlparser.JSQLParserException;
-import parse.QueryConverter;
-import parse.query.ICDBQuery;
+import parse.ICDBQuery;
 import verify.QueryVerifier;
 
 /**
@@ -81,24 +79,22 @@ public class ICDBTool {
 	/**
 	 * Converts the Query to an ICDB Query
 	 */
-
 	private static void convertQuery(CommandLineArgs cmd, UserConfig dbConfig) throws JSQLParserException {
-		final ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
-		final String icdbSchema = dbConfig.icdbSchema;
+        final ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
+        final String icdbSchema = dbConfig.icdbSchema;
 
-		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
+        DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
-		QueryConverter converter = dbConfig.granularity.getConverter(icdb);
+        convertQueryCmd.queries.forEach(query -> {
+            ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb);
 
-		convertQueryCmd.queries.forEach(query -> {
-			Statement result = converter.convert(query);
-			logger.info(result);
-		});
+            logger.info("Verify query:");
+            logger.info(icdbQuery.getVerifyQuery());
 
-
-
-
-	}
+            logger.info("Converted query:");
+            logger.info(icdbQuery.getConvertedQuery());
+        });
+    }
 
 	/**
 	 * Executes the query
@@ -110,14 +106,13 @@ public class ICDBTool {
 		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
 		String query = executeQueryCommand.queries.get(0);
-
-        QueryConverter converter = dbConfig.granularity.getConverter(icdb);
-        ICDBQuery icdbQuery = new ICDBQuery(query, converter);
+        ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb);
 
 		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
 
         if (verifier.verify(icdbQuery)) {
             logger.info("Query verified");
+            verifier.execute(icdbQuery);
         } else {
             logger.info("Query failed to verify");
             logger.error(verifier.getError());

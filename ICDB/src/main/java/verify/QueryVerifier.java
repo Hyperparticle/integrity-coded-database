@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.impl.DSL;
-import parse.query.ICDBQuery;
+import parse.ICDBQuery;
 
 import java.nio.ByteBuffer;
 
@@ -28,7 +28,8 @@ public abstract class QueryVerifier {
 
     private final ICRL icrl;
 
-    protected StringBuilder errorStatus = new StringBuilder();
+    protected final DSLContext icdbCreate;
+    protected final StringBuilder errorStatus = new StringBuilder();
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -36,6 +37,7 @@ public abstract class QueryVerifier {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
 
+        this.icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
         this.icrl = ICRL.getInstance();
     }
 
@@ -46,15 +48,21 @@ public abstract class QueryVerifier {
     public boolean verify(ICDBQuery icdbQuery) {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
-        final DSLContext icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
-        Cursor<Record> cursor = icdbQuery.verify(icdbCreate);
-
+        Cursor<Record> cursor = icdbQuery.getVerifyData(icdbCreate);
         boolean verified = verify(cursor);
 
         logger.debug("Total query verification time: {}", queryVerificationTime);
         cursor.close();
 
         return verified;
+    }
+
+    public void execute(ICDBQuery icdbQuery) {
+        Stopwatch queryExecutionTime = Stopwatch.createStarted();
+
+        icdbQuery.execute(icdbCreate);
+
+        logger.debug("Total query verification time: {}", queryExecutionTime);
     }
 
     /**

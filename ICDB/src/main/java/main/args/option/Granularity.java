@@ -2,9 +2,9 @@ package main.args.option;
 
 import convert.DBConnection;
 import main.args.config.UserConfig;
-import parse.OCFQueryConverter;
-import parse.OCTQueryConverter;
-import parse.QueryConverter;
+import parse.ICDBQuery;
+import parse.OCFQuery;
+import parse.OCTQuery;
 import verify.OCFQueryVerifier;
 import verify.OCTQueryVerifier;
 import verify.QueryVerifier;
@@ -20,8 +20,8 @@ import verify.QueryVerifier;
 public enum Granularity {
     TUPLE {
         @Override
-        public QueryConverter getConverter(DBConnection icdb) {
-            return new OCTQueryConverter(icdb);
+        public ICDBQuery getQuery(String query, DBConnection icdb) {
+            return new OCTQuery(query, icdb);
         }
 
         @Override
@@ -31,8 +31,8 @@ public enum Granularity {
     },
     FIELD {
         @Override
-        public QueryConverter getConverter(DBConnection icdb) {
-            return new OCFQueryConverter(icdb);
+        public ICDBQuery getQuery(String query, DBConnection icdb) {
+            return new OCFQuery(query, icdb);
         }
 
         @Override
@@ -41,6 +41,6 @@ public enum Granularity {
         }
     };
 
-    public abstract QueryConverter getConverter(DBConnection icdb);
+    public abstract ICDBQuery getQuery(String query, DBConnection icdb);
     public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig);
 }

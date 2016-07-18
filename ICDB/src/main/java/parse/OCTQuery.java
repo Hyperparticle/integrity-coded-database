@@ -1,76 +1,45 @@
-/**
-ujwal-signature
-*/
 package parse;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-
 import convert.DBConnection;
-import main.args.option.Granularity;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.AllColumns;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.update.Update;
-import net.sf.jsqlparser.util.SelectUtils;
-import net.sf.jsqlparser.util.TablesNamesFinder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public class OCTQueryConverter implements QueryConverter {
+import java.util.ArrayList;
+import java.util.List;
 
-    private final DBConnection icdb;
-    private final CCJSqlParserManager parserManager = new CCJSqlParserManager();
+/**
+ * <p>
+ * </p>
+ * Created on 7/18/2016
+ *
+ * @author Dan Kondratyuk
+ */
+public class OCTQuery extends ICDBQuery {
 
-    private final Logger logger = LogManager.getLogger();
+    public OCTQuery(String query, DBConnection icdb) {
+        super(query, icdb);
+    }
 
-	public OCTQueryConverter(DBConnection icdb) {
-        this.icdb = icdb;
-	}
+    ////////////
+    // SELECT //
+    ////////////
 
-	@Override
-	public Statement convert(String query) {
-	    logger.info("Converting query: {}", query);
-
-	    try {
-	        // Read and parse the query
-            Reader reader = new StringReader(query);
-            Statement statement = parserManager.parse(reader);
-
-            // Convert based on statement type
-            if (statement instanceof Select) {
-                return convert((Select) statement);
-            } else if (statement instanceof Insert) {
-//                return convert((Insert) statement);
-            } else if (statement instanceof Delete) {
-//                return convert((Delete) statement);
-            } else if (statement instanceof Update) {
-//                return convert((Update) statement);
-            } else {
-                logger.error("SQL statement type not supported.");
-            }
-        } catch (JSQLParserException e) {
-            logger.error("Failed to parse query: {}", e.getMessage());
-        }
-
-        return null;
-	}
+    @Override
+    protected Statement parseConvertedQuery(Select select) {
+        return select; // Return the original query. TODO: convert SELECT * to return all non-icdb columns
+    }
 
     /**
      * SELECT conversion. This effectively turns any SELECT query into a SELECT * query
      */
-    private Statement convert(Select select) {
+    @Override
+    protected Statement parseVerifyQuery(Select select) {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
 
         List<SelectItem> selectList = new ArrayList<>();
@@ -81,21 +50,62 @@ public class OCTQueryConverter implements QueryConverter {
 
         return select;
     }
-//
+
+    ////////////
+    // INSERT //
+    ////////////
+
+    @Override
+    protected Statement parseConvertedQuery(Insert insert) {
+        return null;
+    }
+
+    @Override
+    protected Statement parseVerifyQuery(Insert insert) {
+        return null;
+    }
+
+    ////////////
+    // DELETE //
+    ////////////
+
+    @Override
+    protected Statement parseConvertedQuery(Delete delete) {
+        return null;
+    }
+
+    @Override
+    protected Statement parseVerifyQuery(Delete delete) {
+        return null;
+    }
+
+    ////////////
+    // UPDATE //
+    ////////////
+
+    @Override
+    protected Statement parseConvertedQuery(Update update) {
+        return null;
+    }
+
+    @Override
+    protected Statement parseVerifyQuery(Update update) {
+        return null;
+    }
+
 //    /**
 //     * INSERT conversion
 //     */
 //    private Statement convert(Insert insert) {
-//        Insert insertStatement = (Insert) statement;
-//        columns = insertStatement.getColumns();
-//        table = insertStatement.getTable();
-//        System.out.println(table.getDatabase().toString());
-//        expressions = ((ExpressionList) insertStatement.getItemsList()).getExpressions();
+//        columns = insert.getColumns();
+//        table = insert.getTable();
+//
+//        expressions = ((ExpressionList) insert.getItemsList()).getExpressions();
 //
 //        // update the Query
 //        updateColumnsAndValues(columns, expressions);
-//        ICDBquery = insertStatement.toString();
-//        System.out.println(insertStatement.toString());
+//
+//        return insert;
 //    }
 //
 //    /**
@@ -207,5 +217,4 @@ public class OCTQueryConverter implements QueryConverter {
 //		}
 //
 //	}
-
 }

@@ -1,54 +1,85 @@
-/**
-ujwal-signature
-*/
 package parse;
 
-import java.io.StringReader;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
 import convert.DBConnection;
-import main.args.option.Granularity;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.update.Update;
-import net.sf.jsqlparser.util.SelectUtils;
-import net.sf.jsqlparser.util.TablesNamesFinder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import javax.naming.OperationNotSupportedException;
+/**
+ * <p>
+ * </p>
+ * Created on 7/18/2016
+ *
+ * @author Dan Kondratyuk
+ */
+public class OCFQuery extends ICDBQuery {
 
-public class OCFQueryConverter implements QueryConverter {
+    public OCFQuery(String query, DBConnection icdb) {
+        super(query, icdb);
+    }
 
-	private final DBConnection icdb;
-	private final CCJSqlParserManager parserManager = new CCJSqlParserManager();
+    ////////////
+    // SELECT //
+    ////////////
 
-	private final Logger logger = LogManager.getLogger();
+    @Override
+    protected Statement parseConvertedQuery(Select select) {
+        return select; // Return the original query. TODO: convert SELECT * to return all non-icdb columns
+    }
 
-	public OCFQueryConverter(DBConnection icdb) {
-		this.icdb = icdb;
-	}
+    /**
+     * SELECT conversion. This effectively turns any SELECT query into a SELECT * query
+     */
+    @Override
+    protected Statement parseVerifyQuery(Select select) {
+        return null;
+    }
 
-	@Override
-	public Statement convert(String query) {
-		throw new RuntimeException("Not implemented");
-	}
+    ////////////
+    // INSERT //
+    ////////////
 
-	//	/**
+    @Override
+    protected Statement parseConvertedQuery(Insert insert) {
+        return null;
+    }
+
+    @Override
+    protected Statement parseVerifyQuery(Insert insert) {
+        return null;
+    }
+
+    ////////////
+    // DELETE //
+    ////////////
+
+    @Override
+    protected Statement parseConvertedQuery(Delete delete) {
+        return null;
+    }
+
+    @Override
+    protected Statement parseVerifyQuery(Delete delete) {
+        return null;
+    }
+
+    ////////////
+    // UPDATE //
+    ////////////
+
+    @Override
+    protected Statement parseConvertedQuery(Update update) {
+        return null;
+    }
+
+    @Override
+    protected Statement parseVerifyQuery(Update update) {
+        return null;
+    }
+
+    //	/**
 //	 * <p>
 //	 * generates an ICDB query for the provided original query
 //	 * </p>

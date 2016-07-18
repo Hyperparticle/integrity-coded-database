@@ -56,9 +56,9 @@ public class DBConnection {
     private final DSLContext dbCreate;
     private final Schema dbSchema;
     private final List<String> tableNames;
-    private final Map<Table<?>, UniqueKey<?>> primaryKeyMap; // Map table names to primary keys
+//    private final Map<Table<?>, UniqueKey<?>> primaryKeyMap; // Map table names to primary keys
 //    private final Map<Table<?>, List<Field<?>>> fieldMap;
-    private final Map<String, List<String>> fieldStringMap;
+//    private final Map<String, List<String>> fieldStringMap;
 
     private DBConnection(String dbName) throws SQLException, DataAccessException {
         this.dbName = dbName;
@@ -73,9 +73,9 @@ public class DBConnection {
                 .findFirst()
                 .orElseThrow(() -> new SQLException("Unable to find schema with name " + dbName));
 
-        primaryKeyMap = dbCreate
-                .meta().getPrimaryKeys().stream()
-                .collect(Collectors.toMap(Key::getTable, key -> key));
+//        primaryKeyMap = dbCreate
+//                .meta().getPrimaryKeys().stream()
+//                .collect(Collectors.toMap(Key::getTable, key -> key));
 
 //        fieldMap = dbCreate
 //                .meta().getTables()
@@ -97,13 +97,13 @@ public class DBConnection {
         tableNames = dbCreate.fetch("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")
                 .map(result -> result.get(0).toString());
 
-        // Map a table (String) to a list of columns (List<String>)
-        fieldStringMap = tableNames.stream()
-            .collect(Collectors.toMap(
-                    tableName -> tableName,
-                    tableName -> dbCreate.fetch("DESCRIBE `" + tableName + "`")
-                        .map(result -> result.get(0).toString())
-            ));
+//        // Map a table (String) to a list of columns (List<String>)
+//        fieldStringMap = tableNames.stream()
+//            .collect(Collectors.toMap(
+//                    tableName -> tableName,
+//                    tableName -> dbCreate.fetch("DESCRIBE `" + tableName + "`")
+//                        .map(result -> result.get(0).toString())
+//            ));
     }
 
     public Connection getConnection() {
@@ -118,9 +118,9 @@ public class DBConnection {
         return dbSchema.getTable(name);
     }
 
-    public List<String> getFields(String table) {
-        return fieldStringMap.get(table);
-    }
+//    public List<String> getFields(String table) {
+//        return fieldStringMap.get(table);
+//    }
 
 //    public Map<Table<?>, UniqueKey<?>> getPrimaryKeyMap() {
 //        return primaryKeyMap;
