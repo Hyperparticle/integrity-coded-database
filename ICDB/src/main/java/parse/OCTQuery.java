@@ -66,15 +66,19 @@ public class OCTQuery extends ICDBQuery {
 
         // Obtain the data bytes
         final List<String> data = expressions.stream()
-                .map(Expression::toString)
+                .map(expression -> {
+                    String[] trimmed = expression.toString().split("'");
+                    return trimmed.length < 2 ? expression.toString() : trimmed[1];
+                })
                 .collect(Collectors.toList());
-        final byte[] dataBytes = StringUtils.join(data).getBytes(Charsets.UTF_8);
+        final String dataString = StringUtils.join(data.toArray());
+        final byte[] dataBytes = dataString.getBytes(Charsets.UTF_8);
 
         DataConverter converter = new DataConverter(dataBytes, codeGen, icrl);
 
         // Add base64 representation of signature to store it in the query properly
         final String signatureString = Sign.toBase64(converter.getSignature());
-        expressions.add(new HexValue("from_base64(\'" + signatureString + "\')"));
+        expressions.add(new HexValue("from_base64('" + signatureString + "')"));
 
         // Add serial number to expression list
         lastSerial = converter.getSerial();

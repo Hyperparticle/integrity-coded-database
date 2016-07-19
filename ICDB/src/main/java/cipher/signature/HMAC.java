@@ -9,12 +9,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.util.Arrays;
 
-//import javax.crypto.spec.SecretKeySpec;
-//import java.security.InvalidKeyException;
-//import java.security.NoSuchAlgorithmException;
-//import java.security.SignatureException;
-//import java.util.Arrays;
-
 /**
  * <p>
  *      A Hashing Message Authentication Code (HMAC) is a fast way to generate a

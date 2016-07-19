@@ -53,9 +53,8 @@ public class ICRL implements Serializable {
     public static synchronized ICRL getInstance() {
         if (icrl == null) {
             icrl = new ICRL();
+            Runtime.getRuntime().addShutdownHook(new Thread(icrl::save));
         }
-
-        Runtime.getRuntime().addShutdownHook(new Thread(icrl::save));
 
         return icrl;
     }

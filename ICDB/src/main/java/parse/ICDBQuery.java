@@ -110,7 +110,7 @@ public abstract class ICDBQuery {
      */
     public void execute(DSLContext icdbCreate) {
         String result = icdbCreate.fetch(convertedQuery).toString();
-        logger.info("Executed query:{}\n{}", convertedQuery, result);
+        logger.info("{}\n{}", convertedQuery, result);
 
         if (lastSerial != null) {
             icrl.add(lastSerial);

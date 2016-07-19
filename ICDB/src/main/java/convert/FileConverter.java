@@ -83,7 +83,7 @@ public class FileConverter {
 		List<String> nextLine = csvReader.read();
 		while ((nextLine = csvReader.read()) != null) {
 			// Combine the list into a string
-			final String data = StringUtils.join(nextLine);
+			final String data = StringUtils.join(nextLine.toArray());
 			final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
 			convertLine(nextLine, dataBytes, codeGen, icrl);
 
