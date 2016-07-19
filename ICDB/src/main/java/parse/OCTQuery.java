@@ -3,6 +3,7 @@ package parse;
 import cipher.CodeGen;
 import cipher.signature.Sign;
 import com.google.common.base.Charsets;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 import convert.DBConnection;
 import convert.DataConverter;
 import net.sf.jsqlparser.expression.DoubleValue;
@@ -11,6 +12,7 @@ import net.sf.jsqlparser.expression.HexValue;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
+import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
@@ -63,8 +65,20 @@ public class OCTQuery extends ICDBQuery {
     protected Statement parseConvertedQuery(Insert insert) {
         // Get expression list from query
         ItemsList itemsList = insert.getItemsList();
-        List<Expression> expressions = ((ExpressionList) itemsList).getExpressions();
 
+        if (itemsList instanceof MultiExpressionList) {
+            ((MultiExpressionList) itemsList).getExprList().stream()
+                    .map(ExpressionList::getExpressions)
+                    .forEach(this::convertExpressionList);
+        } else {
+            List<Expression> expressions = ((ExpressionList) itemsList).getExpressions();
+            convertExpressionList(expressions);
+        }
+
+        return insert;
+    }
+
+    private void convertExpressionList(List<Expression> expressions) {
         // Obtain the data bytes
         final List<String> data = expressions.stream()
                 .map(expression -> {
@@ -88,8 +102,6 @@ public class OCTQuery extends ICDBQuery {
         // Add serial number to expression list
         lastSerial = converter.getSerial();
         expressions.add(new DoubleValue(lastSerial.toString()));
-
-        return insert;
     }
 
     @Override
@@ -103,12 +115,12 @@ public class OCTQuery extends ICDBQuery {
 
     @Override
     protected Statement parseConvertedQuery(Delete delete) {
-        return null;
+        return delete; // Delete does not require any conversion
     }
 
     @Override
     protected Statement parseVerifyQuery(Delete delete) {
-        return null;
+        return null; // Delete does not require any verification
     }
 
     ////////////
