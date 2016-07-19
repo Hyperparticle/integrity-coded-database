@@ -14,10 +14,13 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Cursor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
+import org.jooq.Result;
 import verify.ICRL;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -34,11 +37,16 @@ public abstract class ICDBQuery {
     protected final CodeGen codeGen;
 
     private final String originalQuery;   // The original query (SELECT, INSERT, DELETE, etc.)
-    private final String convertedQuery;  // The converted query, like the original, but with extra columns
-    private final String verifyQuery;     // A select query responsible for obtaining verification results
+    private String convertedQuery;  // The converted query, like the original, but with extra columns
+    private String verifyQuery;     // A select query responsible for obtaining verification results
 
     protected ICRL icrl = ICRL.getInstance();
-    protected Long lastSerial; // Keep a reference to the last serial, updating the ICRL if this query was successful
+
+    // Update the ICRL if this query was successful
+    protected List<Long> serialsToBeRevoked = new ArrayList<>();
+    protected List<Long> serialsToBeAdded = new ArrayList<>();
+
+    private boolean requiresUpdate;
 
     private static Logger logger = LogManager.getLogger();
 
@@ -51,9 +59,7 @@ public abstract class ICDBQuery {
         this.codeGen = codeGen;
 
         // Obtain ICDB queries
-        // Parse each query twice to obtain two copies
-        this.convertedQuery = parse(query, QueryType.CONVERT);
-        this.verifyQuery = parse(query, QueryType.VERIFY);
+        this.verifyQuery = parse(originalQuery, QueryType.VERIFY);
     }
 
     private String parse(String query, QueryType queryType) {
@@ -72,6 +78,7 @@ public abstract class ICDBQuery {
             } else if (statement instanceof Delete) {
                 statement = queryType.parseQuery((Delete) statement, this);
             } else if (statement instanceof Update) {
+                requiresUpdate = true;
                 statement = queryType.parseQuery((Update) statement, this);
             } else {
                 logger.error("SQL statement type not supported.");
@@ -94,6 +101,11 @@ public abstract class ICDBQuery {
     protected abstract Statement parseVerifyQuery(Delete delete);
     protected abstract Statement parseVerifyQuery(Update update);
 
+    // TODO: This is a temporary workaround. This should use contexts to apply to converted query.
+//    protected String updateSelectQuery;
+    protected Result<Record> updateSelectResults;
+//    protected Result<Record> updateSelectAllResults;
+
     /**
      * Obtains data to verify the icdb query.
      * Warning: verify() should be called before execute(), to properly verify data integrity.
@@ -101,6 +113,11 @@ public abstract class ICDBQuery {
      * @return a cursor into the requested data
      */
     public Cursor<Record> getVerifyData(DSLContext icdbCreate) {
+        if (requiresUpdate) {
+//            updateSelectResults = icdbCreate.fetch(updateSelectQuery);
+            updateSelectResults = icdbCreate.fetch(verifyQuery);
+        }
+
         return icdbCreate.fetchLazy(verifyQuery);
     }
 
@@ -110,13 +127,24 @@ public abstract class ICDBQuery {
      * @param icdbCreate the context for executing queries
      */
     public void execute(DSLContext icdbCreate) {
+        this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
+
         String result = icdbCreate.fetch(convertedQuery).toString();
         logger.info("{}\n{}", convertedQuery, result);
 
-        if (lastSerial != null) {
-            icrl.add(lastSerial);
-            lastSerial = null;
+        // Add all pending serials
+        if (!serialsToBeAdded.isEmpty()) {
+            serialsToBeAdded.forEach(serial -> icrl.add(serial));
+            serialsToBeAdded.clear();
         }
+
+        // Revoke all pending serials
+        if (!serialsToBeRevoked.isEmpty()) {
+            serialsToBeRevoked.forEach(serial -> icrl.revoke(serial));
+            serialsToBeRevoked.clear();
+        }
+
+
     }
 
     public String getConvertedQuery() {
