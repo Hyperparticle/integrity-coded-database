@@ -77,7 +77,8 @@ public abstract class ICDBQuery {
                 logger.error("SQL statement type not supported.");
             }
         } catch (JSQLParserException e) {
-            logger.error("Failed to parse query: {}", e.getMessage());
+            logger.error("Failed to parse query");
+            e.printStackTrace();
         }
 
         return statement == null ? "" : statement.toString();

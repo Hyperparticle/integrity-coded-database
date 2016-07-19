@@ -16,7 +16,6 @@ import main.args.ConvertDBCommand;
 import main.args.ConvertQueryCommand;
 import main.args.ExecuteQueryCommand;
 import main.args.config.ConfigArgs;
-import net.sf.jsqlparser.JSQLParserException;
 import parse.ICDBQuery;
 import verify.QueryVerifier;
 
@@ -32,7 +31,7 @@ public class ICDBTool {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public static void main(String[] args) throws JSQLParserException, FileNotFoundException {
+	public static void main(String[] args) throws FileNotFoundException {
 		Stopwatch totalTime = Stopwatch.createStarted();
 
 		// Parse the command-line arguments
@@ -79,7 +78,7 @@ public class ICDBTool {
 	/**
 	 * Converts the Query to an ICDB Query
 	 */
-	private static void convertQuery(CommandLineArgs cmd, UserConfig dbConfig) throws JSQLParserException {
+	private static void convertQuery(CommandLineArgs cmd, UserConfig dbConfig) {
         final ConvertQueryCommand convertQueryCmd = cmd.convertQueryCommand;
         final String icdbSchema = dbConfig.icdbSchema;
 
@@ -99,7 +98,7 @@ public class ICDBTool {
 	/**
 	 * Executes the query
 	 */
-	private static void executeQuery(CommandLineArgs cmd, UserConfig dbConfig) throws JSQLParserException {
+	private static void executeQuery(CommandLineArgs cmd, UserConfig dbConfig) {
 		final ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
 		final String icdbSchema = dbConfig.icdbSchema;
 

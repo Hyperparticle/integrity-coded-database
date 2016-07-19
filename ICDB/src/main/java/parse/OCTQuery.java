@@ -8,6 +8,7 @@ import convert.DataConverter;
 import net.sf.jsqlparser.expression.DoubleValue;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.HexValue;
+import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.statement.Statement;
@@ -67,8 +68,12 @@ public class OCTQuery extends ICDBQuery {
         // Obtain the data bytes
         final List<String> data = expressions.stream()
                 .map(expression -> {
-                    String[] trimmed = expression.toString().split("'");
-                    return trimmed.length < 2 ? expression.toString() : trimmed[1];
+                    // Get rid of those pesky quotes
+                    if (expression instanceof StringValue) {
+                        return ((StringValue) expression).getValue();
+                    }
+
+                    return expression.toString();
                 })
                 .collect(Collectors.toList());
         final String dataString = StringUtils.join(data.toArray());
