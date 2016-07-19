@@ -1,5 +1,6 @@
 package parse;
 
+import cipher.CodeGen;
 import convert.DBConnection;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
@@ -16,8 +17,8 @@ import net.sf.jsqlparser.statement.update.Update;
  */
 public class OCFQuery extends ICDBQuery {
 
-    public OCFQuery(String query, DBConnection icdb) {
-        super(query, icdb);
+    public OCFQuery(String query, DBConnection icdb, CodeGen codeGen) {
+        super(query, icdb, codeGen);
     }
 
     ////////////

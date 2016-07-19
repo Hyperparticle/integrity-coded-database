@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.NavigableSet;
 import java.util.Set;
 
 /**
@@ -27,15 +28,15 @@ public class ICRL implements Serializable {
 
     private static final String ICRL_LOCATION = "./src/main/resources/icrl.db";
 
-    private final long start = RNG.randomInt();
-    private long current = start;
+    private final long start;
+    private long current;
 
     private DB db;
-    private Set<Long> serials;
+    private NavigableSet<Long> serials;
 
     private static final Logger logger = LogManager.getLogger();
 
-    public static ICRL init() {
+    public static synchronized ICRL init() {
         try {
             // Delete the old DB
             Files.deleteIfExists(Paths.get(ICRL_LOCATION));
@@ -49,7 +50,7 @@ public class ICRL implements Serializable {
 
 
     private static ICRL icrl;
-    public static ICRL getInstance() {
+    public static synchronized ICRL getInstance() {
         if (icrl == null) {
             icrl = new ICRL();
         }
@@ -64,7 +65,7 @@ public class ICRL implements Serializable {
         db = DBMaker.fileDB(ICRL_LOCATION)
                 .fileMmapEnable()
                 .fileMmapPreclearDisable()
-                .allocateStartSize(80L * 1024*1024) // 80 MB
+//                .allocateStartSize(80L * 1024*1024) // 80 MB
                 .make();
         db.getStore().fileLoad();
 
@@ -72,6 +73,15 @@ public class ICRL implements Serializable {
         serials = db
                 .treeSet("serial", Serializer.LONG)
                 .createOrOpen();
+
+        // Get the first and last values, if they exist (otherwise generate them)
+        if (serials.isEmpty()) {
+            start = RNG.randomInt();
+            current = start - 1;
+        } else {
+            start = serials.first();
+            current = serials.last();
+        }
     }
 
     /**
@@ -83,6 +93,27 @@ public class ICRL implements Serializable {
         serials.add(current);
 
         return current;
+    }
+
+    /**
+     * @return the next serial number to be generated
+     */
+    public long peekNext() {
+        return current + 1;
+    }
+
+    /**
+     * Adds a serial number to the list
+     */
+    public void add(long serial) {
+        serials.add(serial);
+    }
+
+    /**
+     * Revokes the serial number from the list
+     */
+    public void revoke(long serial) {
+        serials.remove(serial);
     }
 
     public boolean contains(long serial) {

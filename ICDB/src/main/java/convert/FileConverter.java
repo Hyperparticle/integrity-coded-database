@@ -83,7 +83,7 @@ public class FileConverter {
 		List<String> nextLine = csvReader.read();
 		while ((nextLine = csvReader.read()) != null) {
 			// Combine the list into a string
-			final String data = StringUtils.join(nextLine.toArray());
+			final String data = StringUtils.join(nextLine);
 			final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
 			convertLine(nextLine, dataBytes, codeGen, icrl);
 
@@ -108,11 +108,10 @@ public class FileConverter {
 	}
 
 	/**
-	 * Given a String, this method generates codes (svc + serial) from it and
+	 * Given some data, this method generates codes (svc + serial) from it and
 	 * adds them to the end of the supplied list
 	 * 
-	 * @param collector
-	 *            the list to collect the codes
+	 * @param collector the list to collect the codes
 	 */
 	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, ICRL icrl) {
         final long serial = icrl.getNext();

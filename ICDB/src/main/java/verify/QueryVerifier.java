@@ -62,7 +62,7 @@ public abstract class QueryVerifier {
 
         icdbQuery.execute(icdbCreate);
 
-        logger.debug("Total query verification time: {}", queryExecutionTime);
+        logger.debug("Total query execution time: {}", queryExecutionTime);
     }
 
     /**

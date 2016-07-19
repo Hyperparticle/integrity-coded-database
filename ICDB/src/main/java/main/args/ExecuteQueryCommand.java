@@ -18,8 +18,8 @@ import java.util.List;
 @Parameters(commandNames = { CommandLineArgs.EXECUTE_QUERY }, commandDescription = "Execute queries on an ICDB Schema")
 public class ExecuteQueryCommand extends ConfigCommand {
 
-    @Parameter(names = { "-q", "--query" }, description = "Execute one or more queries as arguments")
-    public List<String> queries;
+    @Parameter(names = { "-q", "--query" }, description = "Execute a query as an argument")
+    public String query;
 
 //    @Parameter(names = { "-f", "--file" }, description = "Execute all queries in one or more files")
 //    public List<String> files;

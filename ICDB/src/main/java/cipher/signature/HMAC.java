@@ -38,7 +38,8 @@ public class HMAC {
     }
 
     public static boolean verify(final byte[] data, final Key key, final byte[] signature) {
-        return Arrays.equals(generate(data, key), signature);
+        final byte[] generated = generate(data, key);
+        return Arrays.equals(generated, signature);
     }
 
     private static byte[] truncate(byte[] array) {

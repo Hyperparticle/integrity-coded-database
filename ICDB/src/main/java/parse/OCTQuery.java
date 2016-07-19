@@ -1,6 +1,15 @@
 package parse;
 
+import cipher.CodeGen;
+import cipher.signature.Sign;
+import com.google.common.base.Charsets;
 import convert.DBConnection;
+import convert.DataConverter;
+import net.sf.jsqlparser.expression.DoubleValue;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.HexValue;
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
@@ -9,9 +18,11 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.update.Update;
+import org.jooq.tools.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -22,8 +33,8 @@ import java.util.List;
  */
 public class OCTQuery extends ICDBQuery {
 
-    public OCTQuery(String query, DBConnection icdb) {
-        super(query, icdb);
+    public OCTQuery(String query, DBConnection icdb, CodeGen codeGen) {
+        super(query, icdb, codeGen);
     }
 
     ////////////
@@ -32,7 +43,7 @@ public class OCTQuery extends ICDBQuery {
 
     @Override
     protected Statement parseConvertedQuery(Select select) {
-        return select; // Return the original query. TODO: convert SELECT * to return all non-icdb columns
+        return select; // Return the original query. // TODO: convert SELECT * to return all non-icdb columns
     }
 
     /**
@@ -40,15 +51,7 @@ public class OCTQuery extends ICDBQuery {
      */
     @Override
     protected Statement parseVerifyQuery(Select select) {
-        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
-
-        List<SelectItem> selectList = new ArrayList<>();
-        selectList.add(new AllColumns());
-
-        // Convert query to a SELECT * to obtain all tuples
-        plainSelect.setSelectItems(selectList);
-
-        return select;
+        return convertToSelectAll(select);
     }
 
     ////////////
@@ -57,12 +60,32 @@ public class OCTQuery extends ICDBQuery {
 
     @Override
     protected Statement parseConvertedQuery(Insert insert) {
-        return null;
+        // Get expression list from query
+        ItemsList itemsList = insert.getItemsList();
+        List<Expression> expressions = ((ExpressionList) itemsList).getExpressions();
+
+        // Obtain the data bytes
+        final List<String> data = expressions.stream()
+                .map(Expression::toString)
+                .collect(Collectors.toList());
+        final byte[] dataBytes = StringUtils.join(data).getBytes(Charsets.UTF_8);
+
+        DataConverter converter = new DataConverter(dataBytes, codeGen, icrl);
+
+        // Add base64 representation of signature to store it in the query properly
+        final String signatureString = Sign.toBase64(converter.getSignature());
+        expressions.add(new HexValue("from_base64(\'" + signatureString + "\')"));
+
+        // Add serial number to expression list
+        lastSerial = converter.getSerial();
+        expressions.add(new DoubleValue(lastSerial.toString()));
+
+        return insert;
     }
 
     @Override
     protected Statement parseVerifyQuery(Insert insert) {
-        return null;
+        return null; // Verifying an insert statement is not necessary
     }
 
     ////////////
@@ -93,21 +116,21 @@ public class OCTQuery extends ICDBQuery {
         return null;
     }
 
-//    /**
-//     * INSERT conversion
-//     */
-//    private Statement convert(Insert insert) {
-//        columns = insert.getColumns();
-//        table = insert.getTable();
-//
-//        expressions = ((ExpressionList) insert.getItemsList()).getExpressions();
-//
-//        // update the Query
-//        updateColumnsAndValues(columns, expressions);
-//
-//        return insert;
-//    }
-//
+    /**
+     * Converts a SELECT query to SELECT *
+     */
+    private Select convertToSelectAll(Select select) {
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+
+        List<SelectItem> selectList = new ArrayList<>();
+        selectList.add(new AllColumns());
+
+        // Convert query to a SELECT * to obtain all tuples
+        plainSelect.setSelectItems(selectList);
+
+        return select;
+    }
+
 //    /**
 //     * DELETE conversion
 //     */

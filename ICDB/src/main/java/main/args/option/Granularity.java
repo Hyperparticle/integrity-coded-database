@@ -1,5 +1,6 @@
 package main.args.option;
 
+import cipher.CodeGen;
 import convert.DBConnection;
 import main.args.config.UserConfig;
 import parse.ICDBQuery;
@@ -20,8 +21,8 @@ import verify.QueryVerifier;
 public enum Granularity {
     TUPLE {
         @Override
-        public ICDBQuery getQuery(String query, DBConnection icdb) {
-            return new OCTQuery(query, icdb);
+        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen) {
+            return new OCTQuery(query, icdb, codeGen);
         }
 
         @Override
@@ -31,8 +32,8 @@ public enum Granularity {
     },
     FIELD {
         @Override
-        public ICDBQuery getQuery(String query, DBConnection icdb) {
-            return new OCFQuery(query, icdb);
+        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen) {
+            return new OCFQuery(query, icdb, codeGen);
         }
 
         @Override
@@ -41,6 +42,6 @@ public enum Granularity {
         }
     };
 
-    public abstract ICDBQuery getQuery(String query, DBConnection icdb);
+    public abstract ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen);
     public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig);
 }

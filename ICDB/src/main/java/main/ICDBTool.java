@@ -86,7 +86,7 @@ public class ICDBTool {
         DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
         convertQueryCmd.queries.forEach(query -> {
-            ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb);
+            ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen);
 
             logger.info("Verify query:");
             logger.info(icdbQuery.getVerifyQuery());
@@ -105,15 +105,19 @@ public class ICDBTool {
 
 		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
-		String query = executeQueryCommand.queries.get(0);
-        ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb);
+		String query = executeQueryCommand.query;
+        ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen);
 
 		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
 
-        if (verifier.verify(icdbQuery)) {
+        if (!icdbQuery.needsVerification()) {
+            verifier.execute(icdbQuery);
+        } else if (verifier.verify(icdbQuery)) {
+            logger.info(icdbQuery.getVerifyQuery());
             logger.info("Query verified");
             verifier.execute(icdbQuery);
         } else {
+            logger.info(icdbQuery.getVerifyQuery());
             logger.info("Query failed to verify");
             logger.error(verifier.getError());
         }

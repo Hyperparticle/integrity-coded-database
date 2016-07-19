@@ -1,5 +1,6 @@
 package parse;
 
+import cipher.CodeGen;
 import convert.DBConnection;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Cursor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
+import verify.ICRL;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -28,20 +30,25 @@ import java.io.StringReader;
 public abstract class ICDBQuery {
 
     private final CCJSqlParserManager parserManager = new CCJSqlParserManager();
-    private final DBConnection icdb;
+    protected final DBConnection icdb;
+    protected final CodeGen codeGen;
 
     private final String originalQuery;   // The original query (SELECT, INSERT, DELETE, etc.)
     private final String convertedQuery;  // The converted query, like the original, but with extra columns
     private final String verifyQuery;     // A select query responsible for obtaining verification results
+
+    protected ICRL icrl = ICRL.getInstance();
+    protected Long lastSerial; // Keep a reference to the last serial, updating the ICRL if this query was successful
 
     private static Logger logger = LogManager.getLogger();
 
     /**
      * Converts a given plain SQL statement into an ICDB statement
      */
-    public ICDBQuery(String query, DBConnection icdb) {
+    public ICDBQuery(String query, DBConnection icdb, CodeGen codeGen) {
         this.originalQuery = query;
         this.icdb = icdb;
+        this.codeGen = codeGen;
 
         // Obtain ICDB queries
         // Parse each query twice to obtain two copies
@@ -102,8 +109,13 @@ public abstract class ICDBQuery {
      * @param icdbCreate the context for executing queries
      */
     public void execute(DSLContext icdbCreate) {
-        // TODO: also update ICRL
-        logger.info(icdbCreate.fetch(convertedQuery));
+        String result = icdbCreate.fetch(convertedQuery).toString();
+        logger.info("Executed query:{}\n{}", convertedQuery, result);
+
+        if (lastSerial != null) {
+            icrl.add(lastSerial);
+            lastSerial = null;
+        }
     }
 
     public String getConvertedQuery() {
@@ -112,6 +124,13 @@ public abstract class ICDBQuery {
 
     public String getVerifyQuery() {
         return verifyQuery;
+    }
+
+    /**
+     * @return true if this query needs verification
+     */
+    public boolean needsVerification() {
+        return !verifyQuery.equals("");
     }
 
     /**
