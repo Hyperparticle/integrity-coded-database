@@ -102,9 +102,7 @@ public abstract class ICDBQuery {
     protected abstract Statement parseVerifyQuery(Update update);
 
     // TODO: This is a temporary workaround. This should use contexts to apply to converted query.
-//    protected String updateSelectQuery;
     protected Result<Record> updateSelectResults;
-//    protected Result<Record> updateSelectAllResults;
 
     /**
      * Obtains data to verify the icdb query.
@@ -114,7 +112,6 @@ public abstract class ICDBQuery {
      */
     public Cursor<Record> getVerifyData(DSLContext icdbCreate) {
         if (requiresUpdate) {
-//            updateSelectResults = icdbCreate.fetch(updateSelectQuery);
             updateSelectResults = icdbCreate.fetch(verifyQuery);
         }
 

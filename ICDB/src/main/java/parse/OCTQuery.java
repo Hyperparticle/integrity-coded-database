@@ -29,8 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.tools.StringUtils;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -109,6 +108,11 @@ public class OCTQuery extends ICDBQuery {
 
     @Override
     protected Statement parseConvertedQuery(Update update) {
+        List<Column> allColumns = icdb.getFields(update.getTables().get(0).toString())
+                .stream().map(Column::new)
+                .collect(Collectors.toList());
+        update.setColumns(allColumns);
+
         List<Expression> expressions = updateSelectResults
             .map(record -> {
                 List<Expression> values = new ArrayList<>();
@@ -135,9 +139,11 @@ public class OCTQuery extends ICDBQuery {
         convertExpressionList(expressions);
         update.setExpressions(expressions);
 
-        List<Column> columns = update.getColumns();
-        columns.add(new Column(Format.SVC_COLUMN));
-        columns.add(new Column(Format.SERIAL_COLUMN));
+//        List<Column> columns = update.getColumns();
+
+
+//        columns.add(new Column(Format.SVC_COLUMN));
+//        columns.add(new Column(Format.SERIAL_COLUMN));
 
         return update;
     }
@@ -152,16 +158,6 @@ public class OCTQuery extends ICDBQuery {
         // Apply the where clause to the SELECT
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         plainSelect.setWhere(update.getWhere());
-
-//        // This other query is for retrieving the necessary data to construct the converted update query
-//        List<Column> columns = update.getColumns();
-//        columns.add(new Column(Format.SVC_COLUMN));
-//        columns.add(new Column(Format.SERIAL_COLUMN));
-//        Expression[] columnsArray = columns.stream().toArray(Column[]::new);
-//        Select updateSelect = SelectUtils.buildSelectFromTableAndExpressions(tables.get(0), columnsArray);
-//        PlainSelect updatePlainSelect = (PlainSelect) updateSelect.getSelectBody();
-//        updatePlainSelect.setWhere(update.getWhere());
-//        updateSelectQuery = updateSelect.toString();
 
         return select;
     }
