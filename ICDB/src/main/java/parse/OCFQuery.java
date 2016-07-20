@@ -6,7 +6,6 @@ import convert.Format;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.HexValue;
-import net.sf.jsqlparser.expression.operators.relational.GreaterThan;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
@@ -14,7 +13,6 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,14 +44,7 @@ public class OCFQuery extends ICDBQuery {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         List<SelectItem> selectItems = plainSelect.getSelectItems();
 
-        Expression where = plainSelect.getWhere();
-        if (where instanceof BinaryExpression) {
-            Expression leftExpression = ((BinaryExpression) where).getLeftExpression();
-
-            if (leftExpression instanceof Column) {
-                selectItems.add(new SelectExpressionItem(leftExpression));
-            }
-        }
+        addWhereColumn(selectItems, plainSelect.getWhere());
 
         List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.SVC_SUFFIX, Format.SERIAL_SUFFIX);
         selectItems.addAll(signatureItems);
@@ -117,7 +108,29 @@ public class OCFQuery extends ICDBQuery {
             .collect(Collectors.toList());
     }
 
-    //	/**
+    private static void addWhereColumn(List<SelectItem> items, Expression where) {
+        if (!(where instanceof BinaryExpression)) {
+            return;
+        }
+
+        Expression leftExpression = ((BinaryExpression) where).getLeftExpression();
+
+        if (!(leftExpression instanceof Column)) {
+            return;
+        }
+
+        // Check for duplicate columns
+        boolean hasColumn = items.stream()
+                .anyMatch(item -> item.toString().equals(leftExpression.toString()));
+
+        if (hasColumn) {
+            return;
+        }
+
+        items.add(new SelectExpressionItem(leftExpression));
+    }
+
+//	/**
 //	 * <p>
 //	 * generates an ICDB query for the provided original query
 //	 * </p>
