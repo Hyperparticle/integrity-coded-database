@@ -54,6 +54,10 @@ public class OCFQuery extends ICDBQuery {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         List<SelectItem> selectItems = plainSelect.getSelectItems();
 
+        if (selectItems.get(0) instanceof AllColumns) {
+            selectItems.clear();
+        }
+
         addWhereColumn(selectItems, plainSelect.getWhere());
         tables.forEach(table -> addPrimaryKeyColumn(selectItems, table));
 
