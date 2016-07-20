@@ -54,8 +54,9 @@ public class OCFQuery extends ICDBQuery {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         List<SelectItem> selectItems = plainSelect.getSelectItems();
 
+        // If SELECT *, the verify query is the same
         if (selectItems.get(0) instanceof AllColumns) {
-            selectItems.clear();
+            return select;
         }
 
         addWhereColumn(selectItems, plainSelect.getWhere());
@@ -159,14 +160,14 @@ public class OCFQuery extends ICDBQuery {
 
     private void addPrimaryKeyColumn(List<SelectItem> items, String table) {
         icdb.getPrimaryKeys(table)
-                .forEach(key -> {
-                    boolean hasColumn = items.stream()
-                            .anyMatch(item -> item.toString().equals(key));
+            .forEach(key -> {
+                boolean hasColumn = items.stream()
+                        .anyMatch(item -> item.toString().equals(key));
 
-                    if (!hasColumn) {
-                        items.add(new SelectExpressionItem(new HexValue(key)));
-                    }
-                });
+                if (!hasColumn) {
+                    items.add(new SelectExpressionItem(new HexValue(key)));
+                }
+            });
     }
 
     /**
