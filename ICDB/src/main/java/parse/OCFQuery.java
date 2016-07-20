@@ -16,6 +16,7 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
+import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.jooq.tools.StringUtils;
 
 import java.util.ArrayList;
@@ -47,10 +48,14 @@ public class OCFQuery extends ICDBQuery {
 
     @Override
     protected Statement parseVerifyQuery(Select select) {
+        TablesNamesFinder tableNamesFinder = new TablesNamesFinder();
+        List<String> tables = tableNamesFinder.getTableList(select);
+
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         List<SelectItem> selectItems = plainSelect.getSelectItems();
 
         addWhereColumn(selectItems, plainSelect.getWhere());
+        tables.forEach(table -> addPrimaryKeyColumn(selectItems, table));
 
         List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.SVC_SUFFIX, Format.SERIAL_SUFFIX);
         selectItems.addAll(signatureItems);
@@ -146,6 +151,18 @@ public class OCFQuery extends ICDBQuery {
         }
 
         items.add(new SelectExpressionItem(leftExpression));
+    }
+
+    private void addPrimaryKeyColumn(List<SelectItem> items, String table) {
+        icdb.getPrimaryKeys(table)
+                .forEach(key -> {
+                    boolean hasColumn = items.stream()
+                            .anyMatch(item -> item.toString().equals(key));
+
+                    if (!hasColumn) {
+                        items.add(new SelectExpressionItem(new HexValue(key)));
+                    }
+                });
     }
 
     /**

@@ -1,7 +1,6 @@
 package convert;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import main.args.config.ConfigArgs;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +11,6 @@ import org.jooq.impl.DSL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -56,9 +54,8 @@ public class DBConnection {
     private final DSLContext dbCreate;
     private final Schema dbSchema;
     private final List<String> tableNames;
-//    private final Map<Table<?>, UniqueKey<?>> primaryKeyMap; // Map table names to primary keys
-//    private final Map<Table<?>, List<Field<?>>> fieldMap;
-    private final Map<String, List<String>> fieldStringMap;
+    private final Map<String, List<String>> fieldMap;
+    private final Map<String, List<String>> primaryKeyMap;
 
     private DBConnection(String dbName) throws SQLException, DataAccessException {
         this.dbName = dbName;
@@ -73,26 +70,25 @@ public class DBConnection {
                 .findFirst()
                 .orElseThrow(() -> new SQLException("Unable to find schema with name " + dbName));
 
-//        primaryKeyMap = dbCreate
-//                .meta().getPrimaryKeys().stream()
-//                .collect(Collectors.toMap(Key::getTable, key -> key));
-
-//        fieldMap = dbCreate
-//                .meta().getTables()
-//                .stream()
-//                .collect(Collectors.toMap(table -> table, table -> Arrays.asList(table.fields())));
-
         // Get all table names
         tableNames = dbCreate.fetch("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")
                 .map(result -> result.get(0).toString());
 
         // Map a table (String) to a list of columns (List<String>)
-        fieldStringMap = tableNames.stream()
+        fieldMap = tableNames.stream()
             .collect(Collectors.toMap(
                 tableName -> tableName,
                 tableName -> dbCreate.fetch("DESCRIBE `" + tableName + "`")
                     .map(result -> result.get(0).toString())
             ));
+
+        // Map a table (String) to a list of primary keys (List<String>)
+        primaryKeyMap = tableNames.stream()
+                .collect(Collectors.toMap(
+                    tableName -> tableName,
+                    tableName -> dbCreate.fetch("SHOW KEYS FROM`" + tableName + "`WHERE Key_name = 'PRIMARY'")
+                        .map(result -> result.get(DSL.field("Column_name")).toString())
+                ));
     }
 
     public Connection getConnection() {
@@ -108,7 +104,11 @@ public class DBConnection {
     }
 
     public List<String> getFields(String table) {
-        return fieldStringMap.get(table);
+        return fieldMap.get(table);
+    }
+
+    public List<String> getPrimaryKeys(String table) {
+        return primaryKeyMap.get(table);
     }
 
 //    public Map<Table<?>, UniqueKey<?>> getPrimaryKeyMap() {
