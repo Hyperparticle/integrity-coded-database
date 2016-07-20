@@ -82,17 +82,6 @@ public class DBConnection {
 //                .stream()
 //                .collect(Collectors.toMap(table -> table, table -> Arrays.asList(table.fields())));
 
-
-//        fieldStringMap = dbCreate
-//            .meta().getTables().stream()
-//            .collect(Collectors.toMap(
-//                    QueryPart::toString,
-//                    table -> Arrays.stream(table.fields())
-//                        .map(QueryPart::toString)
-//                        .collect(Collectors.toList())
-//                )
-//            );
-
         // Get all table names
         tableNames = dbCreate.fetch("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")
                 .map(result -> result.get(0).toString());

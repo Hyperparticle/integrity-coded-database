@@ -60,6 +60,7 @@ public abstract class ICDBQuery {
 
         // Obtain ICDB queries
         this.verifyQuery = parse(originalQuery, QueryType.VERIFY);
+        this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
     }
 
     private String parse(String query, QueryType queryType) {
@@ -124,7 +125,9 @@ public abstract class ICDBQuery {
      * @param icdbCreate the context for executing queries
      */
     public void execute(DSLContext icdbCreate) {
-        this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
+        if (requiresUpdate) {
+            this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
+        }
 
         String result = icdbCreate.fetch(convertedQuery).toString();
         logger.info("{}\n{}", convertedQuery, result);

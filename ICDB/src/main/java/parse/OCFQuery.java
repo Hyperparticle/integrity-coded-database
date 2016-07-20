@@ -2,11 +2,22 @@ package parse;
 
 import cipher.CodeGen;
 import convert.DBConnection;
+import convert.Format;
+import net.sf.jsqlparser.expression.BinaryExpression;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.HexValue;
+import net.sf.jsqlparser.expression.operators.relational.GreaterThan;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -27,15 +38,27 @@ public class OCFQuery extends ICDBQuery {
 
     @Override
     protected Statement parseConvertedQuery(Select select) {
-        return select; // Return the original query. TODO: convert SELECT * to return all non-icdb columns
+        return select; // Return the original query. // TODO: convert SELECT * to return all non-icdb columns
     }
 
-    /**
-     * SELECT conversion. This effectively turns any SELECT query into a SELECT * query
-     */
     @Override
     protected Statement parseVerifyQuery(Select select) {
-        return null;
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        List<SelectItem> selectItems = plainSelect.getSelectItems();
+
+        Expression where = plainSelect.getWhere();
+        if (where instanceof BinaryExpression) {
+            Expression leftExpression = ((BinaryExpression) where).getLeftExpression();
+
+            if (leftExpression instanceof Column) {
+                selectItems.add(new SelectExpressionItem(leftExpression));
+            }
+        }
+
+        List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.SVC_SUFFIX, Format.SERIAL_SUFFIX);
+        selectItems.addAll(signatureItems);
+
+        return select;
     }
 
     ////////////
@@ -78,6 +101,20 @@ public class OCFQuery extends ICDBQuery {
     @Override
     protected Statement parseVerifyQuery(Update update) {
         return null;
+    }
+
+//    private static List<Expression> getICExpressions(List<Expression> items, String suffix) {
+//        return items.stream()
+//                .map(item -> new HexValue(item.toString() + suffix))
+//                .collect(Collectors.toList());
+//    }
+
+    private static List<SelectItem> getICSelectItems(List<SelectItem> items, String... suffixes) {
+        return items.stream()
+            .flatMap(item -> Arrays.stream(suffixes)
+                .map(suffix -> new SelectExpressionItem(new HexValue(item.toString() + suffix)))
+            )
+            .collect(Collectors.toList());
     }
 
     //	/**

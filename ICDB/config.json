@@ -6,7 +6,7 @@
   "schema": "employees",
   "icdbSchema": "employees_icdb",
   "algorithm": "SHA",
-  "granularity": "TUPLE",
+  "granularity": "FIELD",
   "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
   "rsaKeyFile": "key.pem"
 }

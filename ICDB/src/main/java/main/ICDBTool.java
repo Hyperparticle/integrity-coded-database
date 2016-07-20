@@ -107,12 +107,13 @@ public class ICDBTool {
 		String query = executeQueryCommand.query;
         ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen);
 
+		logger.info("Original Query: {}", query);
+
 		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
 
         if (!icdbQuery.needsVerification()) {
             verifier.execute(icdbQuery);
         } else if (verifier.verify(icdbQuery)) {
-            logger.info(icdbQuery.getVerifyQuery());
             logger.info("Query verified");
             verifier.execute(icdbQuery);
         } else {

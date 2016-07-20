@@ -3,7 +3,6 @@ package parse;
 import cipher.CodeGen;
 import cipher.signature.Sign;
 import com.google.common.base.Charsets;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import convert.DBConnection;
 import convert.DataConverter;
 import convert.Format;
@@ -25,10 +24,7 @@ import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.SelectUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.tools.StringUtils;
-
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -138,12 +134,6 @@ public class OCTQuery extends ICDBQuery {
 
         convertExpressionList(expressions);
         update.setExpressions(expressions);
-
-//        List<Column> columns = update.getColumns();
-
-
-//        columns.add(new Column(Format.SVC_COLUMN));
-//        columns.add(new Column(Format.SERIAL_COLUMN));
 
         return update;
     }

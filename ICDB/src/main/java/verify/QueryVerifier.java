@@ -48,6 +48,7 @@ public abstract class QueryVerifier {
     public boolean verify(ICDBQuery icdbQuery) {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
+        logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
         Cursor<Record> cursor = icdbQuery.getVerifyData(icdbCreate);
         boolean verified = verify(cursor);
 
