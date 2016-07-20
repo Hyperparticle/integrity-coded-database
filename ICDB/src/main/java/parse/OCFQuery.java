@@ -1,18 +1,24 @@
 package parse;
 
 import cipher.CodeGen;
+import cipher.signature.Sign;
+import com.google.common.base.Charsets;
 import convert.DBConnection;
+import convert.DataConverter;
 import convert.Format;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.HexValue;
+import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
+import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
+import org.jooq.tools.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,12 +64,24 @@ public class OCFQuery extends ICDBQuery {
 
     @Override
     protected Statement parseConvertedQuery(Insert insert) {
-        return null;
+        // Get expression list from query
+        ItemsList itemsList = insert.getItemsList();
+
+        if (itemsList instanceof MultiExpressionList) {
+            ((MultiExpressionList) itemsList).getExprList().stream()
+                    .map(ExpressionList::getExpressions)
+                    .forEach(this::convertExpressionList);
+        } else {
+            List<Expression> expressions = ((ExpressionList) itemsList).getExpressions();
+            convertExpressionList(expressions);
+        }
+
+        return insert;
     }
 
     @Override
     protected Statement parseVerifyQuery(Insert insert) {
-        return null;
+        return null; // Verifying an insert statement is not necessary
     }
 
     ////////////
@@ -128,6 +146,38 @@ public class OCFQuery extends ICDBQuery {
         }
 
         items.add(new SelectExpressionItem(leftExpression));
+    }
+
+    /**
+     * Generates a serial number and signature for each expression, and adds them to the list of expressions
+     */
+    private void convertExpressionList(List<Expression> expressions) {
+        new ArrayList<>(expressions).stream()
+            .map(expression -> {
+                // Get rid of those pesky quotes
+                if (expression instanceof StringValue) {
+                    return ((StringValue) expression).getValue();
+                }
+
+                return expression.toString();
+            })
+            .forEach(dataString -> {
+                final byte[] dataBytes = dataString.getBytes(Charsets.UTF_8);
+
+                DataConverter converter = new DataConverter(dataBytes, codeGen, icrl);
+
+                // Add base64 representation of signature to store it in the query properly
+                final String signatureString = Sign.toBase64(converter.getSignature());
+                expressions.add(new HexValue("from_base64('" + signatureString + "')"));
+
+                // Add serial number to expression list
+                Long serial = converter.getSerial();
+                expressions.add(new DoubleValue(serial.toString()));
+
+                // Add this serial to be added to the ICRL upon successful execution
+                serialsToBeAdded.add(serial);
+            });
+
     }
 
 //	/**
