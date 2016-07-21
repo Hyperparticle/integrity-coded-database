@@ -1,6 +1,7 @@
 package main;
 
 import java.io.FileNotFoundException;
+import java.util.concurrent.TimeUnit;
 
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +30,8 @@ import verify.QueryVerifier;
  */
 public class ICDBTool {
 
+    public static final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+
 	private static final Logger logger = LogManager.getLogger();
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -53,7 +56,7 @@ public class ICDBTool {
 			System.exit(0);
 		}
 
-		logger.info("Total time elapsed: {}", totalTime);
+		logger.info("Total time elapsed: {}", totalTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
 	/**

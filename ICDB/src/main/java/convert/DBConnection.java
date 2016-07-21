@@ -42,7 +42,7 @@ public class DBConnection {
             return db;
         } catch (SQLException | DataAccessException e) {
             logger.error("Unable to connect to {}: {}", dbName, e.getMessage());
-            logger.debug(e.getStackTrace());
+            e.printStackTrace();
             System.exit(1);
         }
 
@@ -84,11 +84,11 @@ public class DBConnection {
 
         // Map a table (String) to a list of primary keys (List<String>)
         primaryKeyMap = tableNames.stream()
-                .collect(Collectors.toMap(
-                    tableName -> tableName,
-                    tableName -> dbCreate.fetch("SHOW KEYS FROM`" + tableName + "`WHERE Key_name = 'PRIMARY'")
-                        .map(result -> result.get(DSL.field("Column_name")).toString())
-                ));
+            .collect(Collectors.toMap(
+                tableName -> tableName,
+                tableName -> dbCreate.fetch("SHOW KEYS FROM`" + tableName + "`WHERE Key_name = 'PRIMARY'")
+                    .map(result -> result.get(DSL.field("Column_name")).toString())
+            ));
     }
 
     public Connection getConnection() {

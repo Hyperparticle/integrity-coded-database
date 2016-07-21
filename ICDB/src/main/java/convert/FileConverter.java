@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.ICDBTool;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,7 +77,7 @@ public class FileConverter {
 			logger.error("Unable to convert file {}: {}", input.getName(), e.getMessage());
 		}
 
-		logger.debug("Converted table {} in {}", input.getName(), convertTime);
+		logger.debug("Converted table {} in {}", input.getName(), convertTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
 	private void convertLineOCT(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {

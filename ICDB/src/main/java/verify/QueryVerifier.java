@@ -4,6 +4,7 @@ import cipher.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;
+import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +53,7 @@ public abstract class QueryVerifier {
         Cursor<Record> cursor = icdbQuery.getVerifyData(icdbCreate);
         boolean verified = verify(cursor);
 
-        logger.debug("Total query verification time: {}", queryVerificationTime);
+        logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
         cursor.close();
 
         return verified;
@@ -63,7 +64,7 @@ public abstract class QueryVerifier {
 
         icdbQuery.execute(icdbCreate);
 
-        logger.debug("Total query execution time: {}", queryExecutionTime);
+        logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     /**

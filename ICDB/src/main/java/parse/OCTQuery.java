@@ -55,7 +55,15 @@ public class OCTQuery extends ICDBQuery {
      */
     @Override
     protected Statement parseVerifyQuery(Select select) {
-        return convertToSelectAll(select);
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+
+        List<SelectItem> selectList = new ArrayList<>();
+        selectList.add(new AllColumns());
+
+        // Convert query to a SELECT * to obtain all tuples
+        plainSelect.setSelectItems(selectList);
+
+        return select;
     }
 
     ////////////
@@ -148,21 +156,6 @@ public class OCTQuery extends ICDBQuery {
         // Apply the where clause to the SELECT
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         plainSelect.setWhere(update.getWhere());
-
-        return select;
-    }
-
-    /**
-     * Converts a SELECT query to SELECT *
-     */
-    private Select convertToSelectAll(Select select) {
-        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
-
-        List<SelectItem> selectList = new ArrayList<>();
-        selectList.add(new AllColumns());
-
-        // Convert query to a SELECT * to obtain all tuples
-        plainSelect.setSelectItems(selectList);
 
         return select;
     }
