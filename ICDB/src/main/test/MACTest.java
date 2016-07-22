@@ -1,9 +1,3 @@
-import com.google.common.base.Charsets;
-import cipher.signature.CMAC;
-import cipher.signature.HMAC;
-import org.junit.Assert;
-import org.junit.Test;
-
 /**
  * <p>
  * </p>

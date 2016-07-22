@@ -1,21 +1,17 @@
 package verify;
 
-import cipher.RNG;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
+import java.security.SecureRandom;
 import java.util.NavigableSet;
-import java.util.Set;
 
 /**
  * <p>
@@ -33,6 +29,8 @@ public class ICRL implements Serializable {
 
     private DB db;
     private NavigableSet<Long> serials;
+
+    private final SecureRandom random = new SecureRandom();
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -62,20 +60,19 @@ public class ICRL implements Serializable {
     private ICRL() {
         // Load the DB
         db = DBMaker.fileDB(ICRL_LOCATION)
-                .fileMmapEnable()
-                .fileMmapPreclearDisable()
-//                .allocateStartSize(80L * 1024*1024) // 80 MB
-                .make();
+            .fileMmapEnable()
+            .fileMmapPreclearDisable()
+            .make();
         db.getStore().fileLoad();
 
         // Generate the set
         serials = db
-                .treeSet("serial", Serializer.LONG)
-                .createOrOpen();
+            .treeSet("serial", Serializer.LONG)
+            .createOrOpen();
 
         // Get the first and last values, if they exist (otherwise generate them)
         if (serials.isEmpty()) {
-            start = RNG.randomInt();
+            start = random.nextInt(Integer.MAX_VALUE);
             current = start - 1;
         } else {
             start = serials.first();

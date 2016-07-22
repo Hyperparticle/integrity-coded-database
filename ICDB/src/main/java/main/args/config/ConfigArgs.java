@@ -1,6 +1,6 @@
 package main.args.config;
 
-import cipher.AlgorithmType;
+import crypto.AlgorithmType;
 import main.args.option.Granularity;
 
 /**

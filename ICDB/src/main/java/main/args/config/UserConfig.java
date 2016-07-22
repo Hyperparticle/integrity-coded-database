@@ -1,8 +1,8 @@
 package main.args.config;
 
-import cipher.AlgorithmType;
-import cipher.CodeGen;
-import cipher.Key;
+import crypto.AlgorithmType;
+import crypto.CodeGen;
+import crypto.Key;
 import main.args.option.Granularity;
 
 /**

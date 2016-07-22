@@ -1,4 +1,4 @@
-package cipher.signature
+package crypto
 
 import com.google.common.io.BaseEncoding
 
@@ -10,12 +10,14 @@ import com.google.common.io.BaseEncoding
  */
 object Convert {
 
+    private val base64 = BaseEncoding.base64()
+
     fun toBase64(signature: ByteArray): String {
-        return BaseEncoding.base64().encode(signature)
+        return base64.encode(signature)
     }
 
     fun fromBase64(signature: String): ByteArray {
-        return BaseEncoding.base64().decode(signature)
+        return base64.decode(signature)
     }
 
 }

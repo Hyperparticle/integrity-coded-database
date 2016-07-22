@@ -1,4 +1,4 @@
-package cipher.signature
+package crypto.signer
 
 import org.bouncycastle.crypto.Signer
 import org.bouncycastle.crypto.digests.SHA1Digest
@@ -9,16 +9,19 @@ import org.bouncycastle.crypto.signers.ISO9796d2Signer
 /**
  *
  * Created on 7/12/2016
+ *
  * @author Dan Kondratyuk
  */
-object RSASignature {
+object RsaSigner {
 
     private val rsaSigner: Signer
         get() {
             val rsa = RSAEngine()
-            return ISO9796d2Signer(rsa, SHA1Digest())
+            val digest = SHA1Digest()
+            return ISO9796d2Signer(rsa, digest)
         }
 
+    @JvmStatic
     fun generate(data: ByteArray, privateKey: AsymmetricKeyParameter): ByteArray {
         val signer = this.rsaSigner
 
@@ -28,6 +31,7 @@ object RSASignature {
         return signer.generateSignature()
     }
 
+    @JvmStatic
     fun verify(data: ByteArray, publicKey: AsymmetricKeyParameter, signature: ByteArray): Boolean {
         val signer = rsaSigner
 

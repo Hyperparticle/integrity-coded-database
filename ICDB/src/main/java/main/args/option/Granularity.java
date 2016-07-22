@@ -1,6 +1,6 @@
 package main.args.option;
 
-import cipher.CodeGen;
+import crypto.CodeGen;
 import convert.DBConnection;
 import main.args.config.UserConfig;
 import parse.ICDBQuery;

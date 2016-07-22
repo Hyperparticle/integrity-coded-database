@@ -1,6 +1,6 @@
 package verify;
 
-import cipher.CodeGen;
+import crypto.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;

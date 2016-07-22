@@ -1,7 +1,7 @@
 package parse;
 
-import cipher.CodeGen;
-import cipher.signature.Convert;
+import crypto.CodeGen;
+import crypto.Convert;
 import com.google.common.base.Charsets;
 import convert.DBConnection;
 import convert.DataConverter;

@@ -1,11 +1,9 @@
 package convert;
 
-import cipher.CodeGen;
-import com.google.common.base.Charsets;
+import crypto.CodeGen;
 import com.google.common.base.Stopwatch;
 import main.ICDBTool;
 import main.args.ConvertDBCommand;
-import main.args.config.ConfigArgs;
 import main.args.config.UserConfig;
 import main.args.option.Granularity;
 import org.apache.commons.io.FileUtils;
@@ -22,7 +20,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -40,7 +37,8 @@ public class DBConverter {
     private final DBConnection db;
     private final DBConnection icdb;
 
-    private final boolean skipData;
+    private final boolean skipExport;
+    private final boolean skipConvert;
     private final boolean skipLoad;
 
     private final Granularity granularity;
@@ -55,7 +53,8 @@ public class DBConverter {
         this.db = db;
         this.icdb = icdb;
 
-        this.skipData = convertConfig.skipData;
+        this.skipExport = convertConfig.skipExport;
+        this.skipConvert = convertConfig.skipConvert;
         this.skipLoad = convertConfig.skipLoad;
 
         this.granularity = config.granularity;
@@ -72,7 +71,7 @@ public class DBConverter {
      * Begin the DB conversion process, with the assumption that a converted schema already exists on the DB server.
      */
     public void convert() {
-        if (skipData) {
+        if (skipConvert) {
             logger.debug("Data conversion skipped");
             return;
         }
@@ -82,7 +81,12 @@ public class DBConverter {
 
         try {
             // 1. Export data outfile -> .csv files
-            exportData();
+            if (!skipExport) {
+                exportData();
+            } else {
+                logger.debug("Data export skipped");
+            }
+
 
             // 2. Read from file -> generate signature -> Write to file
             convertData();
@@ -169,7 +173,7 @@ public class DBConverter {
                 String query = "load data local infile '" + filePath + "' " +
                         "into table `" + tableName + "` " +
                         "fields terminated by '" + Format.FILE_DELIMITER + "' " +
-                        "optionally enclosed by '"  + Format.ENCLOSING + "' " +
+                        "optionally enclosed by '"  + Format.ENCLOSING_TAG + "' " +
                         "lines terminated by '\n' " +
                         convertToBlob(icdbTable);
 

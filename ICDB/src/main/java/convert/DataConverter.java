@@ -1,6 +1,6 @@
 package convert;
 
-import cipher.CodeGen;
+import crypto.CodeGen;
 import org.apache.commons.lang3.ArrayUtils;
 import verify.ICRL;
 

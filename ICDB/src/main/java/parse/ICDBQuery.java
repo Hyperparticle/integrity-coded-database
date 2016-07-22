@@ -1,6 +1,6 @@
 package parse;
 
-import cipher.CodeGen;
+import crypto.CodeGen;
 import convert.DBConnection;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;

@@ -22,8 +22,8 @@ import org.supercsv.prefs.CsvPreference;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 
-import cipher.CodeGen;
-import cipher.signature.Convert;
+import crypto.CodeGen;
+import crypto.Convert;
 import main.args.option.Granularity;
 import verify.ICRL;
 

@@ -33,7 +33,7 @@ public class OCTQueryVerifier extends QueryVerifier {
             }
 
             final long serial = (long) record.get(Format.SERIAL_COLUMN);
-            final byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
+            final byte[] signature = (byte[]) record.get(Format.IC_COLUMN);
             final String data = builder.toString();
 
             final boolean verified = verifyData(serial, signature, data);

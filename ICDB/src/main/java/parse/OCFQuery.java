@@ -1,7 +1,7 @@
 package parse;
 
-import cipher.CodeGen;
-import cipher.signature.Convert;
+import crypto.CodeGen;
+import crypto.Convert;
 import com.google.common.base.Charsets;
 import convert.DBConnection;
 import convert.DataConverter;
@@ -61,7 +61,7 @@ public class OCFQuery extends ICDBQuery {
         addWhereColumn(selectItems, plainSelect.getWhere());
         tables.forEach(table -> addPrimaryKeyColumn(selectItems, table));
 
-        List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.SVC_SUFFIX, Format.SERIAL_SUFFIX);
+        List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.IC_SUFFIX, Format.SERIAL_SUFFIX);
         selectItems.addAll(signatureItems);
 
         return select;
