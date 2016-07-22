@@ -18,19 +18,16 @@ import java.util.List;
 @Parameters(commandNames = { CommandLineArgs.EXECUTE_QUERY }, commandDescription = "Execute queries on an ICDB Schema")
 public class ExecuteQueryCommand extends ConfigCommand {
 
-    @Parameter(names = { "-q", "--query" }, description = "Execute one or more queries as arguments")
-    public List<String> queries;
+    @Parameter(names = { "-q", "--query" }, description = "Execute a query as an argument")
+    public String query;
 
-    @Parameter(names = { "-f", "--file" }, description = "Execute all queries in one or more files")
-    public List<String> files;
-
-//    @Parameter(names = { "-g", "--granularity" }, converter = GranularityConverter.class, description = "The granularity to use (per tuple or per field)")
-//    public Granularity granularity = Granularity.TUPLE;
+//    @Parameter(names = { "-f", "--file" }, description = "Execute all queries in one or more files")
+//    public List<String> files;
 
     @Parameter(names = { "--convert" }, description = "Convert the query before executing")
     public Boolean convert = false;
 
-    @Parameter(names = { "--skip-verify" }, description = "Skip the data verification stage after query execution")
-    public Boolean skipVerify = false;
+//    @Parameter(names = { "--skip-verify" }, description = "Skip the data verification stage after query execution")
+//    public Boolean skipVerify = false;
 
 }

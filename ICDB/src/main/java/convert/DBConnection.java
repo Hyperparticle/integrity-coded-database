@@ -1,21 +1,17 @@
 package convert;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import main.args.config.ConfigArgs;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.Schema;
-import org.jooq.Table;
+import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.logging.Level;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -29,9 +25,6 @@ public class DBConnection {
     private static final MysqlDataSource dataSource = new MysqlDataSource();
     private static final Logger logger = LogManager.getLogger();
 
-//    // Keep a map of existing DB connections
-//    private static final Map<String, DBConnection> dbConnections = new HashMap<>();
-
     /**
      * Configure a connection to a MySQL server
      */
@@ -43,18 +36,13 @@ public class DBConnection {
     }
 
     public static DBConnection connect(String dbName, UserConfig dbConfig) {
-//        if (dbConnections.containsKey(dbName)) {
-//            return dbConnections.get(dbName);
-//        }
-
         try {
             DBConnection db = new DBConnection(dbName);
-//            dbConnections.put(dbName, db);
             logger.info("Connected to DB {} at {}:{}", dbName, dbConfig.ip, dbConfig.port);
             return db;
         } catch (SQLException | DataAccessException e) {
             logger.error("Unable to connect to {}: {}", dbName, e.getMessage());
-            logger.debug(e.getStackTrace());
+            e.printStackTrace();
             System.exit(1);
         }
 
@@ -66,6 +54,8 @@ public class DBConnection {
     private final DSLContext dbCreate;
     private final Schema dbSchema;
     private final List<String> tableNames;
+    private final Map<String, List<String>> fieldMap;
+    private final Map<String, List<String>> primaryKeyMap;
 
     private DBConnection(String dbName) throws SQLException, DataAccessException {
         this.dbName = dbName;
@@ -80,11 +70,25 @@ public class DBConnection {
                 .findFirst()
                 .orElseThrow(() -> new SQLException("Unable to find schema with name " + dbName));
 
-        // Get table metadata
-        tableNames = dbCreate.fetch("show full tables where Table_type = 'BASE TABLE'")
+        // Get all table names
+        tableNames = dbCreate.fetch("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'")
                 .map(result -> result.get(0).toString());
 
+        // Map a table (String) to a list of columns (List<String>)
+        fieldMap = tableNames.stream()
+            .collect(Collectors.toMap(
+                tableName -> tableName,
+                tableName -> dbCreate.fetch("DESCRIBE `" + tableName + "`")
+                    .map(result -> result.get(0).toString())
+            ));
 
+        // Map a table (String) to a list of primary keys (List<String>)
+        primaryKeyMap = tableNames.stream()
+            .collect(Collectors.toMap(
+                tableName -> tableName,
+                tableName -> dbCreate.fetch("SHOW KEYS FROM`" + tableName + "`WHERE Key_name = 'PRIMARY'")
+                    .map(result -> result.get(DSL.field("Column_name")).toString())
+            ));
     }
 
     public Connection getConnection() {
@@ -97,6 +101,14 @@ public class DBConnection {
 
     public Table<?> getTable(String name) {
         return dbSchema.getTable(name);
+    }
+
+    public List<String> getFields(String table) {
+        return fieldMap.get(table);
+    }
+
+    public List<String> getPrimaryKeys(String table) {
+        return primaryKeyMap.get(table);
     }
 
     public DSLContext getCreate() {

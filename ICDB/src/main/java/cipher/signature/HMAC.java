@@ -2,18 +2,12 @@ package cipher.signature;
 
 import cipher.Key;
 import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.Mac;
 import org.bouncycastle.crypto.digests.SHA1Digest;
-import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.digests.ShortenedDigest;
 import org.bouncycastle.crypto.macs.HMac;
-import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.util.Arrays;
-
-//import javax.crypto.spec.SecretKeySpec;
-//import java.security.InvalidKeyException;
-//import java.security.NoSuchAlgorithmException;
-//import java.security.SignatureException;
-//import java.util.Arrays;
 
 /**
  * <p>
@@ -26,23 +20,30 @@ import java.util.Arrays;
  */
 public class HMAC {
 
-    private static final Digest digest = new SHA1Digest();
-    private static final HMac hmac = new HMac(digest);
+    private static final int DATA_SIZE = 16; // Size in bytes
+
+    private static final Digest digest = new ShortenedDigest(new SHA1Digest(), DATA_SIZE);
+    private static final Mac hmac = new HMac(digest);
 
     public static byte[] generate(final byte[] data, final Key key) {
-        hmac.init(new KeyParameter(key.getMacKey()));
+//        Mac hmac = getHMAC();
+
+        hmac.init(key.getMacKey());
         hmac.update(data, 0, data.length);
-        final byte[] result = new byte[digest.getDigestSize()];
+        final byte[] result = new byte[DATA_SIZE];
         hmac.doFinal(result, 0);
-        return truncate(result);    // Truncate to the nearest 128 bits (SHA1 outputs 160 bits)
+        return result;
     }
 
     public static boolean verify(final byte[] data, final Key key, final byte[] signature) {
-        return Arrays.equals(generate(data, key), signature);
+        final byte[] generated = generate(data, key);
+        return Arrays.equals(generated, signature);
     }
 
-    private static byte[] truncate(byte[] array) {
-        return Arrays.copyOf(array, array.length - array.length % 16);
+    private static Mac getHMAC() {
+        // TODO: use an object pool?
+        Digest digest = new ShortenedDigest(new SHA1Digest(), DATA_SIZE);
+        return new HMac(digest);
     }
 
 }

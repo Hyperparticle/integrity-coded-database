@@ -3,6 +3,7 @@ package convert;
 import cipher.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
+import main.ICDBTool;
 import main.args.ConvertDBCommand;
 import main.args.config.ConfigArgs;
 import main.args.config.UserConfig;
@@ -21,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -88,7 +90,7 @@ public class DBConverter {
             e.printStackTrace();
         }
 
-        logger.debug("Total data conversion time: {}", dataConvertTime);
+        logger.debug("Total data conversion time: {}", dataConvertTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     public void load() {
@@ -123,13 +125,13 @@ public class DBConverter {
                     db.getCreate().selectFrom(icdbTable)
                         .fetch().formatCSV(output, Format.FILE_DELIMITER_CHAR, Format.MYSQL_NULL);
 
-                    logger.debug("Exported table {} in {}", tableName, exportTime);
+                    logger.debug("Exported table {} in {}", tableName, exportTime.elapsed(ICDBTool.TIME_UNIT));
                 } catch (IOException e) {
                     logger.error("Failed to export table {}: {}", tableName, e.getMessage());
                 }
             });
 
-        logger.debug("Total db data export time: {}", dataExportTime);
+        logger.debug("Total db data export time: {}", dataExportTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     private void convertData() throws IOException {
@@ -176,7 +178,7 @@ public class DBConverter {
 
                 try {
                     icdb.getCreate().execute(query);
-                    logger.debug("Imported table {} in {}", tableName, importTime);
+                    logger.debug("Imported table {} in {}", tableName, importTime.elapsed(ICDBTool.TIME_UNIT));
                 } catch (DataAccessException e) {
                     logger.error("Failed to import table {}: {}", tableName, e.getMessage());
                 }
@@ -185,7 +187,7 @@ public class DBConverter {
         // Don't forget to set foreign key checks back
         icdb.getCreate().execute("set FOREIGN_KEY_CHECKS = 1;");
 
-        logger.debug("Total icdb data import time: {}", importDataTime);
+        logger.debug("Total icdb data import time: {}", importDataTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     /**

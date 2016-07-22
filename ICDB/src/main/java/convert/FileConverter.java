@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.ICDBTool;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 
 import cipher.CodeGen;
-import cipher.signature.Sign;
+import cipher.signature.Convert;
 import main.args.option.Granularity;
 import verify.ICRL;
 
@@ -53,7 +54,10 @@ public class FileConverter {
 	public void convertFile(final File input, final File output) {
 		Stopwatch convertTime = Stopwatch.createStarted();
 
-		try (final Reader reader = new FileReader(input); final Writer writer = new FileWriter(output)) {
+		try (
+            final Reader reader = new FileReader(input);
+            final Writer writer = new FileWriter(output)
+        ) {
 			// Parse the csv
 			final CsvPreference preference = CsvPreference.STANDARD_PREFERENCE;
 			final CsvListReader csvReader = new CsvListReader(reader, preference);
@@ -76,7 +80,7 @@ public class FileConverter {
 			logger.error("Unable to convert file {}: {}", input.getName(), e.getMessage());
 		}
 
-		logger.debug("Converted table {} in {}", input.getName(), convertTime);
+		logger.debug("Converted table {} in {}", input.getName(), convertTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
 	private void convertLineOCT(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
@@ -108,11 +112,10 @@ public class FileConverter {
 	}
 
 	/**
-	 * Given a String, this method generates codes (svc + serial) from it and
+	 * Given some data, this method generates codes (svc + serial) from it and
 	 * adds them to the end of the supplied list
 	 * 
-	 * @param collector
-	 *            the list to collect the codes
+	 * @param collector the list to collect the codes
 	 */
 	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, ICRL icrl) {
         final long serial = icrl.getNext();
@@ -123,7 +126,7 @@ public class FileConverter {
 
 		// Generate the signature
 		final byte[] signature = codeGen.generateSignature(allData);
-		final String signatureString = Sign.toBase64(signature);
+		final String signatureString = Convert.toBase64(signature);
 
 		// Write the line
 		collector.add(signatureString);

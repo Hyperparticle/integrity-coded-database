@@ -19,19 +19,26 @@ import java.util.Arrays;
  */
 public class CMAC {
 
-    private static BlockCipher aes = new AESFastEngine();
-    private static Mac cmac = new CMac(aes);
+    private static final int DATA_SIZE = 16; // Size in bytes
 
     public static byte[] generate(final byte[] data, final Key key) {
-        cmac.init(new KeyParameter(key.getMacKey()));
+        Mac cmac = getCMAC();
+
+        cmac.init(key.getMacKey());
         cmac.update(data, 0, data.length);
-        final byte[] result = new byte[aes.getBlockSize()];
+        final byte[] result = new byte[DATA_SIZE];
         cmac.doFinal(result, 0);
         return result;
     }
 
     public static boolean verify(byte[] data, Key key, byte[] signature) {
         return Arrays.equals(generate(data, key), signature);
+    }
+
+    private static Mac getCMAC() {
+        // TODO: use an object pool?
+        BlockCipher aes = new AESFastEngine();
+        return new CMac(aes);
     }
 
 }

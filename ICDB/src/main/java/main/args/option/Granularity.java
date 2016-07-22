@@ -1,11 +1,11 @@
 package main.args.option;
 
+import cipher.CodeGen;
 import convert.DBConnection;
-import main.args.ConvertQueryCommand;
 import main.args.config.UserConfig;
-import parse.OCFparser;
-import parse.OCTparser;
-import parse.QueryConverter;
+import parse.ICDBQuery;
+import parse.OCFQuery;
+import parse.OCTQuery;
 import verify.OCFQueryVerifier;
 import verify.OCTQueryVerifier;
 import verify.QueryVerifier;
@@ -21,9 +21,8 @@ import verify.QueryVerifier;
 public enum Granularity {
     TUPLE {
         @Override
-        public QueryConverter getConverter(ConvertQueryCommand command, DBConnection icdb) {
-            throw new RuntimeException("Not implemented");
-//            return new OCTparser(command, icdb);
+        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen) {
+            return new OCTQuery(query, icdb, codeGen);
         }
 
         @Override
@@ -33,9 +32,8 @@ public enum Granularity {
     },
     FIELD {
         @Override
-        public QueryConverter getConverter(ConvertQueryCommand command, DBConnection icdb) {
-            throw new RuntimeException("Not implemented");
-//            return new OCFparser();
+        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen) {
+            return new OCFQuery(query, icdb, codeGen);
         }
 
         @Override
@@ -44,6 +42,6 @@ public enum Granularity {
         }
     };
 
-    public abstract QueryConverter getConverter(ConvertQueryCommand command, DBConnection icdb);
+    public abstract ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen);
     public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig);
 }

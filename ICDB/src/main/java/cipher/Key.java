@@ -1,10 +1,11 @@
 package cipher;
 
-import cipher.signature.Sign;
+import cipher.signature.Convert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.crypto.util.PublicKeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -28,20 +29,26 @@ import java.security.Security;
 public class Key {
 
     private final AsymmetricCipherKeyPair rsaKeyPair;
-    private final byte[] macKey;
+    private final byte[] rawMacKey;
+    private final KeyParameter macKey;
 
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
 
     public Key(String macKey, String rsaKeyFile) {
-        this.macKey = Sign.fromBase64(macKey);
-        rsaKeyPair = readKeys(rsaKeyFile);
+        this.rawMacKey = Convert.fromBase64(macKey);
+        this.macKey = new KeyParameter(rawMacKey);
+        this.rsaKeyPair = readKeys(rsaKeyFile);
     }
 
-    public byte[] getMacKey() {
+    public byte[] getRawMacKey() {
+        return rawMacKey;
+    }
+
+    public KeyParameter getMacKey() {
         return macKey;
     }
 

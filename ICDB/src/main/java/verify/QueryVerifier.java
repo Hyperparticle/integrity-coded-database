@@ -4,13 +4,14 @@ import cipher.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import convert.DBConnection;
+import main.ICDBTool;
 import main.args.config.UserConfig;
-import main.args.option.Granularity;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.impl.DSL;
+import parse.ICDBQuery;
 
 import java.nio.ByteBuffer;
 
@@ -24,20 +25,20 @@ import java.nio.ByteBuffer;
 public abstract class QueryVerifier {
 
     private final DBConnection icdb;
-    private final Granularity granularity;
     private final CodeGen codeGen;
 
     private final ICRL icrl;
 
-    protected StringBuilder errorStatus = new StringBuilder();
+    protected final DSLContext icdbCreate;
+    protected final StringBuilder errorStatus = new StringBuilder();
 
     private static final Logger logger = LogManager.getLogger();
 
     public QueryVerifier(DBConnection icdb, UserConfig dbConfig) {
         this.icdb = icdb;
-        this.granularity = dbConfig.granularity;
         this.codeGen = dbConfig.codeGen;
 
+        this.icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
         this.icrl = ICRL.getInstance();
     }
 
@@ -45,19 +46,31 @@ public abstract class QueryVerifier {
      * Executes and verifies a given query
      * @return true if the query is verified
      */
-    public boolean verify(String icdbQuery) {
+    public boolean verify(ICDBQuery icdbQuery) {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
-        final DSLContext icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
-
-        Cursor<Record> cursor = icdbCreate.fetchLazy(icdbQuery);
+        logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
+        Cursor<Record> cursor = icdbQuery.getVerifyData(icdbCreate);
         boolean verified = verify(cursor);
 
+        logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
         cursor.close();
-        logger.debug("Total query verification time: {}", queryVerificationTime);
+
         return verified;
     }
 
+    public void execute(ICDBQuery icdbQuery) {
+        Stopwatch queryExecutionTime = Stopwatch.createStarted();
+
+        icdbQuery.execute(icdbCreate);
+
+        logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
+    }
+
+    /**
+     * Executes and verifies a given query given a cursor into the data records
+     * @return true if the query is verified
+     */
     protected abstract boolean verify(Cursor<Record> cursor);
 
     /**

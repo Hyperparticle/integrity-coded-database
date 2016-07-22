@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/verify/ICRL.java" line="24" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/verify/ICRL.java" line="29" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" line="60" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6145c685-87f5-47c9-a459-7b7494d6a983" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/icdb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__co_paralleluniverse_quasar_core_0_7_5.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_kryo_3_0_3.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_minlog_1_3_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_esotericsoftware_reflectasm_1_10_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_protobuf_protobuf_java_2_6_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__de_javakaffee_kryo_serializers_0_37.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_dropwizard_metrics_metrics_core_3_1_2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hdrhistogram_HdrHistogram_2_1_8.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_latencyutils_LatencyUtils_2_0_3.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_objenesis_objenesis_2_1.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/cipher/signature/Sign.java" afterPath="$PROJECT_DIR$/src/main/java/cipher/signature/Convert.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ICDB.iml" afterPath="$PROJECT_DIR$/ICDB.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java" afterPath="$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../README.md" afterPath="$PROJECT_DIR$/../README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cipher/Key.java" afterPath="$PROJECT_DIR$/src/main/java/cipher/Key.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cipher/signature/CMAC.java" afterPath="$PROJECT_DIR$/src/main/java/cipher/signature/CMAC.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cipher/signature/HMAC.java" afterPath="$PROJECT_DIR$/src/main/java/cipher/signature/HMAC.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cipher/signature/RSASignature.java" afterPath="$PROJECT_DIR$/src/main/java/cipher/signature/RSASignature.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/convert/DBConnection.java" afterPath="$PROJECT_DIR$/src/main/java/convert/DBConnection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/convert/FileConverter.java" afterPath="$PROJECT_DIR$/src/main/java/convert/FileConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" afterPath="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" afterPath="$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/parse/OCFQuery.java" afterPath="$PROJECT_DIR$/src/main/java/parse/OCFQuery.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/parse/OCTQuery.java" afterPath="$PROJECT_DIR$/src/main/java/parse/OCTQuery.java" />
     </list>
     <ignored path="ICDB.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,7 +43,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/ICDB$MACTest_CMACTest.coverage" NAME="MACTest.CMACTest Coverage Results" MODIFIED="1464877436107" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>.*</FILTER>
@@ -45,63 +63,17 @@
     <favorites_list name="ICDB" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.48379937">
+    <splitter split-orientation="horizontal" split-proportion="0.48549488">
       <split-first>
-        <splitter split-orientation="vertical" split-proportion="0.51308584">
+        <splitter split-orientation="vertical" split-proportion="0.51500684">
           <split-first>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
               <file leaf-file-name="FileConverter.java" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/convert/FileConverter.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="236">
-                      <caret line="88" column="5" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
-                      <folding>
-                        <element signature="imports" expanded="true" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="ICRL.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/verify/ICRL.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="289">
-                      <caret line="27" column="50" selection-start-line="27" selection-start-column="50" selection-end-line="27" selection-end-column="50" />
-                      <folding>
-                        <element signature="imports" expanded="true" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="icdb" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/icdb">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="34">
-                      <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+                    <state relative-caret-position="306">
+                      <caret line="43" column="28" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
                       <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="DBConverter.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConverter.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="204">
-                      <caret line="30" column="3" selection-start-line="30" selection-start-column="3" selection-end-line="30" selection-end-column="3" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="Config.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/config/Config.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="408">
-                      <caret line="27" column="68" selection-start-line="27" selection-start-column="68" selection-end-line="27" selection-end-column="68" />
-                      <folding>
-                        <element signature="imports" expanded="false" />
-                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -109,77 +81,10 @@
               <file leaf-file-name="SchemaConverter.java" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/convert/SchemaConverter.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="467">
-                      <caret line="135" column="5" selection-start-line="135" selection-start-column="5" selection-end-line="135" selection-end-column="5" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="RNG.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/RNG.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="272">
-                      <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-            </leaf>
-          </split-first>
-          <split-second>
-            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="QueryVerifier.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="255">
-                      <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+                    <state relative-caret-position="2550">
+                      <caret line="166" column="95" selection-start-line="166" selection-start-column="95" selection-end-line="166" selection-end-column="95" />
                       <folding>
-                        <element signature="e#4419#4420#0" expanded="true" />
-                        <element signature="e#4464#4465#0" expanded="true" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="Signature.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/Signature.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="85">
-                      <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
-                      <folding>
-                        <element signature="e#220#221#0" expanded="false" />
-                        <element signature="e#282#283#0" expanded="false" />
-                        <element signature="e#342#343#0" expanded="false" />
-                        <element signature="e#404#405#0" expanded="false" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="QueryConverter.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/parse/QueryConverter.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="258">
-                      <caret line="63" column="27" selection-start-line="63" selection-start-column="27" selection-end-line="63" selection-end-column="27" />
-                      <folding>
-                        <marker date="1467899495394" expanded="false" signature="23:536" ph="..." />
-                        <marker date="1467899495394" expanded="true" signature="1557:1688" ph="{...}" />
-                        <marker date="1467899495394" expanded="true" signature="1804:1963" ph="{...}" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="CodeGen.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/CodeGen.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="204">
-                      <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-                      <folding>
-                        <element signature="e#524#525#0" expanded="false" />
-                        <element signature="e#585#586#0" expanded="false" />
+                        <element signature="imports" expanded="false" />
                       </folding>
                     </state>
                   </provider>
@@ -188,8 +93,55 @@
               <file leaf-file-name="AlgorithmType.java" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="289">
-                      <caret line="27" column="56" selection-start-line="27" selection-start-column="56" selection-end-line="27" selection-end-column="56" />
+                    <state relative-caret-position="561">
+                      <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                        <element signature="e#703#704#0" expanded="false" />
+                        <element signature="e#758#759#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="QueryVerifier.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="1224">
+                      <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+                      <folding>
+                        <element signature="e#3054#3055#0" expanded="false" />
+                        <element signature="e#3099#3100#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="RSASignature.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/RSASignature.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="612">
+                      <caret line="49" column="40" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="CMAC.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/CMAC.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="350">
+                      <caret line="28" column="50" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="HMAC.java" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/HMAC.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="272">
+                      <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
                       <folding>
                         <element signature="imports" expanded="true" />
                       </folding>
@@ -197,12 +149,118 @@
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="icdb" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/icdb">
+              <file leaf-file-name="OCTQueryVerifier.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/verify/OCTQueryVerifier.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="0">
-                      <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                    <state relative-caret-position="357">
+                      <caret line="29" column="57" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                        <element signature="e#561#562#0" expanded="false" />
+                        <element signature="e#598#599#0" expanded="false" />
+                        <element signature="e#1490#1491#0" expanded="false" />
+                        <element signature="e#1535#1536#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="OCFQueryVerifier.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/verify/OCFQueryVerifier.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="85">
+                      <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+                      <folding>
+                        <element signature="e#538#539#0" expanded="false" />
+                        <element signature="e#575#576#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-first>
+          <split-second>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+              <file leaf-file-name="ICDBQuery.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="510">
+                      <caret line="50" column="25" selection-start-line="50" selection-start-column="25" selection-end-line="50" selection-end-column="25" />
+                      <folding>
+                        <element signature="e#5510#5511#0" expanded="false" />
+                        <element signature="e#5547#5548#0" expanded="false" />
+                        <element signature="e#5585#5586#0" expanded="false" />
+                        <element signature="e#5619#5620#0" expanded="false" />
+                        <element signature="e#5730#5731#0" expanded="false" />
+                        <element signature="e#5776#5777#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="Key.java" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/Key.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="476">
+                      <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
                       <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="OCTQuery.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCTQuery.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="1445">
+                      <caret line="117" column="38" selection-start-line="117" selection-start-column="38" selection-end-line="117" selection-end-column="38" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                        <element signature="e#1417#1418#0" expanded="false" />
+                        <element signature="e#1460#1461#0" expanded="false" />
+                        <element signature="e#3130#3131#0" expanded="false" />
+                        <element signature="e#3201#3202#0" expanded="false" />
+                        <element signature="e#3274#3275#0" expanded="false" />
+                        <element signature="e#3345#3346#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="OCFQuery.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCFQuery.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="1241">
+                      <caret line="96" column="16" selection-start-line="96" selection-start-column="16" selection-end-line="96" selection-end-column="16" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                        <element signature="e#1085#1086#0" expanded="false" />
+                        <element signature="e#1128#1129#0" expanded="false" />
+                        <element signature="e#3136#3137#0" expanded="false" />
+                        <element signature="e#3207#3208#0" expanded="false" />
+                        <element signature="e#3280#3281#0" expanded="false" />
+                        <element signature="e#3351#3352#0" expanded="false" />
+                        <element signature="e#3479#3480#0" expanded="false" />
+                        <element signature="e#3516#3517#0" expanded="false" />
+                        <element signature="e#3589#3590#0" expanded="false" />
+                        <element signature="e#3616#3617#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="DataConverter.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/convert/DataConverter.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="102">
+                      <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                        <element signature="e#781#782#0" expanded="false" />
+                        <element signature="e#810#811#0" expanded="false" />
+                        <element signature="e#846#847#0" expanded="false" />
+                        <element signature="e#878#879#0" expanded="false" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -215,11 +273,11 @@
         <splitter split-orientation="vertical" split-proportion="0.5132832">
           <split-first>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="ICDBTool.java" pinned="false" current-in-tab="false">
+              <file leaf-file-name="ICDBTool.java" pinned="true" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/main/ICDBTool.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="661">
-                      <caret line="116" column="5" selection-start-line="116" selection-start-column="5" selection-end-line="116" selection-end-column="5" />
+                    <state relative-caret-position="153">
+                      <caret line="27" column="2" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="2" />
                       <folding />
                     </state>
                   </provider>
@@ -228,8 +286,8 @@
               <file leaf-file-name="config.json" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/config.json">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="153">
-                      <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+                    <state relative-caret-position="85">
+                      <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
                       <folding />
                     </state>
                   </provider>
@@ -239,8 +297,8 @@
                 <entry file="file://$PROJECT_DIR$/../README.md">
                   <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
                     <state split_layout="FIRST">
-                      <first_editor relative-caret-position="476">
-                        <caret line="34" column="14" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
+                      <first_editor relative-caret-position="318">
+                        <caret line="84" column="64" selection-start-line="84" selection-start-column="64" selection-end-line="84" selection-end-column="64" />
                         <folding />
                       </first_editor>
                       <second_editor />
@@ -251,31 +309,11 @@
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="Format.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/convert/Format.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="493">
-                      <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="DBConnection.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConnection.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="892">
-                      <caret line="78" column="8" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
               <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/pom.xml">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="323">
-                      <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+                    <state relative-caret-position="3247">
+                      <caret line="191" column="0" selection-start-line="191" selection-start-column="0" selection-end-line="191" selection-end-column="0" />
                       <folding />
                     </state>
                   </provider>
@@ -285,33 +323,64 @@
           </split-first>
           <split-second>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="CommandLineArgs.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="279">
-                      <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="ConvertDBCommand.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertDBCommand.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="221">
-                      <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
-                      <folding>
-                        <element signature="imports" expanded="false" />
-                      </folding>
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="ConvertQueryCommand.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java">
+              <file leaf-file-name="ICRL.java" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/main/java/verify/ICRL.java">
                   <provider selected="true" editor-type-id="text-editor">
                     <state relative-caret-position="374">
-                      <caret line="29" column="30" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
+                      <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+                      <folding>
+                        <element signature="e#2731#2732#0" expanded="true" />
+                        <element signature="e#2766#2767#0" expanded="true" />
+                        <element signature="e#2868#2869#0" expanded="true" />
+                        <element signature="e#2906#2907#0" expanded="true" />
+                        <element signature="e#2950#2951#0" expanded="true" />
+                        <element signature="e#2997#2998#0" expanded="true" />
+                        <element signature="e#3024#3025#0" expanded="true" />
+                        <element signature="e#3050#3051#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="Granularity.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/option/Granularity.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="119">
+                      <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="DBConnection.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConnection.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="85">
+                      <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                        <element signature="e#3275#3276#0" expanded="false" />
+                        <element signature="e#3308#3309#0" expanded="false" />
+                        <element signature="e#3347#3348#0" expanded="false" />
+                        <element signature="e#3380#3381#0" expanded="false" />
+                        <element signature="e#3425#3426#0" expanded="false" />
+                        <element signature="e#3471#3472#0" expanded="false" />
+                        <element signature="e#3522#3523#0" expanded="false" />
+                        <element signature="e#3564#3565#0" expanded="false" />
+                        <element signature="e#3620#3621#0" expanded="false" />
+                        <element signature="e#3667#3668#0" expanded="false" />
+                        <element signature="e#3704#3705#0" expanded="false" />
+                        <element signature="e#3735#3736#0" expanded="false" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="ExecuteQueryCommand.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="306">
+                      <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
                       <folding>
                         <element signature="imports" expanded="false" />
                       </folding>
@@ -319,22 +388,14 @@
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="ExecuteQueryCommand.java" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
+              <file leaf-file-name="DBConverter.java" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConverter.java">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="221">
-                      <caret line="18" column="56" selection-start-line="18" selection-start-column="56" selection-end-line="18" selection-end-column="56" />
-                      <folding />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="BaseKeyGenerator.java" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/BaseKeyGenerator.java">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="178">
-                      <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-                      <folding />
+                    <state relative-caret-position="834">
+                      <caret line="157" column="35" selection-start-line="157" selection-start-column="35" selection-end-line="157" selection-end-column="35" />
+                      <folding>
+                        <element signature="imports" expanded="false" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -364,57 +425,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/test/cipher/CipherTest.java" />
-        <option value="$PROJECT_DIR$/src/main/test/cipher/MACTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/option/CipherType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/option/MACType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mac/HMAC.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/Tuple.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/ICDB.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/DataConverter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/BaseKeyGenerator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/RSAKeyGenerator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/option/Granularity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/Key.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/mac/CodeGen.java" />
-        <option value="$PROJECT_DIR$/tmp/db-files/data/departments.csv" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/mac/AlgorithmType.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/scripts/duplicate-schema.sh" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/RSACodeGen.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/MACKey.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/RSAKey.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/config/ConfigArgs.java" />
+        <option value="$PROJECT_DIR$/src/main/test/MACTest.java" />
+        <option value="$PROJECT_DIR$/key.pem" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/config/UserConfig.java" />
         <option value="$PROJECT_DIR$/tmp/icdb-files/data/departments.csv" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/parse/QueryConverter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/mac/HMAC.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertDBCommand.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/deprecated/CodeCipher.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/deprecated/SHACipher.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/deprecated/RSACipher.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/args/config/Config.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/DBConverter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/CodeGen.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/deprecated/Message.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/deprecated/Key.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/Format.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/SchemaConverter.java" />
         <option value="$PROJECT_DIR$/src/main/resources/config-sample.json" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/RNG.java" />
-        <option value="$PROJECT_DIR$/config.json" />
-        <option value="$PROJECT_DIR$/src/main/java/verify/ICRevocationList.java" />
-        <option value="$PROJECT_DIR$/src/main/java/verify/Serial.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/log4j2.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/log4j2.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/DBConnection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/ac75ecee-9fc0-4d39-81fb-81db14a9bba4/console.sql" />
-        <option value="$PROJECT_DIR$/src/main/java/convert/FileConverter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/verify/ICRL.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/tmp/db-files/data/departments.csv" />
+        <option value="$PROJECT_DIR$/src/main/test/TestCipher.java" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/OCFQueryVerifier.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/OCTparser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/QueryConverter.java" />
         <option value="$PROJECT_DIR$/../README.md" />
-        <option value="$PROJECT_DIR$/icdb" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/Query.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/OCFparser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/query/Query.java" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/OCTQueryVerifier.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/OCTQueryConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/OCFQueryConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/query/ICDBQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/query/OCTQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/query/OCFQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/option/QuerySplitter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/option/Granularity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/convert/DataConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/option/QuerySPlitter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/CodeGen.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/sampleQueries.sql" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/OCTQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/OCFQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/java/convert/DBConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/convert/SchemaConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java" />
+        <option value="$PROJECT_DIR$/config.json" />
+        <option value="$PROJECT_DIR$/src/main/java/convert/FileConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/convert/DBConnection.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/ICDBTool.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/signature/Sign.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/signature/Convert.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/signature/CMAC.java" />
+        <option value="$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/signature/RSASignature.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/Key.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cipher/signature/HMAC.java" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/ICRL.java" />
       </list>
     </option>
   </component>
@@ -443,9 +504,10 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1182" />
-    <option name="width" value="2671" />
-    <option name="height" value="1935" />
+    <option name="x" value="1113" />
+    <option name="y" value="1" />
+    <option name="width" value="2722" />
+    <option name="height" value="2004" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -468,6 +530,9 @@
           </State>
           <State>
             <id>Cloning issuesJava</id>
+          </State>
+          <State>
+            <id>Code maturity issuesJava</id>
           </State>
           <State>
             <id>Code style issuesJava</id>
@@ -578,6 +643,11 @@
             <id>XSLT</id>
           </State>
         </expanded-state>
+        <selected-state>
+          <State>
+            <id>Deprecation</id>
+          </State>
+        </selected-state>
       </profile-state>
     </entry>
   </component>
@@ -606,18 +676,12 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="ICDB" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -643,6 +707,36 @@
               <option name="myItemId" value="tmp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="icdb-files" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tmp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="db-files" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -659,6 +753,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -702,21 +800,187 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="scripts" />
+              <option name="myItemId" value="verify" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="parse" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="args" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="convert" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cipher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ICDB" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cipher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="signature" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="preferences.editor" />
+    <property name="settings.editor.selected.configurable" value="VisualVMLauncher" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
@@ -729,6 +993,7 @@
     <property name="Repository.Attach.JavaDocs" value="true" />
     <property name="Repository.Attach.Sources" value="true" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="Sqlite (Xerial)" />
+    <property name="SearchEverywhereHistoryKey" value="convertquerycommand&#9;FILE&#9;file://C:/Users/hyper/OneDrive/Creations/Coding/Assignments/Research/CS_REU/Summer_2016/IntegrityCodedDatabase/ICDB/src/main/java/main/args/ConvertQueryCommand.java&#10;depart&#9;FILE&#9;file://C:/Users/hyper/OneDrive/Creations/Coding/Assignments/Research/CS_REU/Summer_2016/IntegrityCodedDatabase/ICDB/tmp/icdb-files/data/departments.csv&#10;key&#9;FILE&#9;file://C:/Users/hyper/OneDrive/Creations/Coding/Assignments/Research/CS_REU/Summer_2016/IntegrityCodedDatabase/ICDB/src/main/java/cipher/deprecated/Key.java" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -861,8 +1126,13 @@
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
       <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="GAPID_DISABLE_PCS" value="false" />
+      </Profilers>
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method />
@@ -881,8 +1151,13 @@
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
       <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="GAPID_DISABLE_PCS" value="false" />
+      </Profilers>
       <method />
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
@@ -986,6 +1261,9 @@
       <module name="" />
       <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
       <method />
     </configuration>
     <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
@@ -1277,10 +1555,10 @@
     <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
       <node-interpreter>project</node-interpreter>
       <node-options />
-      <working-directory>$PROJECT_DIR$</working-directory>
+      <working-directory />
       <pass-parent-env>true</pass-parent-env>
       <envs />
-      <ui>bdd</ui>
+      <ui />
       <extra-mocha-options />
       <test-kind>DIRECTORY</test-kind>
       <test-directory />
@@ -1312,7 +1590,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="main.ICDBTool" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="convert-query -q &quot;select * from employees&quot;" />
+      <option name="PROGRAM_PARAMETERS" value="convert-query -q &quot;SELECT dept_no, dept_name FROM departments WHERE dept_no &gt; 'd003'&quot;" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -1323,11 +1601,11 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="ICDBTool ExecuteQuery" type="Application" factoryName="Application">
+    <configuration default="false" name="ICDBTool ExecuteInsert" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="main.ICDBTool" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="execute-query -q &quot;select * from departments&quot; --convert" />
+      <option name="PROGRAM_PARAMETERS" value="execute-query -q &quot;INSERT INTO departments VALUES ('d010','Manufacturing'), ('d011', 'Operations')&quot; --convert" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -1338,14 +1616,62 @@
       <envs />
       <method />
     </configuration>
-    <list size="7">
+    <configuration default="false" name="ICDBTool ExecuteDelete" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="main.ICDBTool" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="execute-query -q &quot;DELETE FROM departments WHERE dept_no IN ('d010', 'd011');&quot; --convert" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="ICDB" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="ICDBTool ExecuteUpdate" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="main.ICDBTool" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="execute-query -q &quot;UPDATE departments SET dept_name = 'Marketing' WHERE dept_no = 'd001';&quot; --convert" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="ICDB" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="ICDBTool ExecuteSelect" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="main.ICDBTool" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="execute-query -q &quot;SELECT * FROM salaries&quot; --convert" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="ICDB" />
+      <envs />
+      <method />
+    </configuration>
+    <list size="10">
       <item index="0" class="java.lang.String" itemvalue="Application.ICDBTool ConvertDB" />
       <item index="1" class="java.lang.String" itemvalue="Application.ICDBTool ConvertQuery" />
-      <item index="2" class="java.lang.String" itemvalue="Application.ICDBTool ExecuteQuery" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.CipherTest.SHACipherTest" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.CipherTest.HMACTest" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.MACTest.CMACTest" />
-      <item index="6" class="java.lang.String" itemvalue="JUnit.MACTest.HMACTest" />
+      <item index="2" class="java.lang.String" itemvalue="Application.ICDBTool ExecuteInsert" />
+      <item index="3" class="java.lang.String" itemvalue="Application.ICDBTool ExecuteDelete" />
+      <item index="4" class="java.lang.String" itemvalue="Application.ICDBTool ExecuteUpdate" />
+      <item index="5" class="java.lang.String" itemvalue="Application.ICDBTool ExecuteSelect" />
+      <item index="6" class="java.lang.String" itemvalue="JUnit.CipherTest.SHACipherTest" />
+      <item index="7" class="java.lang.String" itemvalue="JUnit.CipherTest.HMACTest" />
+      <item index="8" class="java.lang.String" itemvalue="JUnit.MACTest.CMACTest" />
+      <item index="9" class="java.lang.String" itemvalue="JUnit.MACTest.HMACTest" />
     </list>
     <recent_temporary>
       <list size="4">
@@ -1395,7 +1721,15 @@
       <workItem from="1466824174425" duration="17000" />
       <workItem from="1466824209397" duration="10520000" />
       <workItem from="1467207837156" duration="26101000" />
-      <workItem from="1467751170370" duration="42335000" />
+      <workItem from="1467751170370" duration="60799000" />
+      <workItem from="1468412003178" duration="13769000" />
+      <workItem from="1468508342560" duration="3393000" />
+      <workItem from="1468553029622" duration="163000" />
+      <workItem from="1468553229446" duration="38152000" />
+      <workItem from="1468856763377" duration="33771000" />
+      <workItem from="1468988556490" duration="24374000" />
+      <workItem from="1469202620118" duration="4494000" />
+      <workItem from="1469208035999" duration="2757000" />
     </task>
     <servers />
   </component>
@@ -1432,39 +1766,41 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="171961000" />
+    <option name="totallyTimeSpent" value="311298000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1182" y="0" width="2671" height="1935" extended-state="0" />
+    <frame x="1113" y="1" width="2722" height="2004" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2143239" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23771314" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25892857" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2373348" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.088655144" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19478357" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19187601" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="775" y="1332" width="2662" height="360" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12179241" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977018" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.119459055" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.07753623" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24981132" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18065205" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27181545" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24971275" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299425" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998997" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32870123" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1480,202 +1816,66 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/test/MACTest.java</url>
-          <line>27</line>
-          <properties />
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/test/MACTest.java</url>
-          <line>46</line>
-          <properties />
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/convert/DBConverter.java</url>
-          <line>212</line>
-          <properties />
-          <option name="timeStamp" value="61" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="93" />
+      <option name="time" value="173" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="allBytes" />
+        <watch expression="selectItems" />
+        <watch expression="((PlainSelect)select.selectBody).fromItem" custom="net.sf.jsqlparser.statement.select.PlainSelect" />
+        <watch expression="icdb.primaryKeyMap" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tmp/db-files/data/departments.csv">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/BaseKeyGenerator.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/AESCipher.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/AESKeyGenerator.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/test/TestCipher.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCFparser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="e#2614#2626#0" expanded="false" />
-            <marker date="1467862219873" expanded="false" signature="40:961" ph="..." />
-            <marker date="1467862219873" expanded="true" signature="1123:1212" ph="{...}" />
-            <marker date="1467862219873" expanded="true" signature="1275:1321" ph="{...}" />
-            <marker date="1467862219873" expanded="true" signature="1479:3006" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tmp/icdb-files/data/dept_emp.csv">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tmp/icdb-files/data/titles.csv">
-      <provider selected="true" editor-type-id="LargeFileEditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tmp/icdb-files/data/departments.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/parse/SQLParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="39" column="10" selection-start-line="39" selection-start-column="10" selection-end-line="39" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.8.2/jooq-3.8.2-sources.jar!/org/jooq/impl/AbstractRecord.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="252" column="0" selection-start-line="252" selection-start-column="0" selection-end-line="252" selection-end-column="0" />
-          <folding>
-            <element signature="e#7059#7060#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertDataCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="31" column="59" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/SHACipher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/Symbol.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCTparser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="182" column="24" selection-start-line="182" selection-start-column="23" selection-end-line="182" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/mac/HMAC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/CodeCipher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/AESCipher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/AESKeyGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="29" column="30" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
+        <state relative-caret-position="256">
+          <caret line="36" column="33" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/Message.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/config/UserConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state relative-caret-position="663">
+          <caret line="46" column="46" selection-start-line="46" selection-start-column="46" selection-end-line="46" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/Key.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/RSACipher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/option/ReaderConverter.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/RNG.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
-          <caret line="21" column="40" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="40" />
-          <folding />
+          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+          <folding>
+            <element signature="e#297#298#0" expanded="false" />
+            <element signature="e#353#354#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/config/ConfigArgs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        <state relative-caret-position="340">
+          <caret line="21" column="34" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/config-sample.json" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/convert/Format.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="51" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
           <folding />
         </state>
       </provider>
@@ -1684,224 +1884,317 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="14" column="31" selection-start-line="14" selection-start-column="31" selection-end-line="14" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/RSAKeyGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-68">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/config/Config.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/convert/ICDB.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCFQueryConverter.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/QueryConverter.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCTQueryConverter.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/resources/scripts/create_employees_schema.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="27" column="68" selection-start-line="27" selection-start-column="68" selection-end-line="27" selection-end-column="68" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/db-files/data/departments.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/config-sample.json">
+    <entry file="file://$PROJECT_DIR$/icdb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+        <state relative-caret-position="34">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/icdb-files/data/departments.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="50" selection-start-line="4" selection-start-column="50" selection-end-line="4" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/jooq/jooq/3.8.2/jooq-3.8.2-sources.jar!/org/jooq/impl/AbstractRecord.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="217" column="0" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/github/jsqlparser/jsqlparser/0.9.5/jsqlparser-0.9.5-sources.jar!/net/sf/jsqlparser/expression/operators/relational/GreaterThan.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/option/Granularity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cipher/CodeGen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        <state relative-caret-position="323">
+          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
           <folding>
-            <element signature="e#524#525#0" expanded="false" />
-            <element signature="e#585#586#0" expanded="false" />
+            <element signature="e#581#582#0" expanded="false" />
+            <element signature="e#642#643#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/parse/QueryConverter.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/SQLParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="63" column="27" selection-start-line="63" selection-start-column="27" selection-end-line="63" selection-end-column="27" />
+        <state relative-caret-position="1513">
+          <caret line="96" column="7" selection-start-line="96" selection-start-column="7" selection-end-line="96" selection-end-column="7" />
           <folding>
-            <marker date="1467899495394" expanded="false" signature="23:536" ph="..." />
-            <marker date="1467899495394" expanded="true" signature="1557:1688" ph="{...}" />
-            <marker date="1467899495394" expanded="true" signature="1804:1963" ph="{...}" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#3163#3164#0" expanded="false" />
+            <element signature="e#3194#3195#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/Signature.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/sampleQueries.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="60" selection-start-line="4" selection-start-column="60" selection-end-line="4" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/verify/OCFQueryVerifier.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="5" column="6" selection-start-line="5" selection-start-column="6" selection-end-line="5" selection-end-column="6" />
+          <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
           <folding>
-            <element signature="e#220#221#0" expanded="false" />
-            <element signature="e#282#283#0" expanded="false" />
-            <element signature="e#342#343#0" expanded="false" />
-            <element signature="e#404#405#0" expanded="false" />
+            <element signature="e#538#539#0" expanded="false" />
+            <element signature="e#575#576#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/log4j2.properties">
+    <entry file="file://$PROJECT_DIR$/src/main/java/verify/OCTQueryVerifier.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/log4j2.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="40" selection-start-line="9" selection-start-column="40" selection-end-line="9" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/RNG.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
-          <folding />
+        <state relative-caret-position="357">
+          <caret line="29" column="57" selection-start-line="29" selection-start-column="57" selection-end-line="29" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#561#562#0" expanded="false" />
+            <element signature="e#598#599#0" expanded="false" />
+            <element signature="e#1490#1491#0" expanded="false" />
+            <element signature="e#1535#1536#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/convert/SchemaConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="135" column="5" selection-start-line="135" selection-start-column="5" selection-end-line="135" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/ICRL">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/ac75ecee-9fc0-4d39-81fb-81db14a9bba4/console.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="22" selection-start-line="0" selection-start-column="22" selection-end-line="0" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/verify/Serial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="44" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/convert/FileConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="88" column="5" selection-start-line="88" selection-start-column="5" selection-end-line="88" selection-end-column="5" />
+        <state relative-caret-position="2550">
+          <caret line="166" column="95" selection-start-line="166" selection-start-column="95" selection-end-line="166" selection-end-column="95" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="30" column="3" selection-start-line="30" selection-start-column="3" selection-end-line="30" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/2d56d/ac75ecee-9fc0-4d39-81fb-81db14a9bba4/serials">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/ICDBTool.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="661">
-          <caret line="116" column="5" selection-start-line="116" selection-start-column="5" selection-end-line="116" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/convert/Format.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConnection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="892">
-          <caret line="78" column="8" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
+        <state relative-caret-position="85">
+          <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3275#3276#0" expanded="false" />
+            <element signature="e#3308#3309#0" expanded="false" />
+            <element signature="e#3347#3348#0" expanded="false" />
+            <element signature="e#3380#3381#0" expanded="false" />
+            <element signature="e#3425#3426#0" expanded="false" />
+            <element signature="e#3471#3472#0" expanded="false" />
+            <element signature="e#3522#3523#0" expanded="false" />
+            <element signature="e#3564#3565#0" expanded="false" />
+            <element signature="e#3620#3621#0" expanded="false" />
+            <element signature="e#3667#3668#0" expanded="false" />
+            <element signature="e#3704#3705#0" expanded="false" />
+            <element signature="e#3735#3736#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCFQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1241">
+          <caret line="96" column="16" selection-start-line="96" selection-start-column="16" selection-end-line="96" selection-end-column="16" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1085#1086#0" expanded="false" />
+            <element signature="e#1128#1129#0" expanded="false" />
+            <element signature="e#3136#3137#0" expanded="false" />
+            <element signature="e#3207#3208#0" expanded="false" />
+            <element signature="e#3280#3281#0" expanded="false" />
+            <element signature="e#3351#3352#0" expanded="false" />
+            <element signature="e#3479#3480#0" expanded="false" />
+            <element signature="e#3516#3517#0" expanded="false" />
+            <element signature="e#3589#3590#0" expanded="false" />
+            <element signature="e#3616#3617#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ConvertQueryCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/CommandLineArgs.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="41" column="56" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config.json">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/option/QuerySplitter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="11" column="58" selection-start-line="11" selection-start-column="58" selection-end-line="11" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/ICDBTool.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+          <caret line="27" column="2" selection-start-line="27" selection-start-column="2" selection-end-line="27" selection-end-column="2" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/deprecated/BaseKeyGenerator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/convert/DataConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
+        <state relative-caret-position="102">
+          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#781#782#0" expanded="false" />
+            <element signature="e#810#811#0" expanded="false" />
+            <element signature="e#846#847#0" expanded="false" />
+            <element signature="e#878#879#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCTQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1445">
+          <caret line="117" column="38" selection-start-line="117" selection-start-column="38" selection-end-line="117" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1417#1418#0" expanded="false" />
+            <element signature="e#1460#1461#0" expanded="false" />
+            <element signature="e#3130#3131#0" expanded="false" />
+            <element signature="e#3201#3202#0" expanded="false" />
+            <element signature="e#3274#3275#0" expanded="false" />
+            <element signature="e#3345#3346#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/convert/FileConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="43" column="28" selection-start-line="43" selection-start-column="28" selection-end-line="43" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/Convert.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="18" column="56" selection-start-line="18" selection-start-column="56" selection-end-line="18" selection-end-column="56" />
+        <state relative-caret-position="136">
+          <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+        <state relative-caret-position="1224">
+          <caret line="85" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
           <folding>
-            <element signature="e#4419#4420#0" expanded="true" />
-            <element signature="e#4464#4465#0" expanded="true" />
+            <element signature="e#3054#3055#0" expanded="false" />
+            <element signature="e#3099#3100#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="37" column="9" selection-start-line="37" selection-start-column="9" selection-end-line="37" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#703#704#0" expanded="false" />
+            <element signature="e#758#759#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="50" column="25" selection-start-line="50" selection-start-column="25" selection-end-line="50" selection-end-column="25" />
+          <folding>
+            <element signature="e#5510#5511#0" expanded="false" />
+            <element signature="e#5547#5548#0" expanded="false" />
+            <element signature="e#5585#5586#0" expanded="false" />
+            <element signature="e#5619#5620#0" expanded="false" />
+            <element signature="e#5730#5731#0" expanded="false" />
+            <element signature="e#5776#5777#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+        <state relative-caret-position="3247">
+          <caret line="191" column="0" selection-start-line="191" selection-start-column="0" selection-end-line="191" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1909,8 +2202,8 @@
     <entry file="file://$PROJECT_DIR$/../README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="476">
-            <caret line="34" column="14" selection-start-line="34" selection-start-column="14" selection-end-line="34" selection-end-column="14" />
+          <first_editor relative-caret-position="318">
+            <caret line="84" column="64" selection-start-line="84" selection-start-column="64" selection-end-line="84" selection-end-column="64" />
             <folding />
           </first_editor>
           <second_editor />
@@ -1920,39 +2213,64 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/AlgorithmType.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/CMAC.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="27" column="56" selection-start-line="27" selection-start-column="56" selection-end-line="27" selection-end-column="56" />
+        <state relative-caret-position="350">
+          <caret line="28" column="50" selection-start-line="28" selection-start-column="50" selection-end-line="28" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/RSASignature.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="49" column="40" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/Key.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/HMAC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="834">
+          <caret line="157" column="35" selection-start-line="157" selection-start-column="35" selection-end-line="157" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/verify/ICRL.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="27" column="50" selection-start-line="27" selection-start-column="50" selection-end-line="27" selection-end-column="50" />
+        <state relative-caret-position="374">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#2731#2732#0" expanded="true" />
+            <element signature="e#2766#2767#0" expanded="true" />
+            <element signature="e#2868#2869#0" expanded="true" />
+            <element signature="e#2906#2907#0" expanded="true" />
+            <element signature="e#2950#2951#0" expanded="true" />
+            <element signature="e#2997#2998#0" expanded="true" />
+            <element signature="e#3024#3025#0" expanded="true" />
+            <element signature="e#3050#3051#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/scripts/duplicate-schema.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/icdb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>

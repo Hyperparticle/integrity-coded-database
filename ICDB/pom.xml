@@ -153,18 +153,8 @@
             <artifactId>mapdb</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.8.11.2</version>
-        </dependency>
 
         <!-- Crypto -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.54</version>
-        </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
@@ -178,6 +168,11 @@
             <version>1.48</version>
         </dependency>
         <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>0.9.5</version>
+        </dependency>
+        <dependency>
             <groupId>net.sf.supercsv</groupId>
             <artifactId>super-csv</artifactId>
             <version>2.4.0</version>
@@ -186,6 +181,13 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.6.2</version>
+        </dependency>
+
+        <!-- Performance Enhancements -->
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>quasar-core</artifactId>
+            <version>0.7.5</version>
         </dependency>
 
         <!-- Testing & Debugging -->
@@ -215,11 +217,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
-        </dependency>
-         <dependency>
-        	<groupId>com.github.jsqlparser</groupId>
-        	<artifactId>jsqlparser</artifactId>
-        	<version>0.9.5</version>
         </dependency>
     </dependencies>
 

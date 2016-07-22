@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -163,7 +164,7 @@ public class SchemaConverter {
 			System.exit(1);
 		}
 
-		logger.debug("Schema duplication time: {}", duplicationTime);
+		logger.debug("Schema duplication time: {}", duplicationTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
 }
