@@ -111,10 +111,6 @@ public class DBConnection {
         return primaryKeyMap.get(table);
     }
 
-//    public Map<Table<?>, UniqueKey<?>> getPrimaryKeyMap() {
-//        return primaryKeyMap;
-//    }
-
     public DSLContext getCreate() {
         return dbCreate;
     }

@@ -1,7 +1,7 @@
 package parse;
 
 import cipher.CodeGen;
-import cipher.signature.Sign;
+import cipher.signature.Convert;
 import com.google.common.base.Charsets;
 import convert.DBConnection;
 import convert.DataConverter;
@@ -17,7 +17,6 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.TablesNamesFinder;
-import org.jooq.tools.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -183,7 +182,7 @@ public class OCFQuery extends ICDBQuery {
                 DataConverter converter = new DataConverter(dataBytes, codeGen, icrl);
 
                 // Add base64 representation of signature to store it in the query properly
-                final String signatureString = Sign.toBase64(converter.getSignature());
+                final String signatureString = Convert.toBase64(converter.getSignature());
                 expressions.add(new HexValue("from_base64('" + signatureString + "')"));
 
                 // Add serial number to expression list

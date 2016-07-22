@@ -157,11 +157,6 @@
         <!-- Crypto -->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.54</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
             <version>1.54</version>
         </dependency>
@@ -186,6 +181,13 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.6.2</version>
+        </dependency>
+
+        <!-- Performance Enhancements -->
+        <dependency>
+            <groupId>co.paralleluniverse</groupId>
+            <artifactId>quasar-core</artifactId>
+            <version>0.7.5</version>
         </dependency>
 
         <!-- Testing & Debugging -->

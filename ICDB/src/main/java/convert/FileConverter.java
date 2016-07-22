@@ -23,7 +23,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 
 import cipher.CodeGen;
-import cipher.signature.Sign;
+import cipher.signature.Convert;
 import main.args.option.Granularity;
 import verify.ICRL;
 
@@ -54,7 +54,10 @@ public class FileConverter {
 	public void convertFile(final File input, final File output) {
 		Stopwatch convertTime = Stopwatch.createStarted();
 
-		try (final Reader reader = new FileReader(input); final Writer writer = new FileWriter(output)) {
+		try (
+            final Reader reader = new FileReader(input);
+            final Writer writer = new FileWriter(output)
+        ) {
 			// Parse the csv
 			final CsvPreference preference = CsvPreference.STANDARD_PREFERENCE;
 			final CsvListReader csvReader = new CsvListReader(reader, preference);
@@ -123,7 +126,7 @@ public class FileConverter {
 
 		// Generate the signature
 		final byte[] signature = codeGen.generateSignature(allData);
-		final String signatureString = Sign.toBase64(signature);
+		final String signatureString = Convert.toBase64(signature);
 
 		// Write the line
 		collector.add(signatureString);

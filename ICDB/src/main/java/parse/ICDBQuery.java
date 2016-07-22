@@ -48,7 +48,7 @@ public abstract class ICDBQuery {
 
     private boolean requiresUpdate;
 
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Converts a given plain SQL statement into an ICDB statement
@@ -102,7 +102,7 @@ public abstract class ICDBQuery {
     protected abstract Statement parseVerifyQuery(Delete delete);
     protected abstract Statement parseVerifyQuery(Update update);
 
-    // TODO: This is a temporary workaround. This should use contexts to apply to converted query.
+    // TODO: This is a temporary workaround. A better solution would be to pass a context object around with the results.
     protected Result<Record> updateSelectResults;
 
     /**

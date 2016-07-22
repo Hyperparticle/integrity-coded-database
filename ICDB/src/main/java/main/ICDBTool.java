@@ -22,7 +22,7 @@ import verify.QueryVerifier;
 
 /**
  * <p>
- * 	A tool for performing ICDB-related tasks.
+ * A tool for performing ICDB-related tasks.
  * </p>
  * Created on 5/10/2016
  *
@@ -30,6 +30,7 @@ import verify.QueryVerifier;
  */
 public class ICDBTool {
 
+    // The time unit for all timed log statements
     public static final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
 
 	private static final Logger logger = LogManager.getLogger();
