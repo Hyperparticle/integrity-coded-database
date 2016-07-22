@@ -126,7 +126,7 @@ public class FileConverter {
 
 		// Generate the signature
 		final byte[] signature = codeGen.generateSignature(allData);
-		final String signatureString = Convert.toBase64(signature);
+		final String signatureString = Convert.INSTANCE.toBase64(signature);
 
 		// Write the line
 		collector.add(signatureString);

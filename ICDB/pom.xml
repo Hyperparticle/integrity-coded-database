@@ -9,6 +9,8 @@
     <version>1.0.0</version>
 
     <properties>
+        <kotlin.version>1.0.3</kotlin.version>
+        <junit.version>4.12</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -68,59 +70,29 @@
                     <!-- Additional configuration. -->
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--&lt;!&ndash; JOOQ Code Autogeneration Plugin &ndash;&gt;-->
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>1.0.3</version>
 
-                <!--&lt;!&ndash; Specify the maven code generator plugin &ndash;&gt;-->
-                <!--<groupId>org.jooq</groupId>-->
-                <!--<artifactId>jooq-codegen-maven</artifactId>-->
-                <!--<version>3.8.2</version>-->
-
-                <!--&lt;!&ndash; The plugin should hook into the generate goal &ndash;&gt;-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>generate</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-
-                <!--&lt;!&ndash; Manage the plugin's dependency. &ndash;&gt;-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>postgresql</groupId>-->
-                        <!--<artifactId>postgresql</artifactId>-->
-                        <!--<version>8.4-702.jdbc4</version>-->
-                    <!--</dependency>-->
-                <!--</dependencies>-->
-
-                <!--&lt;!&ndash; Specify the plugin configuration.-->
-                     <!--The configuration format is the same as for the standalone code generator &ndash;&gt;-->
-                <!--<configuration>-->
-
-                    <!--&lt;!&ndash; JDBC connection parameters &ndash;&gt;-->
-                    <!--<jdbc>-->
-                        <!--<driver>org.postgresql.Driver</driver>-->
-                        <!--<url>jdbc:postgresql:postgres</url>-->
-                        <!--<user>postgres</user>-->
-                        <!--<password>test</password>-->
-                    <!--</jdbc>-->
-
-                    <!--&lt;!&ndash; Generator parameters &ndash;&gt;-->
-                    <!--<generator>-->
-                        <!--<database>-->
-                            <!--<name>org.jooq.util.postgres.PostgresDatabase</name>-->
-                            <!--<includes>.*</includes>-->
-                            <!--<excludes></excludes>-->
-                            <!--<inputSchema>public</inputSchema>-->
-                        <!--</database>-->
-                        <!--<target>-->
-                            <!--<packageName>org.jooq.util.maven.example</packageName>-->
-                            <!--<directory>target/generated-sources/jooq</directory>-->
-                        <!--</target>-->
-                    <!--</generator>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+                <configuration/>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -218,6 +190,20 @@
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
         </dependency>
+
+        <!-- Kotlin -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>1.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <profiles>

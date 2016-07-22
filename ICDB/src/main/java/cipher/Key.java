@@ -21,6 +21,7 @@ import java.security.Security;
 
 /**
  * <p>
+ * Wraps RSA and MAC keys for easy access
  * </p>
  * Created on 7/13/2016
  *
@@ -39,9 +40,9 @@ public class Key {
     }
 
     public Key(String macKey, String rsaKeyFile) {
-        this.rawMacKey = Convert.fromBase64(macKey);
+        this.rawMacKey = Convert.INSTANCE.fromBase64(macKey);
         this.macKey = new KeyParameter(rawMacKey);
-        this.rsaKeyPair = readKeys(rsaKeyFile);
+        this.rsaKeyPair = readRSAKeys(rsaKeyFile);
     }
 
     public byte[] getRawMacKey() {
@@ -60,17 +61,17 @@ public class Key {
         return rsaKeyPair.getPrivate();
     }
 
-    private static AsymmetricCipherKeyPair readKeys(final String rsaKeyFile)
+    private static AsymmetricCipherKeyPair readRSAKeys(final String rsaKeyFile)
     {
         try (Reader reader = new FileReader(rsaKeyFile)) {
             PEMParser parser = new PEMParser(reader);
 
-            Object o;
-            while ((o = parser.readObject()) != null)
+            Object object;
+            while ((object = parser.readObject()) != null)
             {
-                if (o instanceof PEMKeyPair)
+                if (object instanceof PEMKeyPair)
                 {
-                    PEMKeyPair keyPair = (PEMKeyPair) o;
+                    PEMKeyPair keyPair = (PEMKeyPair) object;
 
                     KeyPair pair = new JcaPEMKeyConverter()
                             .setProvider("BC")

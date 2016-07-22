@@ -16,34 +16,34 @@ public enum AlgorithmType {
     RSA {
         @Override
         public byte[] generateSignature(final byte[] data, final Key key) {
-            return RSASignature.generate(data, key.getPrivate());
+            return RSASignature.INSTANCE.generate(data, key.getPrivate());
         }
 
         @Override
         public boolean verify(final byte[] data, final Key key, final byte[] signature) {
-            return RSASignature.verify(data, key.getPublic(), signature);
+            return RSASignature.INSTANCE.verify(data, key.getPublic(), signature);
         }
     },
     AES {
         @Override
         public byte[] generateSignature(final byte[] data, final Key key) {
-            return CMAC.generate(data, key);
+            return CMAC.INSTANCE.generate(data, key);
         }
 
         @Override
         public boolean verify(final byte[] data, final Key key, final byte[] signature) {
-            return CMAC.verify(data, key, signature);
+            return CMAC.INSTANCE.verify(data, key, signature);
         }
     },
     SHA {
         @Override
         public byte[] generateSignature(final byte[] data, final Key key) {
-            return HMAC.generate(data, key);
+            return HMAC.INSTANCE.generate(data, key);
         }
 
         @Override
         public boolean verify(final byte[] data, final Key key, final byte[] signature) {
-            return HMAC.verify(data, key, signature);
+            return HMAC.INSTANCE.verify(data, key, signature);
         }
     };
 
