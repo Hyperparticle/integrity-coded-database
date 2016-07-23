@@ -57,6 +57,7 @@ public class ICDBTool {
 			System.exit(0);
 		}
 
+        logger.info("");
 		logger.info("Total time elapsed: {}", totalTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
