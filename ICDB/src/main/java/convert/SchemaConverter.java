@@ -81,7 +81,8 @@ public class SchemaConverter {
 			return;
 		}
 
-		logger.debug("Converting db schema to icdb");
+		logger.info("");
+		logger.info("Converting DB schema to icdb");
 
 		// Get the ICDB
 		final DBConnection icdb = DBConnection.connect(icdbName, dbConfig);
@@ -111,8 +112,6 @@ public class SchemaConverter {
 			logger.debug("Table already converted. Skipping {}", table.getName());
 			return;
 		}
-
-
 
 		// Create a svc column
 		icdb.getCreate().alterTable(table).add(Format.IC_COLUMN, MySQLDataType.TINYBLOB).execute();
@@ -151,7 +150,8 @@ public class SchemaConverter {
 			return;
 		}
 
-		logger.debug("Duplicating database");
+        logger.info("");
+		logger.info("Duplicating database {}", dbName);
 		Stopwatch duplicationTime = Stopwatch.createStarted();
 
 		try {

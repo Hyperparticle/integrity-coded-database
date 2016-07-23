@@ -74,9 +74,8 @@ public class ICDBTool {
 		DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
 		DBConverter dbConverter = new DBConverter(db, icdb, dbConfig, convertConfig);
 
-		// Convert all data and load it
-		dbConverter.convert();
-		dbConverter.load();
+		// Export, convert, and load all data
+		dbConverter.convertAll();
 	}
 
 	/**

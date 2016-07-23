@@ -67,46 +67,60 @@ public class DBConverter {
         this.convertedDataPath = Paths.get(Format.ICDB_DATA_PATH);
     }
 
+    public void convertAll() {
+        export();  // 1. Export data outfile -> .csv files
+        convert(); // 2. Read from file -> generate signature -> Write to file
+        load();    // 3. Load data infile -> icdb
+    }
+
+    private void export() {
+        if (skipExport) {
+            logger.debug("Data export skipped");
+            return;
+        }
+
+        try {
+            logger.info("");
+            logger.info("Exporting data from {}", dbName);
+            Stopwatch dataExportTime = Stopwatch.createStarted();
+            exportData();
+            logger.debug("Total data export time: {}", dataExportTime.elapsed(ICDBTool.TIME_UNIT));
+        } catch (IOException e) {
+            logger.error("Failed to export DB {}: {}", dbName, e.getMessage());
+        }
+    }
+
     /**
      * Begin the DB conversion process, with the assumption that a converted schema already exists on the DB server.
      */
-    public void convert() {
+    private void convert() {
         if (skipConvert) {
             logger.debug("Data conversion skipped");
             return;
         }
 
-        logger.info("Converting data from {}", dbName);
-        Stopwatch dataConvertTime = Stopwatch.createStarted();
-
         try {
-            // 1. Export data outfile -> .csv files
-            if (!skipExport) {
-                exportData();
-            } else {
-                logger.debug("Data export skipped");
-            }
-
-
-            // 2. Read from file -> generate signature -> Write to file
+            logger.info("");
+            logger.info("Converting data from {}", dbName);
+            Stopwatch dataConversionTime = Stopwatch.createStarted();
             convertData();
+            logger.debug("Total data convert time: {}", dataConversionTime.elapsed(ICDBTool.TIME_UNIT));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to convert DB {}: {}", dbName, e.getMessage());
         }
-
-        logger.debug("Total data conversion time: {}", dataConvertTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
-    public void load() {
+    private void load() {
         if (skipLoad) {
             logger.debug("Data loading skipped");
             return;
         }
 
-        logger.info("Migrating data to {}", icdbName);
-
-        // 3. Load data infile -> icdb
+        logger.info("");
+        logger.info("Loading converted data into {}", icdbName);
+        Stopwatch dataLoadTime = Stopwatch.createStarted();
         importData();
+        logger.debug("Total data load time: {}", dataLoadTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     private void exportData() throws IOException {

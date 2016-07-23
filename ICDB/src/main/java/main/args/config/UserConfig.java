@@ -4,6 +4,8 @@ import crypto.AlgorithmType;
 import crypto.CodeGen;
 import crypto.Key;
 import main.args.option.Granularity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>
@@ -15,9 +17,21 @@ import main.args.option.Granularity;
  */
 public class UserConfig {
 
+    private static final Logger logger = LogManager.getLogger();
+
     private static UserConfig userConfig;
     public static UserConfig init(ConfigArgs configArgs) {
-        return userConfig = new UserConfig(configArgs);
+        userConfig = new UserConfig(configArgs);
+
+        logger.info("------------------------------");
+        logger.info("User Configuration");
+        logger.info("------------------------------");
+        logger.info("Algorithm: {}", configArgs.algorithm);
+        logger.info("Granularity: {}", configArgs.granularity);
+        logger.info("ICDB Schema: {}", configArgs.icdbSchema);
+        logger.info("------------------------------");
+
+        return userConfig;
     }
 
     public static UserConfig getInstance() {
