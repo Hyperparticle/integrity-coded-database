@@ -181,7 +181,7 @@ public class OCTQuery extends ICDBQuery {
         DataConverter converter = new DataConverter(dataBytes, codeGen, icrl);
 
         // Add base64 representation of signature to store it in the query properly
-        final String signatureString = Convert.INSTANCE.toBase64(converter.getSignature());
+        final String signatureString = Convert.toBase64(converter.getSignature());
         expressions.add(new HexValue("from_base64('" + signatureString + "')"));
 
         // Add serial number to expression list
