@@ -2,11 +2,17 @@ package crypto.signer
 
 import crypto.Key
 import org.bouncycastle.crypto.Mac
+import org.bouncycastle.crypto.digests.SHA1Digest
+import org.bouncycastle.crypto.digests.ShortenedDigest
+import org.bouncycastle.crypto.engines.AESFastEngine
+import org.bouncycastle.crypto.macs.CMac
+import org.bouncycastle.crypto.macs.HMac
+import org.bouncycastle.crypto.macs.SipHash
+import org.bouncycastle.crypto.tls.SSL3Mac
 import java.util.*
 
 /**
- * Base class implementing all Message Authentication Code (MAC) based signers
- *
+ * A Message Authentication Code (MAC) is a fast way to generate a signature designed to detect code tampering.
  * Created on 7/22/2016
  * @author Dan Kondratyuk
  */
@@ -14,6 +20,33 @@ object MacSigner {
 
     // Size of output byte array
     const val DATA_SIZE = 16
+
+    // The following properties provide different types of MAC signers to use
+
+    val hmac: Mac
+        get() {
+            val sha = SHA1Digest()
+            val digest = ShortenedDigest(sha, DATA_SIZE)
+            return HMac(digest)
+        }
+
+    val cmac: Mac
+        get() {
+            val aes = AESFastEngine()
+            return CMac(aes)
+        }
+
+    val sipHash: Mac
+        get() {
+            return SipHash()
+        }
+
+    val ssl3Mac: Mac
+        get() {
+            val sha = SHA1Digest()
+            val digest = ShortenedDigest(sha, MacSigner.DATA_SIZE)
+            return SSL3Mac(digest)
+        }
 
     fun generate(data: ByteArray, key: Key, mac: Mac): ByteArray {
         val signature = ByteArray(DATA_SIZE)

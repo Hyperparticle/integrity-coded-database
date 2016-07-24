@@ -21,7 +21,6 @@ object RsaSigner {
             return ISO9796d2Signer(rsa, digest)
         }
 
-    @JvmStatic
     fun generate(data: ByteArray, privateKey: AsymmetricKeyParameter): ByteArray {
         val signer = this.rsaSigner
 
@@ -31,7 +30,6 @@ object RsaSigner {
         return signer.generateSignature()
     }
 
-    @JvmStatic
     fun verify(data: ByteArray, publicKey: AsymmetricKeyParameter, signature: ByteArray): Boolean {
         val signer = rsaSigner
 

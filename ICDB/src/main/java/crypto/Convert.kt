@@ -10,17 +10,10 @@ import com.google.common.io.BaseEncoding
  */
 object Convert {
 
-    @JvmStatic
-    private val base64 = BaseEncoding.base64()
+    // TODO: remove static annotations
+    @JvmStatic private val base64 = BaseEncoding.base64()
 
-    @JvmStatic
-    fun toBase64(signature: ByteArray): String {
-        return base64.encode(signature)
-    }
-
-    @JvmStatic
-    fun fromBase64(signature: String): ByteArray {
-        return base64.decode(signature)
-    }
+    @JvmStatic fun toBase64(signature: ByteArray): String = base64.encode(signature)
+    @JvmStatic fun fromBase64(signature: String): ByteArray = base64.decode(signature)
 
 }

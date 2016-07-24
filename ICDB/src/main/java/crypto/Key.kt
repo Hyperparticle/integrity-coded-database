@@ -25,19 +25,11 @@ class Key(macKey: String, rsaKeyFile: String) {
         Security.addProvider(BouncyCastleProvider())
     }
 
-    val rawMacKey: ByteArray
-    val macKey: KeyParameter
-    val publicRsaKey: AsymmetricKeyParameter
-    val privateRsaKey: AsymmetricKeyParameter
-
-    init {
-        this.rawMacKey = Convert.fromBase64(macKey)
-        this.macKey = KeyParameter(rawMacKey)
-
-        val rsaKeyPair = readRSAKeys(rsaKeyFile)
-        publicRsaKey = rsaKeyPair.public
-        privateRsaKey = rsaKeyPair.private
-    }
+    val rawMacKey = Convert.fromBase64(macKey)
+    val macKey = KeyParameter(rawMacKey)
+    private val rsaKeyPair = readRSAKeys(rsaKeyFile)
+    val publicRsaKey: AsymmetricKeyParameter = rsaKeyPair.public
+    val privateRsaKey: AsymmetricKeyParameter = rsaKeyPair.private
 
     private fun readRSAKeys(rsaKeyFile: String): AsymmetricCipherKeyPair {
         FileReader(rsaKeyFile).use { reader ->
@@ -46,7 +38,9 @@ class Key(macKey: String, rsaKeyFile: String) {
             var o: Any? = null
             while ({ o = parser.readObject(); o }() != null) {
                 if (o is PEMKeyPair) {
-                    val pair = JcaPEMKeyConverter().setProvider("BC").getKeyPair(o as PEMKeyPair)
+                    val pair = JcaPEMKeyConverter()
+                        .setProvider("BC")
+                        .getKeyPair(o as PEMKeyPair)
 
                     val privateKey = PrivateKeyFactory.createKey(pair.private.encoded)
                     val publicKey = PublicKeyFactory.createKey(pair.public.encoded)
