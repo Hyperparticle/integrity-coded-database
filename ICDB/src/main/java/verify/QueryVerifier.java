@@ -3,14 +3,13 @@ package verify;
 import crypto.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
-import convert.DBConnection;
+import io.DBConnection;
 import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import parse.ICDBQuery;
 
 import java.nio.ByteBuffer;
@@ -38,7 +37,7 @@ public abstract class QueryVerifier {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
 
-        this.icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
+        this.icdbCreate = icdb.getCreate();
         this.icrl = ICRL.getInstance();
     }
 

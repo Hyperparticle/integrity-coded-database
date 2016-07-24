@@ -1,15 +1,15 @@
-package convert;
+package io;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import io.destination.FileDestination;
 import main.ICDBTool;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -25,15 +25,14 @@ import com.google.common.base.Stopwatch;
 import crypto.CodeGen;
 import crypto.Convert;
 import main.args.option.Granularity;
+import io.source.FileSource;
 import verify.ICRL;
 
 /**
- * <p>
  * A FileConverter takes an input DB data file and generates a converted ICDB
  * data file. This class only supports MySQL for now.
- * </p>
+ *
  * Created 5/8/2016
- * 
  * @author Dan Kondratyuk
  */
 public class FileConverter {
@@ -55,26 +54,21 @@ public class FileConverter {
 		Stopwatch convertTime = Stopwatch.createStarted();
 
 		try (
-            final Reader reader = new FileReader(input);
             final Writer writer = new FileWriter(output)
         ) {
 			// Parse the csv
-			final CsvPreference preference = CsvPreference.STANDARD_PREFERENCE;
-			final CsvListReader csvReader = new CsvListReader(reader, preference);
-			final CsvListWriter csvWriter = new CsvListWriter(writer, preference);
+			final Stream<List<String>> csvInput = FileSource.stream(input);
+            final FileDestination csvOutput = new FileDestination(output);
 
 			switch (granularity) {
 			case TUPLE:
-				convertLineOCT(csvReader, csvWriter);
+				csvOutput.write(convertLineOCT(csvInput));
 				break;
 			case FIELD:
-				convertLineOCF(csvReader, csvWriter);
+                csvOutput.write(convertLineOCF(csvInput));
 				break;
 			}
 
-			csvReader.close();
-			csvWriter.close();
-			reader.close();
 			writer.close();
 		} catch (IOException e) {
 			logger.error("Unable to convert file {}: {}", input.getName(), e.getMessage());
@@ -83,32 +77,30 @@ public class FileConverter {
 		logger.debug("Converted table {} in {}", input.getName(), convertTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
-	private void convertLineOCT(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
-		List<String> nextLine = csvReader.read();
-		while ((nextLine = csvReader.read()) != null) {
-			// Combine the list into a string
-			final String data = StringUtils.join(nextLine.toArray());
-			final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
-			convertLine(nextLine, dataBytes, codeGen, icrl);
+	private Stream<List<String>> convertLineOCT(Stream<List<String>> csvInput) throws IOException {
+        return csvInput.map(line -> {
+            // Combine the list into a string
+            final String data = StringUtils.join(line.toArray());
+            final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
+            convertLine(line, dataBytes, codeGen, icrl);
 
-			csvWriter.write(nextLine);
-		}
+            return line;
+        });
 	}
 
-	private void convertLineOCF(CsvListReader csvReader, CsvListWriter csvWriter) throws IOException {
-		List<String> nextLine = csvReader.read();
-		List<String> collector = new ArrayList<>(nextLine.size() * 3);
+	private Stream<List<String>> convertLineOCF(Stream<List<String>> csvInput) throws IOException {
+        List<String> collector = new ArrayList<>();
 
-		while ((nextLine = csvReader.read()) != null) {
-			collector.clear();
-            collector.addAll(nextLine);
-			for (String field : nextLine) {
-				final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
-				convertLine(collector, dataBytes, codeGen, icrl);
-			}
+	    return csvInput.map(line -> {
+            collector.clear();
+            collector.addAll(line);
+            for (String field : line) {
+                final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
+                convertLine(collector, dataBytes, codeGen, icrl);
+            }
 
-			csvWriter.write(collector);
-		}
+            return line;
+        });
 	}
 
 	/**

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.NavigableSet;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * <p>
@@ -25,7 +26,7 @@ public class ICRL implements Serializable {
     private static final String ICRL_LOCATION = "./src/main/resources/icrl.db";
 
     private final long start;
-    private long current;
+    private AtomicLong current;
 
     private DB db;
     private NavigableSet<Long> serials;
@@ -58,6 +59,7 @@ public class ICRL implements Serializable {
     }
 
     private ICRL() {
+
         // Load the DB
         db = DBMaker.fileDB(ICRL_LOCATION)
             .fileMmapEnable()
@@ -73,10 +75,10 @@ public class ICRL implements Serializable {
         // Get the first and last values, if they exist (otherwise generate them)
         if (serials.isEmpty()) {
             start = random.nextInt(Integer.MAX_VALUE);
-            current = start - 1;
+            current = new AtomicLong(start - 1);
         } else {
             start = serials.first();
-            current = serials.last();
+            current = new AtomicLong(serials.last());
         }
     }
 
@@ -85,17 +87,16 @@ public class ICRL implements Serializable {
      * @return the new serial number
      */
     public long getNext() {
-        current++;
-        serials.add(current);
-
-        return current;
+        long next = current.incrementAndGet();
+        serials.add(next);
+        return next;
     }
 
     /**
      * @return the next serial number to be generated
      */
     public long peekNext() {
-        return current + 1;
+        return current.get() + 1;
     }
 
     /**

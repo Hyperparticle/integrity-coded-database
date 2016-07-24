@@ -1,4 +1,4 @@
-package convert;
+package io;
 
 import crypto.CodeGen;
 import org.apache.commons.lang3.ArrayUtils;
@@ -7,8 +7,6 @@ import verify.ICRL;
 import java.nio.ByteBuffer;
 
 /**
- * <p>
- * </p>
  * Created on 7/19/2016
  *
  * @author Dan Kondratyuk

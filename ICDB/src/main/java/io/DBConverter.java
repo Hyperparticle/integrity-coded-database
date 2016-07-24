@@ -1,4 +1,4 @@
-package convert;
+package io;
 
 import crypto.CodeGen;
 import com.google.common.base.Stopwatch;
@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -135,8 +136,7 @@ public class DBConverter {
                 Table<?> icdbTable = db.getTable(tableName);
 
                 // Get the output file path
-                File outputFile = Paths.get(dataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
-                        .toAbsolutePath().toFile();
+                File outputFile = Format.getCsvFile(dataPath.toString(), tableName);
 
                 try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     // Output to a csv file
@@ -157,9 +157,12 @@ public class DBConverter {
 
         FileConverter converter = new FileConverter(codeGen, granularity);
 
-        // Walk data path
+        // Find all files in the data path
+        // TODO: parallelize even more by fetching each table into a stream
         Files.walk(dataPath)
             .filter(Files::isRegularFile)
+            .collect(Collectors.toList())
+            .parallelStream() // Convert in parallel
             .forEach(path -> {
                 File output = Paths.get(convertedDataPath.toString(), path.getFileName().toString()).toFile();
                 converter.convertFile(path.toFile(), output);
@@ -179,8 +182,7 @@ public class DBConverter {
             Table<?> icdbTable = icdb.getTable(tableName);
 
             // Get the output file path
-            String filePath = Paths.get(convertedDataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
-                    .toAbsolutePath().toFile()
+            String filePath = Format.getCsvFile(convertedDataPath.toString(), tableName)
                     .getAbsolutePath().replace("\\", "/");
 
 //            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {

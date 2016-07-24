@@ -1,6 +1,6 @@
 package verify;
 
-import convert.DBConnection;
+import io.DBConnection;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,7 +8,6 @@ import org.jooq.Cursor;
 import org.jooq.Record;
 
 import java.util.Iterator;
-import java.util.Spliterator;
 
 /**
  * <p>

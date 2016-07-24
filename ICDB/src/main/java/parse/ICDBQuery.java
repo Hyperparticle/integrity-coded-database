@@ -1,7 +1,7 @@
 package parse;
 
 import crypto.CodeGen;
-import convert.DBConnection;
+import io.DBConnection;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.statement.Statement;

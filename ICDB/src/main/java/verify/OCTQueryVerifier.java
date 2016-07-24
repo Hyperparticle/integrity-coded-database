@@ -1,7 +1,7 @@
 package verify;
 
-import convert.DBConnection;
-import convert.Format;
+import io.DBConnection;
+import io.Format;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

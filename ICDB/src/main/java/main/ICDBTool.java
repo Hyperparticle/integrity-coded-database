@@ -9,9 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Stopwatch;
 
-import convert.DBConnection;
-import convert.DBConverter;
-import convert.SchemaConverter;
+import io.DBConnection;
+import io.DBConverter;
+import io.SchemaConverter;
 import main.args.CommandLineArgs;
 import main.args.ConvertDBCommand;
 import main.args.ConvertQueryCommand;

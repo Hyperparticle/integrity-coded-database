@@ -34,6 +34,7 @@ public class UserConfig {
         return userConfig;
     }
 
+
     public static UserConfig getInstance() {
         return userConfig;
     }

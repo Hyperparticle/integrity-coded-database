@@ -1,4 +1,7 @@
-package convert
+package io
+
+import java.io.File
+import java.nio.file.Paths
 
 /**
  * Contains definitions for formatting
@@ -27,5 +30,8 @@ object Format {
     const val ENCLOSING_TAG = "\""
     const val MYSQL_NULL = "\\N"
 
+    @JvmStatic fun getCsvFile(dataPath: String, tableName: String): File =
+        Paths.get(dataPath, tableName + Format.DATA_FILE_EXTENSION)
+            .toAbsolutePath().toFile()
 
 }

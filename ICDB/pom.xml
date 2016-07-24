@@ -216,4 +216,8 @@
         </profile>
     </profiles>
 
+    <activeProfiles>
+        <activeProfile>downloadSources</activeProfile>
+    </activeProfiles>
+
 </project>

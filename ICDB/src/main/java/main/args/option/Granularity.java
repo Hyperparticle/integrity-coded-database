@@ -1,7 +1,7 @@
 package main.args.option;
 
 import crypto.CodeGen;
-import convert.DBConnection;
+import io.DBConnection;
 import main.args.config.UserConfig;
 import parse.ICDBQuery;
 import parse.OCFQuery;
@@ -11,11 +11,9 @@ import verify.OCTQueryVerifier;
 import verify.QueryVerifier;
 
 /**
- * <p>
- *     ICDB Granularity is configured for one code per tuple (OCT) or one code per field (OCF)
- * </p>
- * Created on 5/21/2016
+ * ICDB Granularity is configured for one code per tuple (OCT) or one code per field (OCF)
  *
+ * Created on 5/21/2016
  * @author Dan Kondratyuk
  */
 public enum Granularity {

@@ -4,10 +4,9 @@ import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.ParameterException;
 
 /**
- * <p>
- * </p>
- * Created on 5/21/2016
+ * Converts the supplied String to its enum counterpart
  *
+ * Created on 5/21/2016
  * @author Dan Kondratyuk
  */
 public class GranularityConverter implements IStringConverter<Granularity> {
