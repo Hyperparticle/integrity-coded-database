@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Cursor;
 import org.jooq.Record;
 
+import java.util.stream.Stream;
+
 /**
  * <p>
  *      Executes an OCT query and verifies data integrity
@@ -24,8 +26,8 @@ public class OCTQueryVerifier extends QueryVerifier {
         super(icdb, dbConfig);
     }
 
-    protected boolean verify(Cursor<Record> cursor) {
-        return cursor.stream().map(record -> {
+    protected boolean verify(Stream<Record> records) {
+        return records.map(record -> {
             final StringBuilder builder = new StringBuilder();
             for (int i = 0; i < record.size() - 2; i++) {
                 final Object value = record.get(i);
@@ -40,8 +42,8 @@ public class OCTQueryVerifier extends QueryVerifier {
 
             if (!verified) {
                 errorStatus.append("\n")
-                        .append(record.toString())
-                        .append("\n");
+                    .append(record.toString())
+                    .append("\n");
             }
 
             return verified;

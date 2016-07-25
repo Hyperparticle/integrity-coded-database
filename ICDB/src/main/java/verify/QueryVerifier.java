@@ -4,6 +4,8 @@ import crypto.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import io.DBConnection;
+import io.source.DBSource;
+import io.source.DataSource;
 import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.commons.lang3.ArrayUtils;
@@ -13,6 +15,7 @@ import org.jooq.*;
 import parse.ICDBQuery;
 
 import java.nio.ByteBuffer;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -49,11 +52,12 @@ public abstract class QueryVerifier {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
         logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
-        Cursor<Record> cursor = icdbQuery.getVerifyData(icdbCreate);
-        boolean verified = verify(cursor);
+
+        Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), DataSource.Fetch.LAZY);
+        boolean verified = verify(records);
+        records.close();
 
         logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
-        cursor.close();
 
         return verified;
     }
@@ -70,7 +74,7 @@ public abstract class QueryVerifier {
      * Executes and verifies a given query given a cursor into the data records
      * @return true if the query is verified
      */
-    protected abstract boolean verify(Cursor<Record> cursor);
+    protected abstract boolean verify(Stream<Record> records);
 
     /**
      * Verifies data and serial number by regenerating the signature

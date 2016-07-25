@@ -105,19 +105,19 @@ public abstract class ICDBQuery {
     // TODO: This is a temporary workaround. A better solution would be to pass a context object around with the results.
     protected Result<Record> updateSelectResults;
 
-    /**
-     * Obtains data to verify the icdb query.
-     * Warning: verify() should be called before execute(), to properly verify data integrity.
-     * @param icdbCreate the context for executing queries
-     * @return a cursor into the requested data
-     */
-    public Cursor<Record> getVerifyData(DSLContext icdbCreate) {
-        if (requiresUpdate) {
-            updateSelectResults = icdbCreate.fetch(verifyQuery);
-        }
-
-        return icdbCreate.fetchLazy(verifyQuery);
-    }
+//    /**
+//     * Obtains data to verify the icdb query.
+//     * Warning: verify() should be called before execute(), to properly verify data integrity.
+//     * @param icdbCreate the context for executing queries
+//     * @return a cursor into the requested data
+//     */
+//    public Cursor<Record> getVerifyData(DSLContext icdbCreate) {
+//        if (requiresUpdate) {
+//            updateSelectResults = icdbCreate.fetch(verifyQuery);
+//        }
+//
+//        return icdbCreate.fetchLazy(verifyQuery);
+//    }
 
     /**
      * Execute the original query.
