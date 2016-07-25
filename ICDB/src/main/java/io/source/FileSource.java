@@ -42,11 +42,11 @@ public class FileSource implements DataSource {
 
             // Generate a stream that reads the CSV file line by line
             return Stream.generate(() -> propagate(csvReader::read))
-                    .limit(Files.lines(dataFile.toPath()).count()) // Read to the end
-                    .onClose(() -> { // Close all readers
-                        close(csvReader);
-                        close(reader);
-                    });
+                .limit(Files.lines(dataFile.toPath()).count()) // Read to the end
+                .onClose(() -> { // Close all readers
+                    close(csvReader);
+                    close(reader);
+                });
         } catch (IOException e) {
             logger.error("Unable to convert file {}: {}", dataFile.getName(), e.getMessage());
         }

@@ -29,8 +29,12 @@ public class DBSource implements DataSource {
     @Override
     public Stream<Record> stream() {
         switch (strategy) {
-            case EAGER: return icdb.getCreate().fetch(fetchQuery).parallelStream();
-            case LAZY: return icdb.getCreate().fetchStream(fetchQuery).parallel();
+            case EAGER: return icdb.getCreate()
+                    .fetch(fetchQuery)
+                    .parallelStream();
+            case LAZY: return icdb.getCreate()
+                    .fetchStream(fetchQuery)
+                    .parallel();
             default: return Stream.empty();
         }
     }

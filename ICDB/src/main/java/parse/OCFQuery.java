@@ -155,7 +155,7 @@ public class OCFQuery extends ICDBQuery {
         icdb.getPrimaryKeys(table)
             .forEach(key -> {
                 boolean hasColumn = items.stream()
-                        .anyMatch(item -> item.toString().equals(key));
+                    .anyMatch(item -> item.toString().equals(key));
 
                 if (!hasColumn) {
                     items.add(new SelectExpressionItem(new HexValue(key)));
