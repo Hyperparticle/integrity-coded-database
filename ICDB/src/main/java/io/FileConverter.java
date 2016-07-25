@@ -53,23 +53,21 @@ public class FileConverter {
 	public void convertFile(final File input, final File output) {
 		Stopwatch convertTime = Stopwatch.createStarted();
 
-		try (
-            final Writer writer = new FileWriter(output)
-        ) {
+		try {
 			// Parse the csv
 			final Stream<List<String>> csvInput = FileSource.stream(input);
             final FileDestination csvOutput = new FileDestination(output);
 
 			switch (granularity) {
-			case TUPLE:
-				csvOutput.write(convertLineOCT(csvInput));
-				break;
-			case FIELD:
-                csvOutput.write(convertLineOCF(csvInput));
-				break;
+                case TUPLE:
+                    csvOutput.write(convertLineOCT(csvInput));
+                    csvInput.close();
+                    break;
+                case FIELD:
+                    csvOutput.write(convertLineOCF(csvInput));
+                    csvInput.close();
+                    break;
 			}
-
-			writer.close();
 		} catch (IOException e) {
 			logger.error("Unable to convert file {}: {}", input.getName(), e.getMessage());
 		}

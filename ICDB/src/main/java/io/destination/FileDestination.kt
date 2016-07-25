@@ -18,7 +18,7 @@ class FileDestination(output: File) : DataDestination {
     private val csvWriter = CsvListWriter(writer, CsvPreference.STANDARD_PREFERENCE)
 
     override fun write(data: Stream<List<String>>) =
-        data.onClose { csvWriter.close() }
+        data.onClose { csvWriter.close(); writer.close() }
             .skip(1) // TODO: skip first as explicit parameter
-            .forEach({ csvWriter.write(it) })
+            .forEach { csvWriter.write(it) }
 }

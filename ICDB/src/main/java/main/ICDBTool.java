@@ -53,7 +53,7 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			executeQuery(cmd, dbConfig);
 		} else {
-			 cmd.jCommander.usage();
+			cmd.jCommander.usage();
 			System.exit(0);
 		}
 
