@@ -21,17 +21,17 @@ enum class AlgorithmType {
     },
     AES {
         override fun generateSignature(data: ByteArray, key: Key) =
-            MacSigner.generate(data, key, MacSigner.cmac)
+            MacSigner.generate(data, key, MacSigner.cmacAes)
 
         override fun verify(data: ByteArray, key: Key, signature: ByteArray) =
-            MacSigner.verify(data, key, signature, MacSigner.cmac)
+            MacSigner.verify(data, key, signature, MacSigner.cmacAes)
     },
     SHA {
         override fun generateSignature(data: ByteArray, key: Key) =
-            MacSigner.generate(data, key, MacSigner.hmac)
+            MacSigner.generate(data, key, MacSigner.hmacSha)
 
         override fun verify(data: ByteArray, key: Key, signature: ByteArray) =
-            MacSigner.verify(data, key, signature, MacSigner.hmac)
+            MacSigner.verify(data, key, signature, MacSigner.hmacSha)
     };
 
     abstract fun generateSignature(data: ByteArray, key: Key): ByteArray

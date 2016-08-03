@@ -23,19 +23,30 @@ object MacSigner {
 
     // The following properties provide different types of MAC signers to use
 
-    val hmac: Mac
+//    class Signer(mac: Mac, size: Int)
+
+    /**
+     * Hash-based MAC
+     */
+    val hmacSha: Mac
         get() {
             val sha = SHA1Digest()
             val digest = ShortenedDigest(sha, DATA_SIZE)
             return HMac(digest)
         }
 
-    val cmac: Mac
+    /**
+     * BlockCipher-based MAC
+     */
+    val cmacAes: Mac
         get() {
             val aes = AESFastEngine()
             return CMac(aes)
         }
 
+    /**
+     * Very fast, 64 bit MAC
+     */
     val sipHash: Mac
         get() {
             return SipHash()
