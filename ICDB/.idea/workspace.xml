@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/verify/serial/ICRL.java" line="29" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/verify/serial/Icrl.kt" line="23" />
     <bookmark url="file://$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" line="59" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6145c685-87f5-47c9-a459-7b7494d6a983" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/verify/ICRL.java" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/ICRL.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/verify/RevocationTree.kt" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/RevocationTree.kt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/Icrl.kt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/verify/serial/ICRL.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/icdb" afterPath="$PROJECT_DIR$/icdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/io/DataConverter.java" afterPath="$PROJECT_DIR$/src/main/java/io/DataConverter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/io/FileConverter.java" afterPath="$PROJECT_DIR$/src/main/java/io/FileConverter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" afterPath="$PROJECT_DIR$/src/main/java/parse/ICDBQuery.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java" afterPath="$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../README.md" afterPath="$PROJECT_DIR$/../README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/verify/serial/RevocationTree.kt" afterPath="$PROJECT_DIR$/src/main/java/verify/serial/RevocationTree.kt" />
     </list>
     <ignored path="ICDB.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -64,8 +61,8 @@
                       <caret line="73" column="7" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
                       <folding>
                         <element signature="imports" expanded="false" />
-                        <element signature="e#3147#3148#0" expanded="false" />
-                        <element signature="e#3192#3193#0" expanded="false" />
+                        <element signature="e#3157#3158#0" expanded="false" />
+                        <element signature="e#3202#3203#0" expanded="false" />
                       </folding>
                     </state>
                   </provider>
@@ -166,22 +163,24 @@
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="RevocationTree.kt" pinned="false" current-in-tab="true">
+              <file leaf-file-name="RevocationTree.kt" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/RevocationTree.kt">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="263">
-                      <caret line="19" column="77" selection-start-line="19" selection-start-column="77" selection-end-line="19" selection-end-column="77" />
+                    <state relative-caret-position="306">
+                      <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
                       <folding />
                     </state>
                   </provider>
                 </entry>
               </file>
-              <file leaf-file-name="LongRevocationTree.kt" pinned="false" current-in-tab="false">
+              <file leaf-file-name="LongRevocationTree.kt" pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="646">
-                      <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-                      <folding />
+                    <state relative-caret-position="306">
+                      <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+                      <folding>
+                        <element signature="e#23#123#0" expanded="true" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -234,12 +233,14 @@
           </split-first>
           <split-second>
             <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="ICRL.java" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/ICRL.java">
+              <file leaf-file-name="Icrl.kt" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/Icrl.kt">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="255">
-                      <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
-                      <folding />
+                    <state relative-caret-position="969">
+                      <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+                      <folding>
+                        <element signature="e#23#270#0" expanded="true" />
+                      </folding>
                     </state>
                   </provider>
                 </entry>
@@ -247,8 +248,8 @@
               <file leaf-file-name="Interval.kt" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="204">
-                      <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+                    <state relative-caret-position="357">
+                      <caret line="21" column="7" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
                       <folding />
                     </state>
                   </provider>
@@ -269,9 +270,7 @@
                   <provider selected="true" editor-type-id="text-editor">
                     <state relative-caret-position="34">
                       <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-                      <folding>
-                        <element signature="imports" expanded="false" />
-                      </folding>
+                      <folding />
                     </state>
                   </provider>
                 </entry>
@@ -299,8 +298,8 @@
       <list>
         <option value="Enum" />
         <option value="Kotlin File" />
-        <option value="Kotlin Class" />
         <option value="Class" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -315,9 +314,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/tmp/db-files/data/departments.csv" />
-        <option value="$PROJECT_DIR$/src/main/test/TestCipher.java" />
-        <option value="$PROJECT_DIR$/src/main/java/verify/OCFQueryVerifier.java" />
         <option value="$PROJECT_DIR$/src/main/java/parse/OCTparser.java" />
         <option value="$PROJECT_DIR$/src/main/java/parse/QueryConverter.java" />
         <option value="$PROJECT_DIR$/src/main/java/parse/Query.java" />
@@ -360,12 +356,15 @@
         <option value="$PROJECT_DIR$/src/main/java/verify/Interval.kt" />
         <option value="$PROJECT_DIR$/src/main/java/verify/RevocationTree.kt" />
         <option value="$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.java" />
-        <option value="$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt" />
         <option value="$PROJECT_DIR$/icdb" />
         <option value="$PROJECT_DIR$/../README.md" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/serial/ICRL.java" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/serial/Icrl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt" />
         <option value="$PROJECT_DIR$/src/main/java/verify/serial/RevocationTree.kt" />
         <option value="$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt" />
+        <option value="$PROJECT_DIR$/src/main/java/verify/serial/Icrl.kt" />
       </list>
     </option>
   </component>
@@ -1686,7 +1685,7 @@
       <workItem from="1469428694604" duration="284000" />
       <workItem from="1469540330503" duration="7863000" />
       <workItem from="1470241416137" duration="625000" />
-      <workItem from="1470242102584" duration="23303000" />
+      <workItem from="1470242102584" duration="26613000" />
     </task>
     <servers />
   </component>
@@ -1723,7 +1722,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="343373000" />
+    <option name="totallyTimeSpent" value="346683000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1048" y="1" width="2787" height="2004" extended-state="0" />
@@ -1789,7 +1788,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/resources/config-sample.json" />
     <entry file="file://$PROJECT_DIR$/src/main/java/convert/Format.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/convert/ICDB.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/parse/OCFQueryConverter.java" />
@@ -1820,14 +1818,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/option/Granularity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1912,24 +1902,14 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/cipher/Key.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/cipher/signature/HMAC.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/convert/DBConverter.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/verify/QueryVerifier.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="73" column="7" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="false" />
-            <element signature="e#3147#3148#0" expanded="false" />
-            <element signature="e#3192#3193#0" expanded="false" />
+            <element signature="e#3157#3158#0" expanded="false" />
+            <element signature="e#3202#3203#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2062,35 +2042,63 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/Icrl.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="4" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/option/Granularity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/args/ExecuteQueryCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/Interval.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/ICRL.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
+        <state relative-caret-position="357">
+          <caret line="21" column="7" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/RevocationTree.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="19" column="77" selection-start-line="19" selection-start-column="77" selection-end-line="19" selection-end-column="77" />
+        <state relative-caret-position="306">
+          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/LongRevocationTree.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <element signature="e#23#123#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/verify/serial/Icrl.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="969">
+          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+          <folding>
+            <element signature="e#23#270#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

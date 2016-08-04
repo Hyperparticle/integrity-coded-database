@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import parse.ICDBQuery;
-import verify.serial.ICRL;
+import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
 import java.util.stream.Stream;
@@ -30,7 +30,7 @@ public abstract class QueryVerifier {
     private final DBConnection icdb;
     private final CodeGen codeGen;
 
-    private final ICRL icrl;
+    private final Icrl icrl;
 
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();
@@ -42,7 +42,7 @@ public abstract class QueryVerifier {
         this.codeGen = dbConfig.codeGen;
 
         this.icdbCreate = icdb.getCreate();
-        this.icrl = ICRL.getInstance();
+        this.icrl = Icrl.Companion.getInstance();
     }
 
     /**

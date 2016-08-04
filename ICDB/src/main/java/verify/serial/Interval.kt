@@ -1,5 +1,7 @@
 package verify.serial
 
+import java.util.concurrent.atomic.AtomicLong
+
 /**
  * Represents a contiguous interval of serial numbers
  *
@@ -11,12 +13,12 @@ package verify.serial
  */
 class Interval(val min: Long, max: Long) {
 
-    var max = max
+    var max: AtomicLong = AtomicLong(max)
         private set
 
     /**
      * Increments the maximum interval value by one
-     * @return the new (incremented) max value
+     * @return the previous max value
      */
-    fun inc(): Long = ++max
+    fun inc(): Long = max.andIncrement
 }

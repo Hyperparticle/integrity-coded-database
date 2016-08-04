@@ -21,7 +21,7 @@ import crypto.CodeGen;
 import crypto.Convert;
 import main.args.option.Granularity;
 import io.source.FileSource;
-import verify.serial.ICRL;
+import verify.serial.Icrl;
 
 /**
  * A FileConverter takes an input DB data file and generates a converted ICDB
@@ -35,14 +35,14 @@ public class FileConverter {
 	private final CodeGen codeGen;
 	private final Granularity granularity;
 
-    private final ICRL icrl;
+    private final Icrl icrl;
 
 	private static final Logger logger = LogManager.getLogger();
 
 	public FileConverter(CodeGen codeGen, Granularity granularity) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
-        this.icrl = ICRL.init();
+        this.icrl = Icrl.Companion.init();
 	}
 
 	public void convertFile(final File input, final File output) {
@@ -102,7 +102,7 @@ public class FileConverter {
 	 * 
 	 * @param collector the list to collect the codes
 	 */
-	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, ICRL icrl) {
+	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, Icrl icrl) {
         final long serial = icrl.getNext();
         final String serialString = Long.toString(serial);
 

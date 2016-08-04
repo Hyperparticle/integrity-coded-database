@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import verify.serial.ICRL;
+import verify.serial.Icrl;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -39,7 +39,7 @@ public abstract class ICDBQuery {
     private String convertedQuery;  // The converted query, like the original, but with extra columns
     private String verifyQuery;     // A select query responsible for obtaining verification results
 
-    protected ICRL icrl = ICRL.getInstance();
+    protected Icrl icrl = Icrl.Companion.getInstance();
 
     // Update the ICRL if this query was successful
     protected List<Long> serialsToBeRevoked = new ArrayList<>();

@@ -3,7 +3,7 @@ package verify.serial
 import java.util.*
 
 /**
- * A Revocation Tree is an ordered binary tree of non-overlapping intervals of integers. The use case is to maintain a
+ * A Revocation Tree is an ordered tree of non-overlapping intervals of integers. The use case is to maintain a
  * list of ranges of valid serial numbers to determine if a given range query is valid.
  *
  * This implementation provides a fast way to:
@@ -17,7 +17,7 @@ import java.util.*
  * @property intervalMap a NavigableMap implementation that may have existing intervals
  * @property next the next maximum value (not currently in the tree).
  */
-abstract class RevocationTree<T : Comparable<T>>(val intervalMap: NavigableMap<T, T>, offset: T) {
+abstract class RevocationTree<T : Comparable<T>>(val intervalMap: NavigableMap<T, T>) {
 
     protected val next: T
         get() = intervalMap.lastEntry().value
@@ -26,11 +26,11 @@ abstract class RevocationTree<T : Comparable<T>>(val intervalMap: NavigableMap<T
         // Validate that no intervals contain min values larger than max values
         intervalMap.map { it.key.compareTo(it.value) > 1 }
             .filter { it }
-            .forEach { throw IllegalArgumentException("Interval Map must not contain min values larger than max values") }
+            .forEach { throw IllegalArgumentException("Interval map must not contain min values larger than max values") }
 
-        // If the map is empty, add a single empty interval, starting at the offset
+        // Validate that there exists at least one interval
         if (intervalMap.isEmpty()) {
-            intervalMap.put(offset, offset)
+            throw IllegalArgumentException("Interval map must contain at least one interval")
         }
     }
 
@@ -58,5 +58,7 @@ abstract class RevocationTree<T : Comparable<T>>(val intervalMap: NavigableMap<T
      * Validates whether the min and max range is overlapped completely by an interval
      */
     abstract fun validate(minRange: T, maxRange: T): Boolean
+
+    fun isEmpty(): Boolean = intervalMap.isEmpty()
 
 }

@@ -1,6 +1,8 @@
 package verify.serial
 
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * A Long implementation of a Revocation Tree
@@ -9,7 +11,11 @@ import java.util.*
  * @see RevocationTree
  * @author Dan Kondratyuk
  */
-class LongRevocationTree(intervalMap: NavigableMap<Long, Long>, offset: Long) : RevocationTree<Long>(intervalMap, offset) {
+class LongRevocationTree(intervalMap: NavigableMap<Long, Long>) : RevocationTree<Long>(intervalMap) {
+
+    constructor(intervalMap: NavigableMap<Long, Long>, offset: Long) : this(intervalMap) {
+        intervalMap.put(offset, offset)
+    }
 
     override fun add(range: Long): Long {
         if (range < 1) { throw IllegalArgumentException("Added range must be >= 1") }
@@ -23,18 +29,25 @@ class LongRevocationTree(intervalMap: NavigableMap<Long, Long>, offset: Long) : 
         val interval = intervalMap.floorEntry(value) ?: throw IllegalArgumentException("value must be within an interval")
         val (min, max) = interval
 
-        // There are 4 cases to consider:
-        if (value == min && value == max-1) {       // 1. single element
-            intervalMap.remove(value)
-        } else if (value == min) {                  // 2. min value
-            intervalMap.remove(min)
-            intervalMap.put(min+1, max)
-        } else if (value == max-1) {                // 3. max value
-            interval.setValue(max-1)
-        } else if (value > min && value < max-1) {  // 4. value inside interval
-            interval.setValue(value)
-            intervalMap.put(value+1, max)
+        val lock = ReentrantLock()
+        lock.withLock {
+            // There are 4 cases to consider:
+            if (value == min && value == max-1) {       // 1. single element
+                intervalMap.remove(value)
+            } else if (value == min) {                  // 2. min value
+                intervalMap.remove(min)
+                intervalMap.put(min+1, max)
+            } else if (value == max-1) {                // 3. max value
+                interval.setValue(max-1)
+            } else if (value > min && value < max-1) {  // 4. value inside interval
+                interval.setValue(value)
+                intervalMap.put(value+1, max)
+            } else {
+                throw IllegalArgumentException("value must be within an interval")
+            }
         }
+
+
     }
 
     override fun validate(minRange: Long, maxRange: Long): Boolean {
