@@ -2,7 +2,7 @@ package io;
 
 import crypto.CodeGen;
 import org.apache.commons.lang3.ArrayUtils;
-import verify.ICRL;
+import verify.serial.ICRL;
 
 import java.nio.ByteBuffer;
 

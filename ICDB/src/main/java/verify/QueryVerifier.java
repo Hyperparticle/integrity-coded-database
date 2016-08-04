@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import parse.ICDBQuery;
+import verify.serial.ICRL;
 
 import java.nio.ByteBuffer;
 import java.util.stream.Stream;

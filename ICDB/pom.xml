@@ -7,6 +7,13 @@
     <groupId>edu.boisestate.cs</groupId>
     <artifactId>ICDB</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <developers>
+        <developer>
+            <name>Dan Kondratyuk</name>
+        </developer>
+    </developers>
 
     <properties>
         <kotlin.version>1.0.3</kotlin.version>
@@ -19,7 +26,7 @@
 
         <plugins>
             <plugin>
-                <!-- Compiler Plugin -->
+                <!-- Maven Compiler Plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
@@ -29,52 +36,10 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- Build an executable JAR -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>main.ICDBTool</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Builds a standalone JAR -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                    <!-- Additional configuration. -->
-                </configuration>
-            </plugin>
-            <plugin>
+                <!-- Kotlin Maven Plugin -->
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <version>1.0.3</version>
-
                 <configuration/>
                 <executions>
                     <execution>
@@ -92,6 +57,33 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <!-- Build a fat jar -->
+                <groupId>sg.enixsoft</groupId>
+                <artifactId>capsule-maven-plugin</artifactId>
+                <version>1.3.0</version>
+                <configuration>
+                    <appClass>main.ICDBTool</appClass>
+                    <type>fat</type>
+                    <execPluginConfig>root</execPluginConfig>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Execute jar from maven -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                    <mainClass>main.ICDBTool</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

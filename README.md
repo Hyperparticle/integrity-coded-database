@@ -29,7 +29,7 @@ $ icdb [-c config-file] [command] [options]
 `icdb` is a bash script that simply runs the compiled jar. This can be run directly:
 
 ```
-$ java -jar target/icdb.jar [-c config-file] [command] [options]
+$ java -jar target/icdb-capsule.jar [-c config-file] [command] [options]
 ```
 
 All interactions with the tool will require a config file containing a JSON object with several parameters:

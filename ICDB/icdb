@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-java -jar target/icdb.jar "$@"
+java -jar target/icdb-capsule.jar "$@"

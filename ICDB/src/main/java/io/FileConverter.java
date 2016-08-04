@@ -1,9 +1,7 @@
 package io;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +13,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.tools.StringUtils;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.prefs.CsvPreference;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
@@ -26,7 +21,7 @@ import crypto.CodeGen;
 import crypto.Convert;
 import main.args.option.Granularity;
 import io.source.FileSource;
-import verify.ICRL;
+import verify.serial.ICRL;
 
 /**
  * A FileConverter takes an input DB data file and generates a converted ICDB

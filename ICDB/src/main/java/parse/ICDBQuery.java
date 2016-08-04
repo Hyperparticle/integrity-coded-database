@@ -11,11 +11,10 @@ import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.Cursor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import verify.ICRL;
+import verify.serial.ICRL;
 
 import java.io.Reader;
 import java.io.StringReader;
