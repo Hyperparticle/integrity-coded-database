@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.SQLDataType;
+import verify.serial.Icrl;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -167,6 +168,9 @@ public class DBConverter {
                 File output = Paths.get(convertedDataPath.toString(), path.getFileName().toString()).toFile();
                 converter.convertFile(path.toFile(), output);
             });
+
+        // Commit all pending serials
+        Icrl.Companion.getIcrl().commit();
     }
 
     private void importData() {

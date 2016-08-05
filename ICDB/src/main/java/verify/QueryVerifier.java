@@ -30,7 +30,7 @@ public abstract class QueryVerifier {
     private final DBConnection icdb;
     private final CodeGen codeGen;
 
-    private final Icrl icrl;
+    private final Icrl icrl = Icrl.Companion.getIcrl();
 
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();
@@ -42,7 +42,6 @@ public abstract class QueryVerifier {
         this.codeGen = dbConfig.codeGen;
 
         this.icdbCreate = icdb.getCreate();
-        this.icrl = Icrl.Companion.getInstance();
     }
 
     /**

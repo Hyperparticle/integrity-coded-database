@@ -4,11 +4,9 @@ import org.apache.logging.log4j.LogManager
 import org.mapdb.DB
 import org.mapdb.DBMaker
 import org.mapdb.serializer.GroupSerializer
-
-import java.io.IOException
+import java.io.File
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.security.SecureRandom
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Maintains the Integrity Code Revocation List (ICRL), storing and loading it from a file.
@@ -21,46 +19,43 @@ class Icrl private constructor() {
     private val db: DB
     private val serials: RevocationTree<Long>
 
-    private val random = SecureRandom()
+    private val pending: AtomicLong
+    private val next: AtomicLong
+
+    private val logger = LogManager.getLogger()
 
     init {
         // Load the DB
-        db = DBMaker.fileDB(ICRL_LOCATION).fileMmapEnable().fileMmapPreclearDisable().make()
+        db = DBMaker.fileDB(ICRL_FILE).fileMmapEnable().fileMmapPreclearDisable().make()
         db.getStore().fileLoad()
+        Runtime.getRuntime().addShutdownHook(Thread({ db.close() }))
 
         // Generate the map
         val treeMap = db.treeMap("serial", GroupSerializer.LONG, GroupSerializer.LONG).createOrOpen()
 
         // Add a random start value if one does not exist
         serials = when {
-            treeMap.isEmpty() -> LongRevocationTree(treeMap, random.nextInt(Integer.MAX_VALUE).toLong())
+            treeMap.isEmpty() -> LongRevocationTree(treeMap, Rng.next())
             else -> LongRevocationTree(treeMap)
         }
+
+        pending = AtomicLong(serials.next)
+        next = AtomicLong(serials.next)
     }
 
     /**
-     * Increments the current serial counter by 1, and copies it to the ICRL storage as a valid serial
-     * @return the new serial number
+     * Increments the current serial counter by 1
+     * @return the newest valid serial number
      */
-    val next: Long
-        get() {
-            val next = current!!.incrementAndGet()
-            serials.add(next)
-            return next
-        }
+    fun addNext(): Long = next.andIncrement
 
-    /**
-     * @return the next serial number to be generated
-     */
-    fun peekNext(): Long {
-        return current!!.get() + 1
-    }
+    fun commit() {
+        if (next.get() == pending.get()) { return }
 
-    /**
-     * Adds a serial number to the list
-     */
-    fun add(serial: Long) {
-        serials.add(serial)
+        logger.debug("Committed new serial range: [{}, {}]", next.get(), pending.get())
+
+        serials.add(next.get() - pending.get())
+        pending.set(next.get())
     }
 
     /**
@@ -70,41 +65,25 @@ class Icrl private constructor() {
         serials.remove(serial)
     }
 
+    /**
+     * Validates whether the serial is contained in the valid list of serial numbers
+     */
     operator fun contains(serial: Long): Boolean {
         return serials.contains(serial)
     }
 
-    private fun save() {
-        db.close()
-    }
-
     companion object {
+        private val ICRL_FILE = File("./src/main/resources/icrl.db")
 
-        private val ICRL_LOCATION = "./src/main/resources/icrl.db"
-        private val logger = LogManager.getLogger()
-
-        val icrl: Icrl = Icrl()
-            get() {
-                    icrl
-
-                }
-
-                return icrl
-            }
-
-        init {
-            Runtime.getRuntime().addShutdownHook(Thread({ icrl.save() }))
+        // If init() is called before getting the Icrl, then the it is reset
+        private var reset: Boolean = false
+        val icrl: Icrl by lazy {
+            if (reset) { Files.deleteIfExists(ICRL_FILE.toPath()) }
+            Icrl()
         }
 
-        fun reset(): Icrl {
-            try {
-                // Delete the old DB
-                Files.deleteIfExists(Paths.get(ICRL_LOCATION))
-            } catch (e: IOException) {
-                logger.error("Failed to reset ICRL DB: {}", e.message)
-                System.exit(1)
-            }
-
+        fun init(): Icrl {
+            reset = true
             return icrl
         }
     }

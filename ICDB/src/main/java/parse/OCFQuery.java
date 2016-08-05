@@ -188,9 +188,6 @@ public class OCFQuery extends ICDBQuery {
                 // Add serial number to expression list
                 Long serial = converter.getSerial();
                 expressions.add(new DoubleValue(serial.toString()));
-
-                // Add this serial to be added to the ICRL upon successful execution
-                serialsToBeAdded.add(serial);
             });
 
     }

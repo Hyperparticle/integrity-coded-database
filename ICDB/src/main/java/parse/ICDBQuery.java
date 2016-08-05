@@ -39,11 +39,10 @@ public abstract class ICDBQuery {
     private String convertedQuery;  // The converted query, like the original, but with extra columns
     private String verifyQuery;     // A select query responsible for obtaining verification results
 
-    protected Icrl icrl = Icrl.Companion.getInstance();
+    protected Icrl icrl = Icrl.Companion.getIcrl();
 
     // Update the ICRL if this query was successful
     protected List<Long> serialsToBeRevoked = new ArrayList<>();
-    protected List<Long> serialsToBeAdded = new ArrayList<>();
 
     private boolean requiresUpdate;
 
@@ -132,10 +131,7 @@ public abstract class ICDBQuery {
         logger.info("{}\n{}", convertedQuery, result);
 
         // Add all pending serials
-        if (!serialsToBeAdded.isEmpty()) {
-            serialsToBeAdded.forEach(serial -> icrl.add(serial));
-            serialsToBeAdded.clear();
-        }
+        icrl.commit();
 
         // Revoke all pending serials
         if (!serialsToBeRevoked.isEmpty()) {

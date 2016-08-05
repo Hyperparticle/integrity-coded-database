@@ -20,7 +20,7 @@ public class DataConverter {
      * Given some data, this method generates codes (svc + serial) from it
      */
     public DataConverter(byte[] data, CodeGen codeGen, Icrl icrl) {
-        serial = icrl.peekNext();
+        serial = icrl.addNext();
 
         final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
         final byte[] allData = ArrayUtils.addAll(data, serialBytes);

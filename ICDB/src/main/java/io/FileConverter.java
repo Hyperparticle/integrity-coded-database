@@ -35,14 +35,13 @@ public class FileConverter {
 	private final CodeGen codeGen;
 	private final Granularity granularity;
 
-    private final Icrl icrl;
+    private final Icrl icrl = Icrl.Companion.init();
 
 	private static final Logger logger = LogManager.getLogger();
 
 	public FileConverter(CodeGen codeGen, Granularity granularity) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
-        this.icrl = Icrl.Companion.init();
 	}
 
 	public void convertFile(final File input, final File output) {
@@ -103,7 +102,7 @@ public class FileConverter {
 	 * @param collector the list to collect the codes
 	 */
 	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, Icrl icrl) {
-        final long serial = icrl.getNext();
+        final long serial = icrl.addNext();
         final String serialString = Long.toString(serial);
 
 		final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();

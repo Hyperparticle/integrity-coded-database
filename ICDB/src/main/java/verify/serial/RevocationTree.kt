@@ -15,11 +15,10 @@ import java.util.*
  * @author Dan Kondratyuk
  *
  * @property intervalMap a NavigableMap implementation that may have existing intervals
- * @property next the next maximum value (not currently in the tree).
  */
 abstract class RevocationTree<T : Comparable<T>>(val intervalMap: NavigableMap<T, T>) {
 
-    protected val next: T
+    val next: T
         get() = intervalMap.lastEntry().value
 
     init {
@@ -27,38 +26,21 @@ abstract class RevocationTree<T : Comparable<T>>(val intervalMap: NavigableMap<T
         intervalMap.map { it.key.compareTo(it.value) > 1 }
             .filter { it }
             .forEach { throw IllegalArgumentException("Interval map must not contain min values larger than max values") }
-
-        // Validate that there exists at least one interval
-        if (intervalMap.isEmpty()) {
-            throw IllegalArgumentException("Interval map must contain at least one interval")
-        }
     }
 
     /**
      * Adds the specified number of valid serial numbers to the tree
-     * @return the last (maximum) value
      */
-    abstract fun add(range: T): T
-
-//    /**
-//     * Removes a range of values from the tree
-//     * @param minRange the minimum value (inclusive)
-//     * @param maxRange the maximum value (inclusive)
-//     */
-//    abstract fun remove(minRange: T, maxRange: T)
+    abstract fun add(range: T)
 
     /**
-     * Removes a range of values from the tree
-     * @param minRange the minimum value (inclusive)
-     * @param maxRange the maximum value (inclusive)
+     * Removes a value from the tree
      */
     abstract fun remove(value: T)
 
     /**
-     * Validates whether the min and max range is overlapped completely by an interval
+     * Validates whether the value is contained in the tree
      */
-    abstract fun validate(minRange: T, maxRange: T): Boolean
-
-    fun isEmpty(): Boolean = intervalMap.isEmpty()
+    abstract fun contains(value: T): Boolean
 
 }
