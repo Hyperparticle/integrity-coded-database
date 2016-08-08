@@ -91,7 +91,7 @@ public class FileConverter {
                 convertLine(collector, dataBytes, codeGen, icrl);
             }
 
-            return line;
+            return collector;
         });
 	}
 
