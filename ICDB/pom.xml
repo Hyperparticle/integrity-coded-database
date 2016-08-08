@@ -153,6 +153,11 @@
             <artifactId>quasar-core</artifactId>
             <version>0.7.5</version>
         </dependency>
+        <dependency>
+            <groupId>nl.komponents.kovenant</groupId>
+            <artifactId>kovenant</artifactId>
+            <version>3.3.0</version>
+        </dependency>
 
         <!-- Testing & Debugging -->
         <dependency>

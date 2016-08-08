@@ -101,6 +101,7 @@ public abstract class ICDBQuery {
     protected abstract Statement parseVerifyQuery(Update update);
 
     // TODO: This is a temporary workaround. A better solution would be to pass a context object around with the results.
+    protected Result<Record> deleteSelectResults;
     protected Result<Record> updateSelectResults;
 
 //    /**
@@ -138,8 +139,6 @@ public abstract class ICDBQuery {
             serialsToBeRevoked.forEach(serial -> icrl.revoke(serial));
             serialsToBeRevoked.clear();
         }
-
-
     }
 
     public String getConvertedQuery() {

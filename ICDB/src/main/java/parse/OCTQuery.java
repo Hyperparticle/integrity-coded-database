@@ -103,7 +103,16 @@ public class OCTQuery extends ICDBQuery {
 
     @Override
     protected Statement parseVerifyQuery(Delete delete) {
-        return null; // Delete does not require any verification
+        // We verify delete so that we can revoke all deleted serial numbers
+        Table table = delete.getTable();
+
+        Select select = SelectUtils.buildSelectFromTableAndSelectItems(table, new AllColumns());
+
+        // Apply the where clause to the SELECT
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        plainSelect.setWhere(delete.getWhere());
+
+        return select;
     }
 
     ////////////

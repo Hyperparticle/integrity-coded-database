@@ -62,6 +62,7 @@ class Icrl private constructor() {
      * Revokes the serial number from the list
      */
     fun revoke(serial: Long) {
+        // TODO: commit pending serials
         serials.remove(serial)
     }
 

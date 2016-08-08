@@ -104,7 +104,7 @@ public class OCFQuery extends ICDBQuery {
 
     @Override
     protected Statement parseVerifyQuery(Delete delete) {
-        return null; // Delete does not require any verification
+        return null; // TODO: verify serials
     }
 
     ////////////
