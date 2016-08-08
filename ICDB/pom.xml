@@ -147,17 +147,17 @@
             <version>2.6.2</version>
         </dependency>
 
-        <!-- Performance Enhancements -->
+        <!-- Async Tools -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>quasar-core</artifactId>
             <version>0.7.5</version>
         </dependency>
-        <dependency>
-            <groupId>nl.komponents.kovenant</groupId>
-            <artifactId>kovenant</artifactId>
-            <version>3.3.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>nl.komponents.kovenant</groupId>-->
+            <!--<artifactId>kovenant</artifactId>-->
+            <!--<version>3.3.0</version>-->
+        <!--</dependency>-->
 
         <!-- Testing & Debugging -->
         <dependency>
