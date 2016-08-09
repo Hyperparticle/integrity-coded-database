@@ -1,7 +1,9 @@
 package main;
 
 import java.io.FileNotFoundException;
+import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import io.source.DBSource;
@@ -140,11 +142,16 @@ public class ICDBTool {
         DBConnection db = DBConnection.connect(dbSchema, dbConfig);
         String query = benchmarkCommand.query;
 
-        Stopwatch executionTime = Stopwatch.createStarted();
+        IntStream.of(500000, 1000000, 1500000, 2000000)
+            .forEach(i -> {
+                Stopwatch executionTime = Stopwatch.createStarted();
+                String limitQuery = query + " limit " + i;
+                db.getCreate().fetch(limitQuery);
+                logger.debug("LIMIT {}:", i);
+                logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+            });
 
-        logger.info("\n" + db.getCreate().fetch(query));
 
-        logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
 	static {
