@@ -142,6 +142,7 @@ public class ICDBTool {
         DBConnection db = DBConnection.connect(dbSchema, dbConfig);
         String query = benchmarkCommand.query;
 
+        // Run through the following fetch sizes
         IntStream.of(500000, 1000000, 1500000, 2000000)
             .forEach(i -> {
                 Stopwatch executionTime = Stopwatch.createStarted();
@@ -150,8 +151,6 @@ public class ICDBTool {
                 logger.debug("LIMIT {}:", i);
                 logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
             });
-
-
     }
 
 	static {
