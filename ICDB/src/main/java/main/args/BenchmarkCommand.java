@@ -6,8 +6,11 @@ import com.google.common.base.Stopwatch;
 import io.DBConnection;
 import main.ICDBTool;
 import main.args.config.UserConfig;
+import main.args.option.QuerySplitter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 /**
@@ -19,8 +22,8 @@ import java.util.stream.IntStream;
 @Parameters(commandNames = {CommandLineArgs.BENCHMARK}, commandDescription = "Benchmark a Query")
 public class BenchmarkCommand implements ConfigCommand {
 
-    @Parameter(names = { "-q", "--query" }, description = "Execute a query as an argument")
-    private String query;
+    @Parameter(names = { "-q", "--query" }, variableArity = true, description = "Execute one or more query arguments", splitter = QuerySplitter.class)
+    private List<String> queries = new ArrayList<>();
 
     @Parameter(names = { "-s", "--schema" }, description = "Specify a custom database schema name")
     private String schemaName;

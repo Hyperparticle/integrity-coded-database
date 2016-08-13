@@ -41,12 +41,8 @@ public class DBConnection {
             logger.trace("Connected to DB {} at {}:{}", dbName, dbConfig.ip, dbConfig.port);
             return db;
         } catch (SQLException | DataAccessException e) {
-            logger.error("Unable to connect to {}: {}", dbName, e.getMessage());
-            e.printStackTrace();
-            System.exit(1);
+            throw new IllegalStateException("Unable to connect to " + dbName + ": " + e.getMessage());
         }
-
-        return null;
     }
 
     private final String dbName;

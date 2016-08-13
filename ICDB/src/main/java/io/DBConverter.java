@@ -189,23 +189,22 @@ public class DBConverter {
             String filePath = Format.getCsvFile(convertedDataPath.toString(), tableName)
                     .getAbsolutePath().replace("\\", "/");
 
-//            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
-                String query = "load data local infile '?' " +
-                        "into table `?` " +
-                        "fields terminated by '?' " +
-                        "optionally enclosed by '?' " +
-                        "lines terminated by '\n' " +
-                        convertToBlob(icdbTable);
+            String query = "load data local infile '?' " +
+                    "into table `?` " +
+                    "fields terminated by '?' " +
+                    "optionally enclosed by '?' " +
+                    "lines terminated by '\n' " +
+                    convertToBlob(icdbTable);
 
-                // Truncate the table before loading the data
-                icdb.getCreate().execute("truncate ?", tableName, Format.FILE_DELIMITER, Format.ENCLOSING_TAG);
+            // Truncate the table before loading the data
+            icdb.getCreate().execute("truncate ?", tableName);
 
-                try {
-                    icdb.getCreate().execute(query, filePath, tableName);
-                    logger.debug("Imported table {} in {}", tableName, importTime.elapsed(ICDBTool.TIME_UNIT));
-                } catch (DataAccessException e) {
-                    logger.error("Failed to import table {}: {}", tableName, e.getMessage());
-                }
+            try {
+                icdb.getCreate().execute(query, filePath, tableName, Format.FILE_DELIMITER, Format.ENCLOSING_TAG);
+                logger.debug("Imported table {} in {}", tableName, importTime.elapsed(ICDBTool.TIME_UNIT));
+            } catch (DataAccessException e) {
+                logger.error("Failed to import table {}: {}", tableName, e.getMessage());
+            }
         });
 
         // Don't forget to set foreign key checks back

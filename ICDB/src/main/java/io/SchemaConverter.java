@@ -58,9 +58,7 @@ public class SchemaConverter {
 			SchemaConverter converter = new SchemaConverter(db, config, convertConfig);
 			converter.convertSchema();
 		} catch (SQLException e) {
-			logger.error("There was an error attempting to convert the schema: {}", e.getMessage());
-			logger.debug(e.getStackTrace());
-			System.exit(1);
+			logger.error("Failed to convert the schema: {}", e.getMessage());
 		}
 	}
 
@@ -158,12 +156,11 @@ public class SchemaConverter {
 
 		try {
 		    // Create folders if they do not exist
-		    new File(Format.SCHEMA_DATA_PATH).mkdirs();
             new File(Format.DB_DATA_PATH).mkdirs();
             new File(Format.ICDB_DATA_PATH).mkdirs();
 
             logger.debug("Dumping database schema");
-            String schemaDumpFile = Format.SCHEMA_DATA_PATH + "/" + dbName + "_schema.sql";
+            String schemaDumpFile = Format.DB_DATA_PATH + "/" + dbName + "_schema.sql";
             Runtime.getRuntime().exec("mysqldump -u root --no-data " + dbName + " > " + schemaDumpFile)
                 .waitFor();
 

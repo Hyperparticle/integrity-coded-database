@@ -19,9 +19,8 @@ object Format {
     const val SERIAL_SUFFIX = "_$SERIAL_COLUMN"
 
     // File Naming
-    const val SCHEMA_DATA_PATH = "./tmp/db/data"
-    const val DB_DATA_PATH = "./tmp/db/schema"
-    const val ICDB_DATA_PATH = "./tmp/icdb/data"
+    const val DB_DATA_PATH = "./tmp/db"
+    const val ICDB_DATA_PATH = "./tmp/icdb"
 
     const val DATA_FILE_EXTENSION = ".csv"
 

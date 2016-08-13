@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import parse.ICDBQuery;
 import verify.QueryVerifier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,14 +23,14 @@ import java.util.List;
 @Parameters(commandNames = {CommandLineArgs.EXECUTE}, commandDescription = "Execute queries on an ICDB schema")
 public class ExecuteCommand implements ConfigCommand {
 
-    @Parameter(names = { "-q", "--query" }, description = "Execute one or more query arguments", splitter = QuerySplitter.class)
-    private List<String> queries;
+    @Parameter(names = { "-q", "--query" }, variableArity = true, description = "Execute one or more query arguments", splitter = QuerySplitter.class)
+    private List<String> queries = new ArrayList<>();
 
     @Parameter(names = { "-s", "--schema" }, description = "Specify a custom database schema name")
     private String schemaName;
 
     @Parameter(names = { "-s", "--skip" }, description = "Skip one or more execution steps (convert|verify|execute)")
-    private List<String> skipSteps;
+    private List<String> skipSteps = new ArrayList<>();
 
     @Parameter(names = { "-p", "--parallel" }, description = "Execute a query in parallel to improve performance (default true)")
     private Boolean parallel = true;

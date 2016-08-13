@@ -36,9 +36,14 @@ public class ICDBTool {
 	public static void main(String[] args) {
 		Stopwatch totalTime = Stopwatch.createStarted();
 
-		// Parse the command-line arguments, and execute the command
-		CommandLineArgs commandLineArgs = new CommandLineArgs(args);
-        commandLineArgs.execute();
+        try {
+            // Parse the command-line arguments, and execute the command
+            CommandLineArgs commandLineArgs = new CommandLineArgs(args);
+            commandLineArgs.execute();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            logger.debug(e.getStackTrace());
+        }
 
 		logger.info("\nTotal time elapsed: {}", totalTime.elapsed(ICDBTool.TIME_UNIT));
 	}
