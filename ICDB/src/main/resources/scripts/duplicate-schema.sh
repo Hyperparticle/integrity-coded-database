@@ -15,11 +15,7 @@ icdb_name=$2
 # Create folders if it they do not exist
 mkdir -p ${export_path}/db-files/schema
 mkdir -p ${export_path}/db-files/data
-mkdir -p ${export_path}/icdb-files/schema
 mkdir -p ${export_path}/icdb-files/data
-
-
-
 
 # Use mysqldump to export the DB schema
 echo "Dumping database schema '$1'."

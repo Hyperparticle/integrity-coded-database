@@ -1,5 +1,6 @@
 package io;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -8,13 +9,14 @@ import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jooq.DSLContext;
 import org.jooq.Table;
 import org.jooq.impl.SQLDataType;
 import org.jooq.util.mysql.MySQLDataType;
 
 import com.google.common.base.Stopwatch;
 
-import main.args.ConvertDBCommand;
+import main.args.ConvertCommand;
 import main.args.option.Granularity;
 
 /**
@@ -39,7 +41,7 @@ public class SchemaConverter {
 
 	private static final Logger logger = LogManager.getLogger();
 
-	private SchemaConverter(DBConnection db, UserConfig dbConfig, ConvertDBCommand convertConfig) {
+	private SchemaConverter(DBConnection db, UserConfig dbConfig, ConvertCommand convertConfig) {
 		this.dbName = dbConfig.schema;
 		this.icdbName = dbConfig.icdbSchema;
 
@@ -51,7 +53,7 @@ public class SchemaConverter {
 		this.skipSchema = convertConfig.skipSchema;
 	}
 
-	public static void convertSchema(DBConnection db, UserConfig config, ConvertDBCommand convertConfig) {
+	public static void convertSchema(DBConnection db, UserConfig config, ConvertCommand convertConfig) {
 		try {
 			SchemaConverter converter = new SchemaConverter(db, config, convertConfig);
 			converter.convertSchema();
@@ -155,9 +157,25 @@ public class SchemaConverter {
 		Stopwatch duplicationTime = Stopwatch.createStarted();
 
 		try {
-			new ProcessBuilder("bash", "./src/main/resources/scripts/duplicate-schema.sh", dbName, icdbName)
-					.start()
-					.waitFor();
+		    // Create folders if they do not exist
+		    new File(Format.SCHEMA_DATA_PATH).mkdirs();
+            new File(Format.DB_DATA_PATH).mkdirs();
+            new File(Format.ICDB_DATA_PATH).mkdirs();
+
+            logger.debug("Dumping database schema");
+            String schemaDumpFile = Format.SCHEMA_DATA_PATH + "/" + dbName + "_schema.sql";
+            Runtime.getRuntime().exec("mysqldump -u root --no-data " + dbName + " > " + schemaDumpFile)
+                .waitFor();
+
+            logger.debug("Creating new database {}", icdbName);
+            final DBConnection db = DBConnection.connect(dbName, dbConfig);
+
+            DSLContext create = db.getCreate();
+            create.execute("DROP DATABASE IF EXISTS ?", icdbName);
+            create.execute("CREATE DATABASE ?", icdbName);
+
+            Runtime.getRuntime().exec("mysql -u root " + icdbName + " > " + schemaDumpFile)
+                    .waitFor();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			System.exit(1);

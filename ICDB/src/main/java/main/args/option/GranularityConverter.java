@@ -14,7 +14,7 @@ public class GranularityConverter implements IStringConverter<Granularity> {
     @Override
     public Granularity convert(String value) {
         try {
-            return Granularity.valueOf(value.toUpperCase());
+            return Granularity.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new ParameterException("Value " + value + " is not valid. Available values are: tuple, field");
         }

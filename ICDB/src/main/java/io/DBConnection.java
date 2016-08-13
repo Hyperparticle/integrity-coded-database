@@ -78,7 +78,7 @@ public class DBConnection {
         fieldMap = tableNames.stream()
             .collect(Collectors.toMap(
                 tableName -> tableName,
-                tableName -> dbCreate.fetch("DESCRIBE `" + tableName + "`")
+                tableName -> dbCreate.fetch("DESCRIBE ?", tableName)
                     .map(result -> result.get(0).toString())
             ));
 
@@ -86,7 +86,7 @@ public class DBConnection {
         primaryKeyMap = tableNames.stream()
             .collect(Collectors.toMap(
                 tableName -> tableName,
-                tableName -> dbCreate.fetch("SHOW KEYS FROM`" + tableName + "`WHERE Key_name = 'PRIMARY'")
+                tableName -> dbCreate.fetch("SHOW KEYS FROM ? WHERE Key_name = 'PRIMARY'", tableName)
                     .map(result -> result.get(DSL.field("Column_name")).toString())
             ));
     }

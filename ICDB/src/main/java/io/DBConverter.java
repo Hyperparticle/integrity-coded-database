@@ -3,7 +3,7 @@ package io;
 import crypto.CodeGen;
 import com.google.common.base.Stopwatch;
 import main.ICDBTool;
-import main.args.ConvertDBCommand;
+import main.args.ConvertCommand;
 import main.args.config.UserConfig;
 import main.args.option.Granularity;
 import org.apache.commons.io.FileUtils;
@@ -51,7 +51,7 @@ public class DBConverter {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public DBConverter(DBConnection db, DBConnection icdb, UserConfig config, ConvertDBCommand convertConfig) {
+    public DBConverter(DBConnection db, DBConnection icdb, UserConfig config, ConvertCommand convertConfig) {
         this.db = db;
         this.icdb = icdb;
 
@@ -190,18 +190,18 @@ public class DBConverter {
                     .getAbsolutePath().replace("\\", "/");
 
 //            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
-                String query = "load data local infile '" + filePath + "' " +
-                        "into table `" + tableName + "` " +
-                        "fields terminated by '" + Format.FILE_DELIMITER + "' " +
-                        "optionally enclosed by '"  + Format.ENCLOSING_TAG + "' " +
+                String query = "load data local infile '?' " +
+                        "into table `?` " +
+                        "fields terminated by '?' " +
+                        "optionally enclosed by '?' " +
                         "lines terminated by '\n' " +
                         convertToBlob(icdbTable);
 
                 // Truncate the table before loading the data
-                icdb.getCreate().execute("truncate `" + tableName + "`;");
+                icdb.getCreate().execute("truncate ?", tableName, Format.FILE_DELIMITER, Format.ENCLOSING_TAG);
 
                 try {
-                    icdb.getCreate().execute(query);
+                    icdb.getCreate().execute(query, filePath, tableName);
                     logger.debug("Imported table {} in {}", tableName, importTime.elapsed(ICDBTool.TIME_UNIT));
                 } catch (DataAccessException e) {
                     logger.error("Failed to import table {}: {}", tableName, e.getMessage());
