@@ -1,14 +1,12 @@
-package convert;
+package io;
 
-import cipher.CodeGen;
+import crypto.CodeGen;
 import org.apache.commons.lang3.ArrayUtils;
-import verify.ICRL;
+import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
 
 /**
- * <p>
- * </p>
  * Created on 7/19/2016
  *
  * @author Dan Kondratyuk
@@ -21,8 +19,8 @@ public class DataConverter {
     /**
      * Given some data, this method generates codes (svc + serial) from it
      */
-    public DataConverter(byte[] data, CodeGen codeGen, ICRL icrl) {
-        serial = icrl.peekNext();
+    public DataConverter(byte[] data, CodeGen codeGen, Icrl icrl) {
+        serial = icrl.addNext();
 
         final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
         final byte[] allData = ArrayUtils.addAll(data, serialBytes);

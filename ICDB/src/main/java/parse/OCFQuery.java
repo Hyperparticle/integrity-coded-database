@@ -1,11 +1,11 @@
 package parse;
 
-import cipher.CodeGen;
-import cipher.signature.Convert;
+import crypto.CodeGen;
+import crypto.Convert;
 import com.google.common.base.Charsets;
-import convert.DBConnection;
-import convert.DataConverter;
-import convert.Format;
+import io.DBConnection;
+import io.DataConverter;
+import io.Format;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
@@ -61,7 +61,7 @@ public class OCFQuery extends ICDBQuery {
         addWhereColumn(selectItems, plainSelect.getWhere());
         tables.forEach(table -> addPrimaryKeyColumn(selectItems, table));
 
-        List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.SVC_SUFFIX, Format.SERIAL_SUFFIX);
+        List<SelectItem> signatureItems = getICSelectItems(selectItems, Format.IC_SUFFIX, Format.SERIAL_SUFFIX);
         selectItems.addAll(signatureItems);
 
         return select;
@@ -104,7 +104,7 @@ public class OCFQuery extends ICDBQuery {
 
     @Override
     protected Statement parseVerifyQuery(Delete delete) {
-        return null; // Delete does not require any verification
+        return null; // TODO: verify serials
     }
 
     ////////////
@@ -155,7 +155,7 @@ public class OCFQuery extends ICDBQuery {
         icdb.getPrimaryKeys(table)
             .forEach(key -> {
                 boolean hasColumn = items.stream()
-                        .anyMatch(item -> item.toString().equals(key));
+                    .anyMatch(item -> item.toString().equals(key));
 
                 if (!hasColumn) {
                     items.add(new SelectExpressionItem(new HexValue(key)));
@@ -188,9 +188,6 @@ public class OCFQuery extends ICDBQuery {
                 // Add serial number to expression list
                 Long serial = converter.getSerial();
                 expressions.add(new DoubleValue(serial.toString()));
-
-                // Add this serial to be added to the ICRL upon successful execution
-                serialsToBeAdded.add(serial);
             });
 
     }

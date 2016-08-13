@@ -1,22 +1,25 @@
 package main;
 
 import java.io.FileNotFoundException;
+import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import io.source.DBSource;
+import io.source.DataSource;
+import main.args.*;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Stopwatch;
 
-import convert.DBConnection;
-import convert.DBConverter;
-import convert.SchemaConverter;
-import main.args.CommandLineArgs;
-import main.args.ConvertDBCommand;
-import main.args.ConvertQueryCommand;
-import main.args.ExecuteQueryCommand;
+import io.DBConnection;
+import io.DBConverter;
+import io.SchemaConverter;
 import main.args.config.ConfigArgs;
+import org.jooq.Record;
 import parse.ICDBQuery;
 import verify.QueryVerifier;
 
@@ -52,11 +55,14 @@ public class ICDBTool {
 			convertQuery(cmd, dbConfig);
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			executeQuery(cmd, dbConfig);
-		} else {
-			 cmd.jCommander.usage();
+		} else if (cmd.isCommand(CommandLineArgs.BENCHMARK)) {
+		    benchmark(cmd, dbConfig);
+		} else { // TODO: add revoke serial command
+			cmd.jCommander.usage();
 			System.exit(0);
 		}
 
+        logger.info("");
 		logger.info("Total time elapsed: {}", totalTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
@@ -74,9 +80,8 @@ public class ICDBTool {
 		DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
 		DBConverter dbConverter = new DBConverter(db, icdb, dbConfig, convertConfig);
 
-		// Convert all data and load it
-		dbConverter.convert();
-		dbConverter.load();
+		// Export, convert, and load all data
+		dbConverter.convertAll();
 	}
 
 	/**
@@ -99,21 +104,21 @@ public class ICDBTool {
         });
     }
 
-	/**
-	 * Executes the query
-	 */
-	private static void executeQuery(CommandLineArgs cmd, UserConfig dbConfig) {
-		final ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
-		final String icdbSchema = dbConfig.icdbSchema;
+    /**
+     * Executes a query
+     */
+    private static void executeQuery(CommandLineArgs cmd, UserConfig dbConfig) {
+        final ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
+        final String icdbSchema = dbConfig.icdbSchema;
 
-		DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
+        DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
-		String query = executeQueryCommand.query;
+        String query = executeQueryCommand.query;
         ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen);
 
-		logger.info("Original Query: {}", query);
+        logger.info("Original Query: {}", query);
 
-		QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
+        QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig);
 
         if (!icdbQuery.needsVerification()) {
             verifier.execute(icdbQuery);
@@ -125,7 +130,28 @@ public class ICDBTool {
             logger.info("Query failed to verify");
             logger.error(verifier.getError());
         }
-	}
+    }
+
+    /**
+     * Benchmarks the query
+     */
+    private static void benchmark(CommandLineArgs cmd, UserConfig dbConfig) {
+        final BenchmarkCommand benchmarkCommand = cmd.benchmarkCommand;
+        final String dbSchema = benchmarkCommand.schemaName != null ? benchmarkCommand.schemaName : dbConfig.icdbSchema;
+
+        DBConnection db = DBConnection.connect(dbSchema, dbConfig);
+        String query = benchmarkCommand.query;
+
+        // Run through the following fetch sizes
+        IntStream.of(500000, 1000000, 1500000, 2000000)
+            .forEach(i -> {
+                Stopwatch executionTime = Stopwatch.createStarted();
+                String limitQuery = query + " limit " + i;
+                db.getCreate().fetch(limitQuery);
+                logger.debug("LIMIT {}:", i);
+                logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+            });
+    }
 
 	static {
         System.setProperty("org.jooq.no-logo", "true");

@@ -8,10 +8,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * <p>
- * </p>
- * Created on 6/8/2016
+ * Maps the supplied filename String to a Reader
  *
+ * Created on 6/8/2016
  * @author Dan Kondratyuk
  */
 public class ReaderConverter implements IStringConverter<Reader> {

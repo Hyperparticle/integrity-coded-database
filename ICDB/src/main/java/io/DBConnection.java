@@ -1,4 +1,4 @@
-package convert;
+package io;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import main.args.config.UserConfig;
@@ -38,7 +38,7 @@ public class DBConnection {
     public static DBConnection connect(String dbName, UserConfig dbConfig) {
         try {
             DBConnection db = new DBConnection(dbName);
-            logger.info("Connected to DB {} at {}:{}", dbName, dbConfig.ip, dbConfig.port);
+            logger.trace("Connected to DB {} at {}:{}", dbName, dbConfig.ip, dbConfig.port);
             return db;
         } catch (SQLException | DataAccessException e) {
             logger.error("Unable to connect to {}: {}", dbName, e.getMessage());

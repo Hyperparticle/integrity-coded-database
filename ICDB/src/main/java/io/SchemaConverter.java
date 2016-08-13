@@ -1,4 +1,4 @@
-package convert;
+package io;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,7 +15,6 @@ import org.jooq.util.mysql.MySQLDataType;
 import com.google.common.base.Stopwatch;
 
 import main.args.ConvertDBCommand;
-import main.args.config.ConfigArgs;
 import main.args.option.Granularity;
 
 /**
@@ -82,7 +81,8 @@ public class SchemaConverter {
 			return;
 		}
 
-		logger.debug("Converting db schema to icdb");
+		logger.info("");
+		logger.info("Converting DB schema to icdb");
 
 		// Get the ICDB
 		final DBConnection icdb = DBConnection.connect(icdbName, dbConfig);
@@ -106,17 +106,15 @@ public class SchemaConverter {
 	}
 
 	private void addOCTColumns(final DBConnection icdb, final Table<?> table) {
-		boolean converted = Arrays.stream(table.fields()).anyMatch(field -> field.getName().equals(Format.SVC_COLUMN));
+		boolean converted = Arrays.stream(table.fields()).anyMatch(field -> field.getName().equals(Format.IC_COLUMN));
 
 		if (converted) {
 			logger.debug("Table already converted. Skipping {}", table.getName());
 			return;
 		}
 
-
-
 		// Create a svc column
-		icdb.getCreate().alterTable(table).add(Format.SVC_COLUMN, MySQLDataType.TINYBLOB).execute();
+		icdb.getCreate().alterTable(table).add(Format.IC_COLUMN, MySQLDataType.TINYBLOB).execute();
 
 		// Create a serial column
 		icdb.getCreate().alterTable(table).add(Format.SERIAL_COLUMN, SQLDataType.BIGINT).execute();
@@ -124,7 +122,7 @@ public class SchemaConverter {
 
 	private void addOCFColumns(final DBConnection icdb, final Table<?> table) {
 		boolean converted = Arrays.stream(table.fields())
-				.anyMatch(field -> field.getName().endsWith(Format.SVC_SUFFIX));
+				.anyMatch(field -> field.getName().endsWith(Format.IC_SUFFIX));
 
 		if (converted) {
 			logger.debug("Table already converted. Skipping {}", table.getName());
@@ -134,7 +132,7 @@ public class SchemaConverter {
 		// Loop through each field and create a corresponding column
 		Arrays.stream(table.fields()).forEach(field -> {
 			// Create a svc column
-			icdb.getCreate().alterTable(table).add(field.getName() + Format.SVC_SUFFIX, MySQLDataType.TINYBLOB)
+			icdb.getCreate().alterTable(table).add(field.getName() + Format.IC_SUFFIX, MySQLDataType.TINYBLOB)
 					.execute();
 
 			// Create a serial column
@@ -152,7 +150,8 @@ public class SchemaConverter {
 			return;
 		}
 
-		logger.debug("Duplicating database");
+        logger.info("");
+		logger.info("Duplicating database {}", dbName);
 		Stopwatch duplicationTime = Stopwatch.createStarted();
 
 		try {

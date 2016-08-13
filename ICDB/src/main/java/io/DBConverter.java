@@ -1,11 +1,9 @@
-package convert;
+package io;
 
-import cipher.CodeGen;
-import com.google.common.base.Charsets;
+import crypto.CodeGen;
 import com.google.common.base.Stopwatch;
 import main.ICDBTool;
 import main.args.ConvertDBCommand;
-import main.args.config.ConfigArgs;
 import main.args.config.UserConfig;
 import main.args.option.Granularity;
 import org.apache.commons.io.FileUtils;
@@ -14,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.SQLDataType;
+import verify.serial.Icrl;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -22,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -40,7 +39,8 @@ public class DBConverter {
     private final DBConnection db;
     private final DBConnection icdb;
 
-    private final boolean skipData;
+    private final boolean skipExport;
+    private final boolean skipConvert;
     private final boolean skipLoad;
 
     private final Granularity granularity;
@@ -55,7 +55,8 @@ public class DBConverter {
         this.db = db;
         this.icdb = icdb;
 
-        this.skipData = convertConfig.skipData;
+        this.skipExport = convertConfig.skipExport;
+        this.skipConvert = convertConfig.skipConvert;
         this.skipLoad = convertConfig.skipLoad;
 
         this.granularity = config.granularity;
@@ -68,41 +69,60 @@ public class DBConverter {
         this.convertedDataPath = Paths.get(Format.ICDB_DATA_PATH);
     }
 
+    public void convertAll() {
+        export();  // 1. Export data outfile -> .csv files
+        convert(); // 2. Read from file -> generate signature -> Write to file
+        load();    // 3. Load data infile -> icdb
+    }
+
+    private void export() {
+        if (skipExport) {
+            logger.debug("Data export skipped");
+            return;
+        }
+
+        try {
+            logger.info("");
+            logger.info("Exporting data from {}", dbName);
+            Stopwatch dataExportTime = Stopwatch.createStarted();
+            exportData();
+            logger.debug("Total data export time: {}", dataExportTime.elapsed(ICDBTool.TIME_UNIT));
+        } catch (IOException e) {
+            logger.error("Failed to export DB {}: {}", dbName, e.getMessage());
+        }
+    }
+
     /**
      * Begin the DB conversion process, with the assumption that a converted schema already exists on the DB server.
      */
-    public void convert() {
-        if (skipData) {
+    private void convert() {
+        if (skipConvert) {
             logger.debug("Data conversion skipped");
             return;
         }
 
-        logger.info("Converting data from {}", dbName);
-        Stopwatch dataConvertTime = Stopwatch.createStarted();
-
         try {
-            // 1. Export data outfile -> .csv files
-            exportData();
-
-            // 2. Read from file -> generate signature -> Write to file
+            logger.info("");
+            logger.info("Converting data from {}", dbName);
+            Stopwatch dataConversionTime = Stopwatch.createStarted();
             convertData();
+            logger.debug("Total data convert time: {}", dataConversionTime.elapsed(ICDBTool.TIME_UNIT));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to convert DB {}: {}", dbName, e.getMessage());
         }
-
-        logger.debug("Total data conversion time: {}", dataConvertTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
-    public void load() {
+    private void load() {
         if (skipLoad) {
             logger.debug("Data loading skipped");
             return;
         }
 
-        logger.info("Migrating data to {}", icdbName);
-
-        // 3. Load data infile -> icdb
+        logger.info("");
+        logger.info("Loading converted data into {}", icdbName);
+        Stopwatch dataLoadTime = Stopwatch.createStarted();
         importData();
+        logger.debug("Total data load time: {}", dataLoadTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     private void exportData() throws IOException {
@@ -117,8 +137,7 @@ public class DBConverter {
                 Table<?> icdbTable = db.getTable(tableName);
 
                 // Get the output file path
-                File outputFile = Paths.get(dataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
-                        .toAbsolutePath().toFile();
+                File outputFile = Format.getCsvFile(dataPath.toString(), tableName);
 
                 try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile))) {
                     // Output to a csv file
@@ -139,13 +158,19 @@ public class DBConverter {
 
         FileConverter converter = new FileConverter(codeGen, granularity);
 
-        // Walk data path
+        // Find all files in the data path
+        // TODO: parallelize even more by fetching each table into a stream
         Files.walk(dataPath)
             .filter(Files::isRegularFile)
+            .collect(Collectors.toList())
+            .parallelStream() // Convert in parallel
             .forEach(path -> {
                 File output = Paths.get(convertedDataPath.toString(), path.getFileName().toString()).toFile();
                 converter.convertFile(path.toFile(), output);
             });
+
+        // Commit all pending serials
+        Icrl.Companion.getIcrl().commit();
     }
 
     private void importData() {
@@ -161,15 +186,14 @@ public class DBConverter {
             Table<?> icdbTable = icdb.getTable(tableName);
 
             // Get the output file path
-            String filePath = Paths.get(convertedDataPath.toString(), tableName + Format.DATA_FILE_EXTENSION)
-                    .toAbsolutePath().toFile()
+            String filePath = Format.getCsvFile(convertedDataPath.toString(), tableName)
                     .getAbsolutePath().replace("\\", "/");
 
 //            try (InputStream input = new BufferedInputStream(new FileInputStream(inputFile))) {
                 String query = "load data local infile '" + filePath + "' " +
                         "into table `" + tableName + "` " +
                         "fields terminated by '" + Format.FILE_DELIMITER + "' " +
-                        "optionally enclosed by '"  + Format.ENCLOSING + "' " +
+                        "optionally enclosed by '"  + Format.ENCLOSING_TAG + "' " +
                         "lines terminated by '\n' " +
                         convertToBlob(icdbTable);
 

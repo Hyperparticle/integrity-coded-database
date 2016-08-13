@@ -20,8 +20,11 @@ public class ConvertDBCommand {
     @Parameter(names = { "--skip-schema" }, description = "If set, the schema conversion step will be skipped")
     public Boolean skipSchema = false;
 
+    @Parameter(names = { "--skip-export" }, description = "If set, the data export step will be skipped")
+    public Boolean skipExport = false;
+
     @Parameter(names = { "--skip-data" }, description = "If set, the data conversion step will be skipped")
-    public Boolean skipData = false;
+    public Boolean skipConvert = false;
 
     @Parameter(names = { "--skip-load" }, description = "If set, the data loading step will be skipped")
     public Boolean skipLoad = false;

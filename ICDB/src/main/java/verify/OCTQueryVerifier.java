@@ -1,19 +1,24 @@
 package verify;
 
-import convert.DBConnection;
-import convert.Format;
+import io.DBConnection;
+import io.Format;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Cursor;
+import org.jooq.Field;
 import org.jooq.Record;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
- * <p>
- *      Executes an OCT query and verifies data integrity
- * </p>
- * Created on 7/16/2016
+ * Executes an OCT query and verifies data integrity.
  *
+ * Created on 7/16/2016
  * @author Dan Kondratyuk
  */
 public class OCTQueryVerifier extends QueryVerifier {
@@ -24,28 +29,41 @@ public class OCTQueryVerifier extends QueryVerifier {
         super(icdb, dbConfig);
     }
 
-    protected boolean verify(Cursor<Record> cursor) {
-        return cursor.stream().map(record -> {
-            final StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < record.size() - 2; i++) {
-                final Object value = record.get(i);
-                builder.append(value);
-            }
+    protected boolean verify(Stream<Record> records) {
+        List<CompletableFuture<Boolean>> futures = records
+                .map(record -> CompletableFuture.supplyAsync(() -> {
+                    final StringBuilder builder = new StringBuilder();
 
-            final long serial = (long) record.get(Format.SERIAL_COLUMN);
-            final byte[] signature = (byte[]) record.get(Format.SVC_COLUMN);
-            final String data = builder.toString();
+                    for (int i = 0; i < record.size() - 2; i++) {
+                        final Object value = record.get(i);
+                        builder.append(value);
+                    }
 
-            final boolean verified = verifyData(serial, signature, data);
+                    final long serial = (long) record.get(Format.SERIAL_COLUMN);
+                    final byte[] signature = (byte[]) record.get(Format.IC_COLUMN);
+                    final String data = builder.toString();
 
-            if (!verified) {
-                errorStatus.append("\n")
-                        .append(record.toString())
-                        .append("\n");
-            }
+                    final boolean verified = verifyData(serial, signature, data);
 
-            return verified;
-        }).allMatch(verified -> verified);
+                    if (!verified) {
+                        errorStatus.append("\n")
+                                .append(record.toString())
+                                .append("\n");
+                    }
+
+                    return verified;
+                }))
+                .collect(Collectors.toList());
+
+        // Asynchronously verify all signatures
+        return futures.stream()
+            .allMatch(f -> {
+                try {
+                    return f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
     }
 
     public String getError() {

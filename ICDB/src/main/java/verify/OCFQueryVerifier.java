@@ -1,11 +1,16 @@
 package verify;
 
-import convert.DBConnection;
+import io.DBConnection;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.Cursor;
 import org.jooq.Record;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -23,8 +28,8 @@ public class OCFQueryVerifier extends QueryVerifier {
         super(icdb, dbConfig);
     }
 
-    protected boolean verify(Cursor<Record> cursor) {
-        return cursor.stream().map(record -> {
+    protected boolean verify(Stream<Record> records) {
+        List<CompletableFuture<Boolean>> futures = records.map(record -> CompletableFuture.supplyAsync(() -> {
             final int dataSize = record.size() / 3;
             for (int i = 0; i < dataSize; i++) {
                 final long serial = (long) record.get(dataSize + 2*i + 1);
@@ -44,7 +49,18 @@ public class OCFQueryVerifier extends QueryVerifier {
             }
 
             return true;
-        }).allMatch(verified -> verified);
+        }))
+        .collect(Collectors.toList());
+
+        // Asynchronously verify all signatures
+        return futures.stream()
+            .allMatch(f -> {
+                try {
+                    return f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
     }
 
 }

@@ -1,7 +1,7 @@
 package parse;
 
-import cipher.CodeGen;
-import convert.DBConnection;
+import crypto.CodeGen;
+import io.DBConnection;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.statement.Statement;
@@ -11,11 +11,10 @@ import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jooq.Cursor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import verify.ICRL;
+import verify.serial.Icrl;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -40,11 +39,10 @@ public abstract class ICDBQuery {
     private String convertedQuery;  // The converted query, like the original, but with extra columns
     private String verifyQuery;     // A select query responsible for obtaining verification results
 
-    protected ICRL icrl = ICRL.getInstance();
+    protected Icrl icrl = Icrl.Companion.getIcrl();
 
     // Update the ICRL if this query was successful
     protected List<Long> serialsToBeRevoked = new ArrayList<>();
-    protected List<Long> serialsToBeAdded = new ArrayList<>();
 
     private boolean requiresUpdate;
 
@@ -103,21 +101,22 @@ public abstract class ICDBQuery {
     protected abstract Statement parseVerifyQuery(Update update);
 
     // TODO: This is a temporary workaround. A better solution would be to pass a context object around with the results.
+    protected Result<Record> deleteSelectResults;
     protected Result<Record> updateSelectResults;
 
-    /**
-     * Obtains data to verify the icdb query.
-     * Warning: verify() should be called before execute(), to properly verify data integrity.
-     * @param icdbCreate the context for executing queries
-     * @return a cursor into the requested data
-     */
-    public Cursor<Record> getVerifyData(DSLContext icdbCreate) {
-        if (requiresUpdate) {
-            updateSelectResults = icdbCreate.fetch(verifyQuery);
-        }
-
-        return icdbCreate.fetchLazy(verifyQuery);
-    }
+//    /**
+//     * Obtains data to verify the icdb query.
+//     * Warning: verify() should be called before execute(), to properly verify data integrity.
+//     * @param icdbCreate the context for executing queries
+//     * @return a cursor into the requested data
+//     */
+//    public Cursor<Record> getVerifyData(DSLContext icdbCreate) {
+//        if (requiresUpdate) {
+//            updateSelectResults = icdbCreate.fetch(verifyQuery);
+//        }
+//
+//        return icdbCreate.fetchLazy(verifyQuery);
+//    }
 
     /**
      * Execute the original query.
@@ -133,18 +132,13 @@ public abstract class ICDBQuery {
         logger.info("{}\n{}", convertedQuery, result);
 
         // Add all pending serials
-        if (!serialsToBeAdded.isEmpty()) {
-            serialsToBeAdded.forEach(serial -> icrl.add(serial));
-            serialsToBeAdded.clear();
-        }
+        icrl.commit();
 
         // Revoke all pending serials
         if (!serialsToBeRevoked.isEmpty()) {
             serialsToBeRevoked.forEach(serial -> icrl.revoke(serial));
             serialsToBeRevoked.clear();
         }
-
-
     }
 
     public String getConvertedQuery() {

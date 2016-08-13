@@ -7,8 +7,17 @@
     <groupId>edu.boisestate.cs</groupId>
     <artifactId>ICDB</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <developers>
+        <developer>
+            <name>Dan Kondratyuk</name>
+        </developer>
+    </developers>
 
     <properties>
+        <kotlin.version>1.0.3</kotlin.version>
+        <junit.version>4.12</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -17,7 +26,21 @@
 
         <plugins>
             <plugin>
-                <!-- Compiler Plugin -->
+                <!-- Maven Clean Plugin -->
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>auto-clean</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Maven Compiler Plugin -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
@@ -27,100 +50,55 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- Build an executable JAR -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>main.ICDBTool</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Builds a standalone JAR -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
+                <!-- Kotlin Maven Plugin -->
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>1.0.3</version>
+                <configuration/>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>test-compile</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <!-- Build a fat jar -->
+                <groupId>sg.enixsoft</groupId>
+                <artifactId>capsule-maven-plugin</artifactId>
+                <version>1.3.0</version>
                 <configuration>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                    <!-- Additional configuration. -->
+                    <appClass>main.ICDBTool</appClass>
+                    <type>fat</type>
+                    <execPluginConfig>root</execPluginConfig>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Execute jar from maven -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                    <mainClass>main.ICDBTool</mainClass>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--&lt;!&ndash; JOOQ Code Autogeneration Plugin &ndash;&gt;-->
-
-                <!--&lt;!&ndash; Specify the maven code generator plugin &ndash;&gt;-->
-                <!--<groupId>org.jooq</groupId>-->
-                <!--<artifactId>jooq-codegen-maven</artifactId>-->
-                <!--<version>3.8.2</version>-->
-
-                <!--&lt;!&ndash; The plugin should hook into the generate goal &ndash;&gt;-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>generate</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-
-                <!--&lt;!&ndash; Manage the plugin's dependency. &ndash;&gt;-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>postgresql</groupId>-->
-                        <!--<artifactId>postgresql</artifactId>-->
-                        <!--<version>8.4-702.jdbc4</version>-->
-                    <!--</dependency>-->
-                <!--</dependencies>-->
-
-                <!--&lt;!&ndash; Specify the plugin configuration.-->
-                     <!--The configuration format is the same as for the standalone code generator &ndash;&gt;-->
-                <!--<configuration>-->
-
-                    <!--&lt;!&ndash; JDBC connection parameters &ndash;&gt;-->
-                    <!--<jdbc>-->
-                        <!--<driver>org.postgresql.Driver</driver>-->
-                        <!--<url>jdbc:postgresql:postgres</url>-->
-                        <!--<user>postgres</user>-->
-                        <!--<password>test</password>-->
-                    <!--</jdbc>-->
-
-                    <!--&lt;!&ndash; Generator parameters &ndash;&gt;-->
-                    <!--<generator>-->
-                        <!--<database>-->
-                            <!--<name>org.jooq.util.postgres.PostgresDatabase</name>-->
-                            <!--<includes>.*</includes>-->
-                            <!--<excludes></excludes>-->
-                            <!--<inputSchema>public</inputSchema>-->
-                        <!--</database>-->
-                        <!--<target>-->
-                            <!--<packageName>org.jooq.util.maven.example</packageName>-->
-                            <!--<directory>target/generated-sources/jooq</directory>-->
-                        <!--</target>-->
-                    <!--</generator>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 
@@ -183,12 +161,17 @@
             <version>2.6.2</version>
         </dependency>
 
-        <!-- Performance Enhancements -->
+        <!-- Async Tools -->
         <dependency>
             <groupId>co.paralleluniverse</groupId>
             <artifactId>quasar-core</artifactId>
             <version>0.7.5</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>nl.komponents.kovenant</groupId>-->
+            <!--<artifactId>kovenant</artifactId>-->
+            <!--<version>3.3.0</version>-->
+        <!--</dependency>-->
 
         <!-- Testing & Debugging -->
         <dependency>
@@ -218,6 +201,20 @@
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
         </dependency>
+
+        <!-- Kotlin -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>1.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <profiles>

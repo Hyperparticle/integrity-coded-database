@@ -1,19 +1,22 @@
 package verify;
 
-import cipher.CodeGen;
+import crypto.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
-import convert.DBConnection;
+import io.DBConnection;
+import io.source.DBSource;
+import io.source.DataSource;
 import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
-import org.jooq.impl.DSL;
 import parse.ICDBQuery;
+import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -27,7 +30,7 @@ public abstract class QueryVerifier {
     private final DBConnection icdb;
     private final CodeGen codeGen;
 
-    private final ICRL icrl;
+    private final Icrl icrl = Icrl.Companion.getIcrl();
 
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();
@@ -38,8 +41,7 @@ public abstract class QueryVerifier {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
 
-        this.icdbCreate = DSL.using(icdb.getConnection(), SQLDialect.MYSQL);
-        this.icrl = ICRL.getInstance();
+        this.icdbCreate = icdb.getCreate();
     }
 
     /**
@@ -50,11 +52,12 @@ public abstract class QueryVerifier {
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
         logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
-        Cursor<Record> cursor = icdbQuery.getVerifyData(icdbCreate);
-        boolean verified = verify(cursor);
+
+        Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), DataSource.Fetch.LAZY);
+        boolean verified = verify(records);
+        records.close();
 
         logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
-        cursor.close();
 
         return verified;
     }
@@ -71,7 +74,7 @@ public abstract class QueryVerifier {
      * Executes and verifies a given query given a cursor into the data records
      * @return true if the query is verified
      */
-    protected abstract boolean verify(Cursor<Record> cursor);
+    protected abstract boolean verify(Stream<Record> records);
 
     /**
      * Verifies data and serial number by regenerating the signature

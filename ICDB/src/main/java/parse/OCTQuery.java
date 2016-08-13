@@ -1,11 +1,11 @@
 package parse;
 
-import cipher.CodeGen;
-import cipher.signature.Convert;
+import crypto.CodeGen;
+import crypto.Convert;
 import com.google.common.base.Charsets;
-import convert.DBConnection;
-import convert.DataConverter;
-import convert.Format;
+import io.DBConnection;
+import io.DataConverter;
+import io.Format;
 import net.sf.jsqlparser.expression.DoubleValue;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.HexValue;
@@ -103,7 +103,16 @@ public class OCTQuery extends ICDBQuery {
 
     @Override
     protected Statement parseVerifyQuery(Delete delete) {
-        return null; // Delete does not require any verification
+        // We verify delete so that we can revoke all deleted serial numbers
+        Table table = delete.getTable();
+
+        Select select = SelectUtils.buildSelectFromTableAndSelectItems(table, new AllColumns());
+
+        // Apply the where clause to the SELECT
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        plainSelect.setWhere(delete.getWhere());
+
+        return select;
     }
 
     ////////////
@@ -187,9 +196,6 @@ public class OCTQuery extends ICDBQuery {
         // Add serial number to expression list
         Long serial = converter.getSerial();
         expressions.add(new DoubleValue(serial.toString()));
-
-        // Add this serial to be added to the ICRL upon successful execution
-        serialsToBeAdded.add(serial);
     }
 
 }
