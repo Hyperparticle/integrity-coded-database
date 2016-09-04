@@ -1,7 +1,9 @@
 package parse;
 
+import com.google.common.base.Stopwatch;
 import crypto.CodeGen;
 import io.DBConnection;
+import main.ICDBTool;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.statement.Statement;
@@ -57,8 +59,10 @@ public abstract class ICDBQuery {
         this.codeGen = codeGen;
 
         // Obtain ICDB queries
+        Stopwatch queryConversionTime = Stopwatch.createStarted();
         this.verifyQuery = parse(originalQuery, QueryType.VERIFY);
         this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
+        logger.debug("Query conversion time: {}", queryConversionTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
     private String parse(String query, QueryType queryType) {
