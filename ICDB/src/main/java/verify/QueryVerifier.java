@@ -60,9 +60,10 @@ public abstract class QueryVerifier {
 
         Stopwatch queryFetchTime = Stopwatch.createStarted();
         Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), fetch);
-        logger.debug("Query fetch time: {}", queryFetchTime.elapsed(ICDBTool.TIME_UNIT));
 
+        logger.debug("Query fetch time: {}", queryFetchTime.elapsed(ICDBTool.TIME_UNIT));
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
+
         boolean verified = verify(records);
         records.close();
 

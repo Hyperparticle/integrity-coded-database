@@ -24,7 +24,7 @@ public class ExecuteQueryCommand extends ConfigCommand {
     @Parameter(names = { "-C", "--convert" }, description = "Convert the query before executing")
     public Boolean convert = false;
 
-    @Parameter(names = { "-t", "--threads" }, description = "The number of threads for parallel execution. If 1 is specified, no parallelization will occur. (default 1)")
-    public Integer threads = 1;
+    @Parameter(names = { "-t", "--threads" }, description = "The number of worker threads for verification. An argument of 0 will use the JVM default configuration, which usually results in the best parallel performance. (Default: 0)")
+    public Integer threads = 0;
 
 }
