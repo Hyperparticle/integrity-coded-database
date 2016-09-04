@@ -35,11 +35,16 @@ public abstract class QueryVerifier {
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();
 
+    protected final int threads;
+    private final DataSource.Fetch fetch;
+
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(DBConnection icdb, UserConfig dbConfig) {
+    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
+        this.threads = threads;
+        fetch = threads <= 1 ? DataSource.Fetch.EAGER : DataSource.Fetch.LAZY;
 
         this.icdbCreate = icdb.getCreate();
     }
@@ -49,15 +54,20 @@ public abstract class QueryVerifier {
      * @return true if the query is verified
      */
     public boolean verify(ICDBQuery icdbQuery) {
-        Stopwatch queryVerificationTime = Stopwatch.createStarted();
+        Stopwatch totalQueryVerificationTime = Stopwatch.createStarted();
 
         logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
 
-        Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), DataSource.Fetch.LAZY);
+        Stopwatch queryFetchTime = Stopwatch.createStarted();
+        Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), fetch);
+        logger.debug("Query fetch time: {}", queryFetchTime.elapsed(ICDBTool.TIME_UNIT));
+
+        Stopwatch queryVerificationTime = Stopwatch.createStarted();
         boolean verified = verify(records);
         records.close();
 
-        logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Total query verification time: {}", totalQueryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
 
         return verified;
     }

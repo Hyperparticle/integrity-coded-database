@@ -21,13 +21,10 @@ public class ExecuteQueryCommand extends ConfigCommand {
     @Parameter(names = { "-q", "--query" }, description = "Execute a query as an argument")
     public String query;
 
-//    @Parameter(names = { "-f", "--file" }, description = "Execute all queries in one or more files")
-//    public List<String> files;
-
-    @Parameter(names = { "--convert" }, description = "Convert the query before executing")
+    @Parameter(names = { "-C", "--convert" }, description = "Convert the query before executing")
     public Boolean convert = false;
 
-//    @Parameter(names = { "--skip-verify" }, description = "Skip the data verification stage after query execution")
-//    public Boolean skipVerify = false;
+    @Parameter(names = { "-t", "--threads" }, description = "The number of threads for parallel execution. If 1 is specified, no parallelization will occur. (default 1)")
+    public Integer threads = 1;
 
 }

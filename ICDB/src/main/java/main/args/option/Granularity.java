@@ -24,8 +24,8 @@ public enum Granularity {
         }
 
         @Override
-        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig) {
-            return new OCTQueryVerifier(icdb, dbConfig);
+        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
+            return new OCTQueryVerifier(icdb, dbConfig, threads);
         }
     },
     FIELD {
@@ -35,11 +35,11 @@ public enum Granularity {
         }
 
         @Override
-        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig) {
-            return new OCFQueryVerifier(icdb, dbConfig);
+        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
+            return new OCFQueryVerifier(icdb, dbConfig, threads);
         }
     };
 
     public abstract ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen);
-    public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig);
+    public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads);
 }

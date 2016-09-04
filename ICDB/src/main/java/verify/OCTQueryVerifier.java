@@ -25,8 +25,8 @@ public class OCTQueryVerifier extends QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig) {
-        super(icdb, dbConfig);
+    public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
+        super(icdb, dbConfig, threads);
     }
 
     protected boolean verify(Stream<Record> records) {

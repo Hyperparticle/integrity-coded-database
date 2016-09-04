@@ -24,8 +24,8 @@ public class OCFQueryVerifier extends QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public OCFQueryVerifier(DBConnection icdb, UserConfig dbConfig) {
-        super(icdb, dbConfig);
+    public OCFQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
+        super(icdb, dbConfig, threads);
     }
 
     protected boolean verify(Stream<Record> records) {
