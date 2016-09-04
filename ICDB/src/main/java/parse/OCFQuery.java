@@ -17,6 +17,8 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.TablesNamesFinder;
+import stats.RunStatistics;
+import stats.Statistics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +34,8 @@ import java.util.stream.Collectors;
  */
 public class OCFQuery extends ICDBQuery {
 
-    public OCFQuery(String query, DBConnection icdb, CodeGen codeGen) {
-        super(query, icdb, codeGen);
+    public OCFQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics) {
+        super(query, icdb, codeGen, statistics);
     }
 
     ////////////

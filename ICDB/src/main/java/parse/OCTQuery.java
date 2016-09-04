@@ -25,6 +25,9 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.SelectUtils;
 import org.jooq.tools.StringUtils;
+import org.jooq.util.mysql.information_schema.tables.Statistics;
+import stats.RunStatistics;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,8 +40,8 @@ import java.util.stream.Collectors;
  */
 public class OCTQuery extends ICDBQuery {
 
-    public OCTQuery(String query, DBConnection icdb, CodeGen codeGen) {
-        super(query, icdb, codeGen);
+    public OCTQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics) {
+        super(query, icdb, codeGen, statistics);
     }
 
     ////////////

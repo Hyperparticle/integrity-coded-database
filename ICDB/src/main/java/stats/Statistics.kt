@@ -14,7 +14,7 @@ import java.util.*
  * Created on 9/4/2016
  * @author Dan Kondratyuk
  */
-class Statistics(val outputFile: File) {
+class Statistics(private val metadata: StatisticsMetadata, private val outputFile: File) {
 
     // The runs are collected in a list
     private val runs = ArrayList<RunStatistics>()
@@ -31,24 +31,26 @@ class Statistics(val outputFile: File) {
      */
     fun outputRuns() {
         try {
-            outputFile.mkdirs()
+            outputFile.parentFile.mkdirs()
 
             val writer = FileWriter(outputFile)
             val csvWriter = CsvListWriter(writer, CsvPreference.STANDARD_PREFERENCE)
 
-            // Output the headings
+            // Output metadata
             csvWriter.write(listOf(
-                "Algorithm", "Granularity", "Schema Name", "DB Query", "Fetch Type", "Threads",      // Metadata
-                "Query Fetch Size", "Query Conversion Time", "Data Fetch Time", "Verification Time"  // Data
+                "Algorithm", "Granularity", "Schema Name", "DB Query", "Fetch Type", "Threads", "Date"
             ))
+            csvWriter.write(metadata.list())
 
-            // Output the data
+            // Output data
+            csvWriter.write(listOf("Query Fetch Size", "Query Conversion Time", "Data Fetch Time", "Verification Time"))
             runs.forEach { csvWriter.write(it.list()) }
 
             csvWriter.close()
             writer.close()
         } catch (e: IOException) {
             logger.error("Failed to output to file: ", e.message)
+            e.printStackTrace()
         }
     }
 

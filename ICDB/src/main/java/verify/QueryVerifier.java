@@ -13,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import parse.ICDBQuery;
+import stats.RunStatistics;
+import stats.Statistics;
 import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
@@ -37,14 +39,16 @@ public abstract class QueryVerifier {
 
     protected final int threads;
     private final DataSource.Fetch fetch;
+    protected final RunStatistics statistics;
 
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch) {
+    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
         this.threads = threads;
         this.fetch = fetch;
+        this.statistics = statistics;
 
         this.icdbCreate = icdb.getCreate();
     }
@@ -63,13 +67,15 @@ public abstract class QueryVerifier {
         Stopwatch queryFetchTime = Stopwatch.createStarted();
         Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), fetch);
 
-        logger.debug("Query fetch time: {}", queryFetchTime.elapsed(ICDBTool.TIME_UNIT));
+        statistics.setDataFetchTime(queryFetchTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Data fetch time: {}", statistics.getDataFetchTime());
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
         boolean verified = verify(records);
         records.close();
 
-        logger.debug("Query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
+        statistics.setVerificationTime(queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Data verification time: {}", statistics.getVerificationTime());
         logger.debug("Total query verification time: {}", totalQueryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
 
         return verified;

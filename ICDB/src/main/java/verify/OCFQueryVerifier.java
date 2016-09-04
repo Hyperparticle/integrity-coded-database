@@ -6,6 +6,7 @@ import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Record;
+import stats.RunStatistics;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,8 +26,8 @@ public class OCFQueryVerifier extends QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public OCFQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch) {
-        super(icdb, dbConfig, threads, fetch);
+    public OCFQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+        super(icdb, dbConfig, threads, fetch, statistics);
     }
 
     protected boolean verify(Stream<Record> records) {

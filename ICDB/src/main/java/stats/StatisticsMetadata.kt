@@ -3,6 +3,8 @@ package stats
 import crypto.AlgorithmType
 import io.source.DataSource
 import main.args.option.Granularity
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Metadata specified on run initialization
@@ -17,4 +19,15 @@ data class StatisticsMetadata(
     val dbQuery: String,
     val fetchType: DataSource.Fetch,
     val threads: Int
-)
+) {
+    private val date: String
+        get() {
+            val df = SimpleDateFormat("dd/MM/yy HH:mm:ss")
+            val calendar = Calendar.getInstance()
+            return df.format(calendar.time)
+        }
+
+    fun list(): List<String> = listOf(
+        algorithm.toString(), granularity.toString(), schemaName, dbQuery, fetchType.toString(), threads.toString(), date
+    )
+}

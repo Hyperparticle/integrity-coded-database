@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
+import stats.RunStatistics;
+import stats.Statistics;
 import verify.serial.Icrl;
 
 import java.io.Reader;
@@ -53,7 +55,7 @@ public abstract class ICDBQuery {
     /**
      * Converts a given plain SQL statement into an ICDB statement
      */
-    public ICDBQuery(String query, DBConnection icdb, CodeGen codeGen) {
+    public ICDBQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics) {
         this.originalQuery = query;
         this.icdb = icdb;
         this.codeGen = codeGen;
@@ -62,7 +64,9 @@ public abstract class ICDBQuery {
         Stopwatch queryConversionTime = Stopwatch.createStarted();
         this.verifyQuery = parse(originalQuery, QueryType.VERIFY);
         this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
-        logger.debug("Query conversion time: {}", queryConversionTime.elapsed(ICDBTool.TIME_UNIT));
+
+        statistics.setQueryConversionTime(queryConversionTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Query conversion time: {}", statistics.getQueryConversionTime());
     }
 
     private String parse(String query, QueryType queryType) {

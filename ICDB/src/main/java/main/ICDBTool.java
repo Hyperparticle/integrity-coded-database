@@ -1,15 +1,17 @@
 package main;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import io.source.DBSource;
+import crypto.AlgorithmType;
+import io.Format;
 import io.source.DataSource;
 import main.args.*;
 import main.args.config.UserConfig;
+import main.args.option.Granularity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,8 +21,10 @@ import io.DBConnection;
 import io.DBConverter;
 import io.SchemaConverter;
 import main.args.config.ConfigArgs;
-import org.jooq.Record;
 import parse.ICDBQuery;
+import stats.RunStatistics;
+import stats.Statistics;
+import stats.StatisticsMetadata;
 import verify.QueryVerifier;
 
 /**
@@ -94,7 +98,7 @@ public class ICDBTool {
         DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
 
         convertQueryCmd.queries.forEach(query -> {
-            ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen);
+            ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen, new RunStatistics());
 
             logger.info("Verify query:");
             logger.info(icdbQuery.getVerifyQuery());
@@ -109,29 +113,21 @@ public class ICDBTool {
      */
     private static void executeQuery(CommandLineArgs cmd, UserConfig dbConfig) {
         final ExecuteQueryCommand executeQueryCommand = cmd.executeQueryCommand;
-        final String icdbSchema = dbConfig.icdbSchema;
 
-        DBConnection icdb = DBConnection.connect(icdbSchema, dbConfig);
-
-        String query = executeQueryCommand.query;
-        ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen);
-
-        logger.info("Original Query: {}", query);
-
-        QueryVerifier verifier = dbConfig.granularity.getVerifier(
-            icdb, dbConfig, executeQueryCommand.threads, executeQueryCommand.fetch
+        StatisticsMetadata metadata = new StatisticsMetadata(
+                dbConfig.codeGen.getAlgorithm(), dbConfig.granularity, dbConfig.icdbSchema, executeQueryCommand.query,
+                executeQueryCommand.fetch, executeQueryCommand.threads
         );
 
-        if (!icdbQuery.needsVerification()) {
-            verifier.execute(icdbQuery);
-        } else if (verifier.verify(icdbQuery)) {
-            logger.info("Query verified");
-            verifier.execute(icdbQuery);
-        } else {
-            logger.info(icdbQuery.getVerifyQuery());
-            logger.info("Query failed to verify");
-            logger.error(verifier.getError());
-        }
+        Statistics statistics = new Statistics(metadata, new File("./src/main/resources/statistics/data.csv"));
+        RunStatistics run = new RunStatistics();
+        statistics.addRun(run);
+
+        executeQueryRun(
+            executeQueryCommand.query, executeQueryCommand.fetch, executeQueryCommand.threads, dbConfig, run
+        );
+
+        statistics.outputRuns();
     }
 
     /**
@@ -139,20 +135,71 @@ public class ICDBTool {
      */
     private static void benchmark(CommandLineArgs cmd, UserConfig dbConfig) {
         final BenchmarkCommand benchmarkCommand = cmd.benchmarkCommand;
-        final String dbSchema = benchmarkCommand.schemaName != null ? benchmarkCommand.schemaName : dbConfig.icdbSchema;
+//        final String dbSchema = benchmarkCommand.schemaName != null ? benchmarkCommand.schemaName : dbConfig.icdbSchema;
+        final String dbSchema = dbConfig.icdbSchema;
 
-        DBConnection db = DBConnection.connect(dbSchema, dbConfig);
         String query = benchmarkCommand.query;
 
+//        Arrays.stream(AlgorithmType.values()).forEach(algorithm -> {
+//            logger.info("Using Algorithm: {}", algorithm);
+//            dbConfig.setAlgorithm(algorithm);
+//
+//            Arrays.stream(Granularity.values()).forEach(granularity -> {
+//                logger.info("Using Granularity: {}", granularity);
+//                dbConfig.setGranularity(granularity);
+//
+//                });
+//            });
+
+        final AlgorithmType algorithm = dbConfig.codeGen.getAlgorithm();
+        final Granularity granularity = dbConfig.granularity;
+
+        Statistics statistics = new Statistics(
+            new StatisticsMetadata(
+                algorithm, granularity, dbSchema, query, benchmarkCommand.fetch, benchmarkCommand.threads
+            ),
+            new File("./src/main/resources/statistics/" + algorithm + "-" + granularity + "-data.csv")
+        );
+
+        final int[] sizes = { 125_000, 250_000, 500_000, 1_000_000, 1_500_000, 2_000_000 };
+
         // Run through the following fetch sizes
-        IntStream.of(500000, 1000000, 1500000, 2000000)
-            .forEach(i -> {
-                Stopwatch executionTime = Stopwatch.createStarted();
-                String limitQuery = query + " limit " + i;
-                db.getCreate().fetch(limitQuery);
-                logger.debug("LIMIT {}:", i);
-                logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
-            });
+        IntStream.of(sizes).forEach(i -> {
+            RunStatistics run = new RunStatistics();
+            statistics.addRun(run);
+
+            Stopwatch executionTime = Stopwatch.createStarted();
+
+            String limitQuery = query + " limit " + i;
+            executeQueryRun(limitQuery, benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, run);
+
+            logger.debug("LIMIT {}:", i);
+            logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+        });
+
+        statistics.outputRuns();
+    }
+
+    /**
+     * Executes a query
+     */
+    private static void executeQueryRun(String query, DataSource.Fetch fetch, int threads, UserConfig dbConfig, RunStatistics run) {
+        DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
+        ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen, run);
+
+        logger.info("Original Query: {}", query);
+
+        QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig, threads, fetch, run);
+
+        if (!icdbQuery.needsVerification()) {
+            verifier.execute(icdbQuery);
+        } else if (verifier.verify(icdbQuery)) {
+            logger.info("Query verified");
+        } else {
+            logger.info(icdbQuery.getVerifyQuery());
+            logger.info("Query failed to verify");
+            logger.error(verifier.getError());
+        }
     }
 
 	static {

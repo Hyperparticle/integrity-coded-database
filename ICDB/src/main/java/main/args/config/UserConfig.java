@@ -45,7 +45,7 @@ public class UserConfig {
     public final String password;
     public final String schema;
     public final String icdbSchema;
-    public final Granularity granularity;
+    public Granularity granularity;
     public final CodeGen codeGen;
 
     public UserConfig(ConfigArgs configArgs) {
@@ -60,5 +60,13 @@ public class UserConfig {
         final Key key = new Key(configArgs.macKey, configArgs.rsaKeyFile);
         final AlgorithmType algorithm = configArgs.algorithm;
         codeGen = new CodeGen(algorithm, key);
+    }
+
+    public void setAlgorithm(AlgorithmType algorithm) {
+        this.codeGen.setAlgorithm(algorithm);
+    }
+
+    public void setGranularity(Granularity granularity) {
+        this.granularity = granularity;
     }
 }
