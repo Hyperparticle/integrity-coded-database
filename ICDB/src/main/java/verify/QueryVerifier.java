@@ -40,11 +40,11 @@ public abstract class QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
+    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch) {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
         this.threads = threads;
-        fetch = threads <= 1 ? DataSource.Fetch.EAGER : DataSource.Fetch.LAZY;
+        this.fetch = fetch;
 
         this.icdbCreate = icdb.getCreate();
     }
@@ -54,6 +54,8 @@ public abstract class QueryVerifier {
      * @return true if the query is verified
      */
     public boolean verify(ICDBQuery icdbQuery) {
+        logger.debug("Using fetch type: {}", fetch);
+
         Stopwatch totalQueryVerificationTime = Stopwatch.createStarted();
 
         logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());

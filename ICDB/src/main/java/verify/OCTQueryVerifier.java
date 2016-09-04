@@ -2,6 +2,7 @@ package verify;
 
 import io.DBConnection;
 import io.Format;
+import io.source.DataSource;
 import main.args.config.UserConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,8 +27,8 @@ public class OCTQueryVerifier extends QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads) {
-        super(icdb, dbConfig, threads);
+    public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch) {
+        super(icdb, dbConfig, threads, fetch);
     }
 
     protected boolean verify(Stream<Record> records) {
