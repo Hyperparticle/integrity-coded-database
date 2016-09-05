@@ -8,12 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Record;
 import stats.RunStatistics;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
  * <p>
  *      Executes an OCF query and verifies data integrity
@@ -30,39 +24,27 @@ public class OCFQueryVerifier extends QueryVerifier {
         super(icdb, dbConfig, threads, fetch, statistics);
     }
 
-    protected boolean verify(Stream<Record> records) {
-        List<CompletableFuture<Boolean>> futures = records.map(record -> CompletableFuture.supplyAsync(() -> {
-            final int dataSize = record.size() / 3;
-            for (int i = 0; i < dataSize; i++) {
-                final long serial = (long) record.get(dataSize + 2*i + 1);
-                final byte[] signature = (byte[]) record.get(dataSize + 2*i);
-                final String data = record.get(i).toString();
+    @Override
+    protected boolean verifyRecord(Record record) {
+        final int dataSize = record.size() / 3;
+        for (int i = 0; i < dataSize; i++) {
+            final long serial = (long) record.get(dataSize + 2*i + 1);
+            final byte[] signature = (byte[]) record.get(dataSize + 2*i);
+            final String data = record.get(i).toString();
 
-                final boolean verified = verifyData(serial, signature, data);
+            final boolean verified = verifyData(serial, signature, data);
 
-                if (!verified) {
-                    errorStatus.append("\n")
-                            .append(record.field(i))
-                            .append(" : ")
-                            .append(record.get(i))
-                            .append("\n");
-                    return false;
-                }
+            if (!verified) {
+                errorStatus.append("\n")
+                        .append(record.field(i))
+                        .append(" : ")
+                        .append(record.get(i))
+                        .append("\n");
+                return false;
             }
+        }
 
-            return true;
-        }))
-        .collect(Collectors.toList());
-
-        // Asynchronously verify all signatures
-        return futures.stream()
-            .allMatch(f -> {
-                try {
-                    return f.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        return true;
     }
 
 }

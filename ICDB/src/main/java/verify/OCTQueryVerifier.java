@@ -4,19 +4,8 @@ import io.DBConnection;
 import io.Format;
 import io.source.DataSource;
 import main.args.config.UserConfig;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jooq.Cursor;
-import org.jooq.Field;
 import org.jooq.Record;
 import stats.RunStatistics;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Executes an OCT query and verifies data integrity.
@@ -26,42 +15,16 @@ import java.util.stream.Stream;
  */
 public class OCTQueryVerifier extends QueryVerifier {
 
-    private long verifyCount = 0;
-
-    private static final Logger logger = LogManager.getLogger();
-
     public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
         super(icdb, dbConfig, threads, fetch, statistics);
-    }
-
-    protected boolean verify(Stream<Record> records) {
-        final ForkJoinPool threadPool = threads < 1 ? new ForkJoinPool() : new ForkJoinPool(threads);
-
-        logger.debug("Using {} thread(s)", threadPool.getParallelism());
-        verifyCount = 0;
-
-        List<CompletableFuture<Boolean>> futures = records
-                .map(record -> CompletableFuture.supplyAsync(() -> verify(record), threadPool))
-                .collect(Collectors.toList());
-
-        // Asynchronously verify all signatures
-        return futures.stream()
-            .allMatch(f -> {
-                try {
-                    return f.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            });
     }
 
     public String getError() {
         return errorStatus.toString();
     }
 
-    private boolean verify(Record record) {
-        statistics.setQueryFetchSize(++verifyCount);
-
+    @Override
+    protected boolean verifyRecord(Record record) {
         final StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < record.size() - 2; i++) {

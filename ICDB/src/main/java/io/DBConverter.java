@@ -128,6 +128,8 @@ public class DBConverter {
     private void exportData() throws IOException {
         Stopwatch dataExportTime = Stopwatch.createStarted();
 
+        dataPath.toFile().mkdirs();
+
         FileUtils.cleanDirectory(dataPath.toFile());
 
         db.getTables().forEach(tableName -> {
@@ -154,6 +156,8 @@ public class DBConverter {
     }
 
     private void convertData() throws IOException {
+        convertedDataPath.toFile().mkdirs();
+
         FileUtils.cleanDirectory(convertedDataPath.toFile());
 
         FileConverter converter = new FileConverter(codeGen, granularity);

@@ -18,6 +18,11 @@ import stats.Statistics;
 import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -71,7 +76,7 @@ public abstract class QueryVerifier {
         logger.debug("Data fetch time: {}", statistics.getDataFetchTime());
         Stopwatch queryVerificationTime = Stopwatch.createStarted();
 
-        boolean verified = verify(records);
+        boolean verified = verifyRecords(records);
         records.close();
 
         statistics.setVerificationTime(queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
@@ -89,11 +94,34 @@ public abstract class QueryVerifier {
         logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
+
+    protected long verifyCount = 0;
     /**
      * Executes and verifies a given query given a cursor into the data records
      * @return true if the query is verified
      */
-    protected abstract boolean verify(Stream<Record> records);
+    private boolean verifyRecords(Stream<Record> records) {
+        final ForkJoinPool threadPool = threads < 1 ? new ForkJoinPool() : new ForkJoinPool(threads);
+
+        logger.debug("Using {} thread(s)", threadPool.getParallelism());
+        verifyCount = 0;
+
+        List<CompletableFuture<Boolean>> futures = records.map(record -> CompletableFuture.supplyAsync(() -> verifyRecord(record), threadPool))
+                .collect(Collectors.toList());
+
+        // Asynchronously verify all signatures
+        return futures.stream()
+            .allMatch(f -> {
+                try {
+                    statistics.setQueryFetchSize(++verifyCount);
+                    return f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+
+    protected abstract boolean verifyRecord(Record record);
 
     /**
      * Verifies data and serial number by regenerating the signature
