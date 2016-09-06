@@ -49,8 +49,7 @@ class Statistics(private val metadata: StatisticsMetadata, private val outputFil
             csvWriter.close()
             writer.close()
         } catch (e: IOException) {
-            logger.error("Failed to output to file: ", e.message)
-            e.printStackTrace()
+            logger.error("Failed to output statistics to file: ", e.message)
         }
     }
 
