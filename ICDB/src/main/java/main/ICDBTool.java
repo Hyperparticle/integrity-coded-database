@@ -124,7 +124,7 @@ public class ICDBTool {
         statistics.addRun(run);
 
         executeQueryRun(
-            executeQueryCommand.query, executeQueryCommand.fetch, executeQueryCommand.threads, dbConfig, run
+            executeQueryCommand.query, executeQueryCommand.fetch, executeQueryCommand.threads, dbConfig, run, true
         );
 
         statistics.outputRuns();
@@ -171,7 +171,7 @@ public class ICDBTool {
             Stopwatch executionTime = Stopwatch.createStarted();
 
             String limitQuery = query + " limit " + i;
-            executeQueryRun(limitQuery, benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, run);
+            executeQueryRun(limitQuery, benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, run, false);
 
             logger.debug("LIMIT {}:", i);
             logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
@@ -183,7 +183,7 @@ public class ICDBTool {
     /**
      * Executes a query
      */
-    private static void executeQueryRun(String query, DataSource.Fetch fetch, int threads, UserConfig dbConfig, RunStatistics run) {
+    private static void executeQueryRun(String query, DataSource.Fetch fetch, int threads, UserConfig dbConfig, RunStatistics run, boolean execute) {
         DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
         ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen, run);
 
@@ -192,9 +192,10 @@ public class ICDBTool {
         QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig, threads, fetch, run);
 
         if (!icdbQuery.needsVerification()) {
-            verifier.execute(icdbQuery);
+            if (execute) { verifier.execute(icdbQuery); }
         } else if (verifier.verify(icdbQuery)) {
             logger.info("Query verified");
+            if (execute) { verifier.execute(icdbQuery); }
         } else {
             logger.info(icdbQuery.getVerifyQuery());
             logger.info("Query failed to verify");
