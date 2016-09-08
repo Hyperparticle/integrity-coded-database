@@ -61,3 +61,4 @@ fabric.properties
 /ICDB/tmp
 icrl.db
 icrl.ser
+ICDB/src/main/resources/statistics/*.csv

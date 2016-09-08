@@ -31,10 +31,9 @@ public class DBSource implements DataSource {
         switch (strategy) {
             case EAGER: return icdb.getCreate()
                     .fetch(fetchQuery)
-                    .parallelStream();
+                    .stream();
             case LAZY: return icdb.getCreate()
-                    .fetchStream(fetchQuery)
-                    .parallel();
+                    .fetchStream(fetchQuery);
             default: return Stream.empty();
         }
     }

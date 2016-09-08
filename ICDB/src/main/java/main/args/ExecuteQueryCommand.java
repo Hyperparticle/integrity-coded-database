@@ -2,6 +2,7 @@ package main.args;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import io.source.DataSource;
 import main.args.option.Granularity;
 import main.args.option.GranularityConverter;
 
@@ -21,13 +22,13 @@ public class ExecuteQueryCommand extends ConfigCommand {
     @Parameter(names = { "-q", "--query" }, description = "Execute a query as an argument")
     public String query;
 
-//    @Parameter(names = { "-f", "--file" }, description = "Execute all queries in one or more files")
-//    public List<String> files;
-
-    @Parameter(names = { "--convert" }, description = "Convert the query before executing")
+    @Parameter(names = { "-C", "--convert" }, description = "Convert the query before executing")
     public Boolean convert = false;
 
-//    @Parameter(names = { "--skip-verify" }, description = "Skip the data verification stage after query execution")
-//    public Boolean skipVerify = false;
+    @Parameter(names = { "-f", "--fetch" }, description = "Use eager or lazy fetching. (Default: LAZY)")
+    public DataSource.Fetch fetch = DataSource.Fetch.LAZY;
+
+    @Parameter(names = { "-t", "--threads" }, description = "The number of worker threads for verification. An argument of 0 will use the JVM default configuration, which usually results in the best parallel performance. (Default: 0)")
+    public Integer threads = 0;
 
 }

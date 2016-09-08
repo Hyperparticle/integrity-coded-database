@@ -1,7 +1,9 @@
 package parse;
 
+import com.google.common.base.Stopwatch;
 import crypto.CodeGen;
 import io.DBConnection;
+import main.ICDBTool;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.statement.Statement;
@@ -14,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
+import stats.RunStatistics;
+import stats.Statistics;
 import verify.serial.Icrl;
 
 import java.io.Reader;
@@ -58,14 +62,18 @@ public abstract class ICDBQuery {
     /**
      * Converts a given plain SQL statement into an ICDB statement
      */
-    public ICDBQuery(String query, DBConnection icdb, CodeGen codeGen) {
+    public ICDBQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics) {
         this.originalQuery = query;
         this.icdb = icdb;
         this.codeGen = codeGen;
 
         // Obtain ICDB queries
+        Stopwatch queryConversionTime = Stopwatch.createStarted();
         this.verifyQuery = parse(originalQuery, QueryType.VERIFY);
         this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
+
+        statistics.setQueryConversionTime(queryConversionTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Query conversion time: {}", statistics.getQueryConversionTime());
     }
 
     private String parse(String query, QueryType queryType) {

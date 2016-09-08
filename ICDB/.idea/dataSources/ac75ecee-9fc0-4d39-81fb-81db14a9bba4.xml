@@ -1,0 +1,16 @@
+<dataSource name="Sqlite (Xerial)">
+  <database-model serializer="dbm" rdbms="SQLITE" format-version="2.6">
+    <schema id="1">
+      <visible>1</visible>
+    </schema>
+    <table id="2" parent="1" name="serials" />
+    <column id="3" parent="2" name="serial">
+      <mandatory>1</mandatory>
+      <data-type>BIGINT(0,-1)|4</data-type>
+    </column>
+    <key id="4" parent="2">
+      <columns>serial</columns>
+      <primary>1</primary>
+    </key>
+  </database-model>
+</dataSource>

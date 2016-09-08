@@ -13,11 +13,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.*;
 import parse.ICDBQuery;
+import stats.RunStatistics;
+import stats.Statistics;
 import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -41,12 +48,18 @@ public abstract class QueryVerifier {
     public final Map<String, Integer> avgOperationCount=new ConcurrentHashMap<String, Integer>();
 
     protected final List<Integer> testTotal= new ArrayList<>();
+    protected final int threads;
+    private final DataSource.Fetch fetch;
+    protected final RunStatistics statistics;
 
     private static final Logger logger = LogManager.getLogger();
 
-    public QueryVerifier(DBConnection icdb, UserConfig dbConfig) {
+    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
         this.icdb = icdb;
         this.codeGen = dbConfig.codeGen;
+        this.threads = threads;
+        this.fetch = fetch;
+        this.statistics = statistics;
 
         this.icdbCreate = icdb.getCreate();
     }
@@ -56,17 +69,25 @@ public abstract class QueryVerifier {
      * @return true if the query is verified
      */
     public boolean verify(ICDBQuery icdbQuery) {
-        Stopwatch queryVerificationTime = Stopwatch.createStarted();
+        logger.debug("Using fetch type: {}", fetch);
+
+        Stopwatch totalQueryVerificationTime = Stopwatch.createStarted();
 
         logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
 
-        Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), DataSource.Fetch.LAZY);
-        boolean verified = verify(records,icdbQuery);
-       // System.out.print(columnComputedValue.get("salary"));
-        System.out.print(testTotal);
+        Stopwatch queryFetchTime = Stopwatch.createStarted();
+        Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), fetch);
+
+        statistics.setDataFetchTime(queryFetchTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Data fetch time: {}", statistics.getDataFetchTime());
+        Stopwatch queryVerificationTime = Stopwatch.createStarted();
+
+        boolean verified = verifyRecords(records,  icdbQuery);
         records.close();
 
-        logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
+        statistics.setVerificationTime(queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
+        logger.debug("Data verification time: {}", statistics.getVerificationTime());
+        logger.debug("Total query verification time: {}", totalQueryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
 
         return verified;
     }
@@ -92,11 +113,34 @@ public abstract class QueryVerifier {
         logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
+
+    protected long verifyCount = 0;
     /**
      * Executes and verifies a given query given a cursor into the data records
      * @return true if the query is verified
      */
-    protected abstract boolean verify(Stream<Record> records, ICDBQuery icdbQuery);
+    private boolean verifyRecords(Stream<Record> records, ICDBQuery icdbQuery) {
+        final ForkJoinPool threadPool = threads < 1 ? new ForkJoinPool() : new ForkJoinPool(threads);
+
+        logger.debug("Using {} thread(s)", threadPool.getParallelism());
+        verifyCount = 0;
+
+        List<CompletableFuture<Boolean>> futures = records.map(record -> CompletableFuture.supplyAsync(() -> verifyRecord(record, icdbQuery), threadPool))
+                .collect(Collectors.toList());
+
+        // Asynchronously verify all signatures
+        return futures.stream()
+            .allMatch(f -> {
+                try {
+                    statistics.setQueryFetchSize(++verifyCount);
+                    return f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+    }
+
+    protected abstract boolean verifyRecord(Record record, ICDBQuery icdbQuery);
 
     /**
      * Verifies data and serial number by regenerating the signature

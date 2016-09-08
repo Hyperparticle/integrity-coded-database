@@ -2,10 +2,14 @@ package main.args.option;
 
 import crypto.CodeGen;
 import io.DBConnection;
+import io.source.DataSource;
 import main.args.config.UserConfig;
 import parse.ICDBQuery;
 import parse.OCFQuery;
 import parse.OCTQuery;
+import stats.RunStatistics;
+import stats.Statistics;
+import stats.StatisticsMetadata;
 import verify.OCFQueryVerifier;
 import verify.OCTQueryVerifier;
 import verify.QueryVerifier;
@@ -19,27 +23,27 @@ import verify.QueryVerifier;
 public enum Granularity {
     TUPLE {
         @Override
-        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen) {
-            return new OCTQuery(query, icdb, codeGen);
+        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics) {
+            return new OCTQuery(query, icdb, codeGen, statistics);
         }
 
         @Override
-        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig) {
-            return new OCTQueryVerifier(icdb, dbConfig);
+        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+            return new OCTQueryVerifier(icdb, dbConfig, threads, fetch, statistics);
         }
     },
     FIELD {
         @Override
-        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen) {
-            return new OCFQuery(query, icdb, codeGen);
+        public ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics) {
+            return new OCFQuery(query, icdb, codeGen, statistics);
         }
 
         @Override
-        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig) {
-            return new OCFQueryVerifier(icdb, dbConfig);
+        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+            return new OCFQueryVerifier(icdb, dbConfig, threads, fetch, statistics);
         }
     };
 
-    public abstract ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen);
-    public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig);
+    public abstract ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics);
+    public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics);
 }
