@@ -6,10 +6,7 @@ import com.google.common.base.Charsets;
 import io.DBConnection;
 import io.DataConverter;
 import io.Format;
-import net.sf.jsqlparser.expression.DoubleValue;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.HexValue;
-import net.sf.jsqlparser.expression.StringValue;
+import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
@@ -18,10 +15,7 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.AllColumns;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SelectItem;
+import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.SelectUtils;
 import org.jooq.tools.StringUtils;
@@ -56,12 +50,38 @@ public class OCTQuery extends ICDBQuery {
     @Override
     protected Statement parseVerifyQuery(Select select) {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        List<SelectItem> selectItems = plainSelect.getSelectItems();
+
+//check for the aggregate query
+        List<String> aggregateFxnColumn=new ArrayList<>();
+
+        for (SelectItem item:selectItems) {
+            if (((SelectExpressionItem) item).getExpression() instanceof Function){
+                Function function=(Function) ((SelectExpressionItem) item).getExpression();
+                if (function!=null ){
+                    if (function.getParameters()!=null){
+                        isAggregateQuery=true;
+                        String columnname=function.getParameters().toString();
+
+                        if(!aggregateFxnColumn.contains(columnname.substring(1, columnname.length()-1)))
+                            aggregateFxnColumn.add(columnname.substring(1, columnname.length()-1));
+                        //map column name with operation for verification of aggregate function result
+                        columnOperation.put(function.getName()+columnname,function.getName());
+                    }else
+                        return select;
+                }
+            }
+        }
 
         List<SelectItem> selectList = new ArrayList<>();
         selectList.add(new AllColumns());
 
         // Convert query to a SELECT * to obtain all tuples
         plainSelect.setSelectItems(selectList);
+
+
+        // Join
+        // Sum, Count, Average, Min, Max
 
         return select;
     }

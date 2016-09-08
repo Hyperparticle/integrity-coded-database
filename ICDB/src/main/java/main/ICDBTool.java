@@ -123,8 +123,11 @@ public class ICDBTool {
         if (!icdbQuery.needsVerification()) {
             verifier.execute(icdbQuery);
         } else if (verifier.verify(icdbQuery)) {
+
             logger.info("Query verified");
             verifier.execute(icdbQuery);
+            logger.info("Query verified");
+
         } else {
             logger.info(icdbQuery.getVerifyQuery());
             logger.info("Query failed to verify");

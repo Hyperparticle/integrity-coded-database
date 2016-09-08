@@ -16,6 +16,8 @@ import parse.ICDBQuery;
 import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 /**
@@ -34,6 +36,11 @@ public abstract class QueryVerifier {
 
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();
+
+    public final Map<String, Double> columnComputedValue=new ConcurrentHashMap<String, Double>();
+    public final Map<String, Integer> avgOperationCount=new ConcurrentHashMap<String, Integer>();
+
+    protected final List<Integer> testTotal= new ArrayList<>();
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -54,7 +61,9 @@ public abstract class QueryVerifier {
         logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
 
         Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), DataSource.Fetch.LAZY);
-        boolean verified = verify(records);
+        boolean verified = verify(records,icdbQuery);
+       // System.out.print(columnComputedValue.get("salary"));
+        System.out.print(testTotal);
         records.close();
 
         logger.debug("Total query verification time: {}", queryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
@@ -65,7 +74,20 @@ public abstract class QueryVerifier {
     public void execute(ICDBQuery icdbQuery) {
         Stopwatch queryExecutionTime = Stopwatch.createStarted();
 
-        icdbQuery.execute(icdbCreate);
+        if (icdbQuery.isAggregateQuery) {
+            //compute aggregate average operation if any
+            if (avgOperationCount.size()!=0){
+                avgOperationCount.entrySet().forEach(entry-> {
+                    columnComputedValue.put(entry.getKey(),columnComputedValue.get(entry.getKey())/entry.getValue());
+                        }
+                );
+            }
+
+           if (icdbQuery.executeandmatch(icdbCreate,columnComputedValue)){
+            logger.info("aggregate operation matched");
+           }
+        }
+        else icdbQuery.execute(icdbCreate);
 
         logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
     }
@@ -74,7 +96,7 @@ public abstract class QueryVerifier {
      * Executes and verifies a given query given a cursor into the data records
      * @return true if the query is verified
      */
-    protected abstract boolean verify(Stream<Record> records);
+    protected abstract boolean verify(Stream<Record> records, ICDBQuery icdbQuery);
 
     /**
      * Verifies data and serial number by regenerating the signature
@@ -100,5 +122,74 @@ public abstract class QueryVerifier {
     public String getError() {
         return errorStatus.toString();
     }
+
+
+    protected void computeAggregateOperation(ICDBQuery icdbQuery,Record record){
+        icdbQuery.columnOperation.entrySet().forEach(entry -> {
+            String ColumnName=((String) entry.getKey()).substring(((String)entry.getKey()).indexOf("(") + 1, ((String)entry.getKey()).indexOf(")"));
+            if (entry.getValue().equalsIgnoreCase("SUM")){
+                operateSum(record,entry,ColumnName);
+            }else if (entry.getValue().equalsIgnoreCase("MAX")){
+                operateMax(record,entry,ColumnName);
+            }else if (entry.getValue().equalsIgnoreCase("MIN")){
+                operateMin(record,entry,ColumnName);
+            }else if (entry.getValue().equalsIgnoreCase("AVG")){
+                operateAvg(record,entry,ColumnName);
+            }
+        });
+    }
+
+    protected void operateSum(Record record, Map.Entry entry,String ColumnName){
+        if (columnComputedValue.get(entry.getKey())!=null){
+            Double oldValue=columnComputedValue.get(entry.getKey());
+            columnComputedValue.put((String)entry.getKey(),oldValue+ ((Integer)record.get(ColumnName)).doubleValue());
+        }else {
+            columnComputedValue.put((String)entry.getKey(), ((Integer)record.get(ColumnName)).doubleValue());
+        }
+    }
+
+    protected void operateMax(Record record, Map.Entry entry,String ColumnName){
+
+        if (columnComputedValue.get(entry.getKey())!=null){
+            Double oldValue=columnComputedValue.get((String)entry.getKey());
+            if (Double.parseDouble(record.get(ColumnName).toString()) > oldValue) {
+                columnComputedValue.put((String)entry.getKey(),((Integer)record.get(ColumnName)).doubleValue());
+            }
+
+        }else {
+            columnComputedValue.put((String)entry.getKey(), ((Integer)record.get(ColumnName)).doubleValue());
+        }
+    }
+
+    protected void operateMin(Record record, Map.Entry entry,String ColumnName){
+
+        if (columnComputedValue.get(entry.getKey())!=null){
+            Double oldValue=columnComputedValue.get((String)entry.getKey());
+            if (Double.parseDouble(record.get(ColumnName).toString()) < oldValue) {
+                columnComputedValue.put((String)entry.getKey(), ((Integer)record.get(ColumnName)).doubleValue());
+            }
+
+        }else {
+            columnComputedValue.put((String)entry.getKey(), ((Integer)record.get(ColumnName)).doubleValue());
+        }
+    }
+
+    protected void operateAvg(Record record, Map.Entry entry,String ColumnName){
+
+        if (columnComputedValue.get(entry.getKey())!=null){
+            Double oldValue=columnComputedValue.get((String)entry.getKey());
+            columnComputedValue.put((String)entry.getKey(), ((((Integer)record.get(ColumnName)).doubleValue())+oldValue));
+
+        }else {
+            columnComputedValue.put((String)entry.getKey(),  ((Integer)record.get(ColumnName)).doubleValue());
+        }
+        //count the total operation for avg calculation
+        if (avgOperationCount.get(entry.getKey())==null)
+            avgOperationCount.put((String)entry.getKey(),1);
+        else
+            avgOperationCount.put((String)entry.getKey(),avgOperationCount.get((String)entry.getKey())+1);
+    }
+
+
 
 }

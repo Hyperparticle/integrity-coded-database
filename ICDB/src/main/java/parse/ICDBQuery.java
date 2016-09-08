@@ -20,6 +20,11 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -44,6 +49,8 @@ public abstract class ICDBQuery {
     // Update the ICRL if this query was successful
     protected List<Long> serialsToBeRevoked = new ArrayList<>();
 
+    public Map<String, String> columnOperation = new ConcurrentHashMap<String, String>();
+    public boolean isAggregateQuery;
     private boolean requiresUpdate;
 
     private static final Logger logger = LogManager.getLogger();
@@ -139,6 +146,46 @@ public abstract class ICDBQuery {
             serialsToBeRevoked.forEach(serial -> icrl.revoke(serial));
             serialsToBeRevoked.clear();
         }
+    }
+
+    /**
+     * Aggregate Query
+     * Execute the original query and match with the computed data( if aggregate query).
+     * Warning: verify() should be called before execute(), to properly verify data integrity.
+     * @param icdbCreate the context for executing queries
+     */
+    public boolean executeandmatch(DSLContext icdbCreate, Map < String, Double > columnComputedValue) {
+        if (requiresUpdate) {
+            this.convertedQuery = parse(originalQuery, QueryType.CONVERT);
+        }
+        Result result=icdbCreate.fetch(convertedQuery);
+
+        Set set = columnComputedValue.entrySet();
+        Iterator iterator = set.iterator();
+        while(iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry)iterator.next();
+            logger.info(result.getValues(0));
+
+
+
+            if (Double.parseDouble(result.getValues((String) entry.getKey()).get(0).toString())!=(Double) (entry.getValue())){
+                return false;
+            }
+        }
+
+        String resultstr = result.toString();
+        logger.info("{}\n{}", convertedQuery, resultstr);
+
+        // Add all pending serials
+        icrl.commit();
+
+        // Revoke all pending serials
+        if (!serialsToBeRevoked.isEmpty()) {
+            serialsToBeRevoked.forEach(serial -> icrl.revoke(serial));
+            serialsToBeRevoked.clear();
+        }
+        return  true;
+
     }
 
     public String getConvertedQuery() {

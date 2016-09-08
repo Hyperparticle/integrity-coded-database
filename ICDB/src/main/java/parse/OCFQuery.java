@@ -17,6 +17,7 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.TablesNamesFinder;
+import org.jooq.Field;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,10 +54,47 @@ public class OCFQuery extends ICDBQuery {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         List<SelectItem> selectItems = plainSelect.getSelectItems();
 
-        // If SELECT *, the verify query is the same
-        if (selectItems.get(0) instanceof AllColumns) {
+        // If SELECT *, the verify query is the same, and if join with *, rearrange fields of both tables combined
+        if (selectItems.get(0) instanceof AllColumns ) {
+            if (plainSelect.getJoins()!=null){
+                selectItems.clear();
+
+                for (String table:tables) {
+                    List<String> Fields=icdb.getFields(table);
+                    int total=Fields.size();
+                    for (int i=0; i<total/3;i++) {
+                        selectItems.add(new SelectExpressionItem(new HexValue(Fields.get(i))));
+                    }
+                }
+            }
+            else
             return select;
+        }else {
+            //check if aggregate function in select items and replace with respective column name
+            List<SelectItem> aggregateFxnItem=new ArrayList<>();
+            List<String> aggregateFxnColumn=new ArrayList<>();
+            for (SelectItem item:selectItems) {
+                if (((SelectExpressionItem) item).getExpression() instanceof Function){
+                    Function function=(Function) ((SelectExpressionItem) item).getExpression();
+                    if (function!=null ){
+                        if (function.getParameters()!=null){
+                            isAggregateQuery=true;
+                        String columnname=function.getParameters().toString();
+
+                            if(!aggregateFxnColumn.contains(columnname.substring(1, columnname.length()-1)))
+                        aggregateFxnColumn.add(columnname.substring(1, columnname.length()-1));
+                            //map column name with operation for verification of aggregate function result
+                            columnOperation.put(function.getName()+columnname,function.getName());
+                        aggregateFxnItem.add(item);
+                        }else
+                            return select;
+                    }
+                }
+            }
+            addAggregateFunctionColumn(selectItems,aggregateFxnItem,aggregateFxnColumn);
+
         }
+
 
         addWhereColumn(selectItems, plainSelect.getWhere());
         tables.forEach(table -> addPrimaryKeyColumn(selectItems, table));
@@ -157,10 +195,31 @@ public class OCFQuery extends ICDBQuery {
                 boolean hasColumn = items.stream()
                     .anyMatch(item -> item.toString().equals(key));
 
+                //add key (along with tablename to remove ambiguity)
                 if (!hasColumn) {
-                    items.add(new SelectExpressionItem(new HexValue(key)));
+                    items.add(new SelectExpressionItem(new HexValue(table+"."+key)));
+                }else {
+                    List<SelectItem> existingKeyItems=new ArrayList<SelectItem>();
+                    for (SelectItem item:items) {
+                        if (item.toString().equals(key)){
+                            existingKeyItems.add(item);
+                        }
+                    }
+
+                    items.removeAll(existingKeyItems);
+                    items.add(0,new SelectExpressionItem(new HexValue(table+"."+key)));
                 }
             });
+
+    }
+
+    private void addAggregateFunctionColumn(List<SelectItem> items,List<SelectItem> aggregateFxnItem,List<String> aggregateFxnColumn) {
+            items.removeAll(aggregateFxnItem);
+        for (String column:aggregateFxnColumn) {
+            items.add(new SelectExpressionItem(new HexValue(column)));
+        }
+
+
     }
 
     /**

@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import parse.ICDBQuery;
+
 /**
  * Executes an OCT query and verifies data integrity.
  *
@@ -29,15 +31,65 @@ public class OCTQueryVerifier extends QueryVerifier {
         super(icdb, dbConfig);
     }
 
-    protected boolean verify(Stream<Record> records) {
-        List<CompletableFuture<Boolean>> futures = records
-                .map(record -> CompletableFuture.supplyAsync(() -> {
-                    final StringBuilder builder = new StringBuilder();
 
+
+    protected boolean verify(Stream<Record> records, ICDBQuery icdbQuery) {
+
+        return records.map(record -> {
+            final StringBuilder builder = new StringBuilder();
+
+            Field<?> Serial = record.field(Format.SERIAL_COLUMN);
+            Field<?> IC = record.field(Format.IC_COLUMN);
+
+            int index = 0;
+            boolean verified = false;
+            boolean isSkip = false;
+            for (Field<?> attr : record.fields()) {
+
+                if (!attr.getName().contains(Serial.getName()) && !attr.getName().contains(IC.getName())) {
+                    final Object value = record.get(index);
+                    builder.append(value);
+
+                    index++;
+                    if (isSkip)
+                        isSkip = false;
+
+                } else {
+                    if (isSkip)
+                        continue;
+
+                    final byte[] signature = (byte[]) record.get(index);
+                    final long serial = (long) record.get(index + 1);
+
+                    final String data = builder.toString();
+                    verified = verifyData(serial, signature, data);
+
+                    builder.setLength(0);
+                    if (!verified) {
+                        errorStatus.append("\n")
+                                .append(record.toString())
+                                .append("\n");
+                        break;
+                    }
+
+                    if (record.size() == index + 2)
+                        break;
+                    else {
+                        isSkip = true;
+                        index += 2;
+                    }
+                }
+
+
+            }
+
+                    /*
                     for (int i = 0; i < record.size() - 2; i++) {
+
                         final Object value = record.get(i);
                         builder.append(value);
                     }
+
 
                     final long serial = (long) record.get(Format.SERIAL_COLUMN);
                     final byte[] signature = (byte[]) record.get(Format.IC_COLUMN);
@@ -50,20 +102,15 @@ public class OCTQueryVerifier extends QueryVerifier {
                                 .append(record.toString())
                                 .append("\n");
                     }
+                    */
+            if (icdbQuery.isAggregateQuery) {
+                computeAggregateOperation(icdbQuery, record);
+            }
 
-                    return verified;
-                }))
-                .collect(Collectors.toList());
+            return verified;
+        })
+                .allMatch(result -> result);
 
-        // Asynchronously verify all signatures
-        return futures.stream()
-            .allMatch(f -> {
-                try {
-                    return f.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            });
     }
 
     public String getError() {
