@@ -93,10 +93,11 @@ public abstract class QueryVerifier {
     }
 
     public void execute(ICDBQuery icdbQuery) {
-        Stopwatch queryExecutionTime = Stopwatch.createStarted();
+
 
         if (icdbQuery.isAggregateQuery) {
             //compute aggregate average operation if any
+            Stopwatch aggregateOperationTime = Stopwatch.createStarted();
             if (avgOperationCount.size()!=0){
                 avgOperationCount.entrySet().forEach(entry-> {
                     columnComputedValue.put(entry.getKey(),columnComputedValue.get(entry.getKey())/entry.getValue());
@@ -107,9 +108,12 @@ public abstract class QueryVerifier {
            if (icdbQuery.executeandmatch(icdbCreate,columnComputedValue)){
             logger.info("aggregate operation matched");
            }
+            statistics.setAggregateOperationTime(aggregateOperationTime.elapsed(ICDBTool.TIME_UNIT));
+            logger.debug("Aggregate Operation Time: {}", statistics.getAggregateOperationTime());
         }
-        else icdbQuery.execute(icdbCreate);
 
+        Stopwatch queryExecutionTime =Stopwatch.createStarted();;
+        icdbQuery.execute(icdbCreate);
         logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
     }
 
