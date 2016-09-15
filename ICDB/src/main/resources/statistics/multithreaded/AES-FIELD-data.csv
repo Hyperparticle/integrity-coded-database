@@ -1,0 +1,9 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+AES,FIELD,employees_icdb_aes_field,SELECT * FROM salaries,LAZY,0,04/09/16 19:44:00
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time
+125000,25,262,1014
+250000,0,849,1519
+500000,0,1720,2530
+1000000,0,3337,6580
+1500000,0,5557,9934
+2000000,0,12791,14780

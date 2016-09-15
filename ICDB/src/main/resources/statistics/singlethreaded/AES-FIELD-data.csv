@@ -1,0 +1,9 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+AES,FIELD,employees_icdb_aes_field,SELECT * FROM salaries,EAGER,1,04/09/16 19:10:28
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time
+125000,25,940,1482
+250000,0,2107,2688
+500000,0,4807,4906
+1000000,0,8755,10681
+1500000,0,13565,14941
+2000000,0,25381,19724

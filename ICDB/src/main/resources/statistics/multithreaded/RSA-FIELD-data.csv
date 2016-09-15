@@ -1,0 +1,9 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+RSA,FIELD,employees_icdb_rsa_field,SELECT * FROM salaries,LAZY,0,04/09/16 19:49:16
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time
+125000,25,2146,2590
+250000,0,3458,5231
+500000,0,9646,10189
+1000000,0,26826,20606
+1500000,0,41493,29384
+2000000,0,59723,36169

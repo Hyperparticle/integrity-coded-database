@@ -1,0 +1,9 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+RSA,FIELD,employees_icdb_rsa_field,SELECT * FROM salaries,EAGER,1,04/09/16 19:39:01
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time
+125000,26,4174,27512
+250000,0,5337,54773
+500000,0,13812,109538
+1000000,0,37436,217785
+1500000,0,57767,314106
+2000000,0,61704,427329

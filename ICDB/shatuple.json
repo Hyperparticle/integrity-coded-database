@@ -4,10 +4,9 @@
   "user": "root",
   "password": "spidermonkey",
   "schema": "employees",
-  "icdbSchema": "employees_icdb_sha_field",
+  "icdbSchema": "employees_icdb_sha_tuple",
   "algorithm": "SHA",
-  "granularity": "FIELD",
+  "granularity": "TUPLE",
   "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
   "rsaKeyFile": "key.pem"
 }
- 
