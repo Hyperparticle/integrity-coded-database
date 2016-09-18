@@ -18,6 +18,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import stats.RunStatistics;
 import stats.Statistics;
+import verify.serial.AbstractIcrl;
 import verify.serial.Icrl;
 
 import java.io.Reader;
@@ -48,7 +49,7 @@ public abstract class ICDBQuery {
     private String convertedQuery;  // The converted query, like the original, but with extra columns
     private String verifyQuery;     // A select query responsible for obtaining verification results
 
-    protected Icrl icrl = Icrl.Companion.getIcrl();
+    protected AbstractIcrl icrl = Icrl.Companion.getIcrl();
 
     // Update the ICRL if this query was successful
     protected List<Long> serialsToBeRevoked = new ArrayList<>();

@@ -47,6 +47,7 @@ public class UserConfig {
     public final String icdbSchema;
     public Granularity granularity;
     public final CodeGen codeGen;
+    public final boolean validateIcrl;
 
     public UserConfig(ConfigArgs configArgs) {
         ip = configArgs.ip;
@@ -56,6 +57,7 @@ public class UserConfig {
         schema = configArgs.schema;
         icdbSchema = configArgs.icdbSchema;
         granularity = configArgs.granularity;
+        validateIcrl = configArgs.validateIcrl;
 
         final Key key = new Key(configArgs.macKey, configArgs.rsaKeyFile);
         final AlgorithmType algorithm = configArgs.algorithm;

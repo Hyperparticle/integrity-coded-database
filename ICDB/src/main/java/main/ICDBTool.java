@@ -26,6 +26,7 @@ import stats.RunStatistics;
 import stats.Statistics;
 import stats.StatisticsMetadata;
 import verify.QueryVerifier;
+import verify.serial.Icrl;
 
 /**
  * <p>
@@ -49,6 +50,8 @@ public class ICDBTool {
 		CommandLineArgs cmd = new CommandLineArgs(args);
 		ConfigArgs configArgs = cmd.getConfig();
         UserConfig dbConfig = UserConfig.init(configArgs);
+
+        Icrl.Companion.debug(!dbConfig.validateIcrl);
 
 		DBConnection.configure(dbConfig);
 

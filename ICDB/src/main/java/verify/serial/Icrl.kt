@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Created 5/8/2016
  * @author Dan Kondratyuk
  */
-class Icrl private constructor() {
+class Icrl private constructor() : AbstractIcrl {
 
     private val db: DB
     private val serials: RevocationTree<Long>
@@ -47,9 +47,9 @@ class Icrl private constructor() {
      * Increments the current serial counter by 1
      * @return the newest valid serial number
      */
-    fun addNext(): Long = next.andIncrement
+    override fun addNext(): Long = next.andIncrement
 
-    fun commit() {
+    override fun commit() {
         if (next.get() == pending.get()) { return }
 
         logger.debug("Committed new serial range: [{}, {}]", next.get(), pending.get())
@@ -61,7 +61,7 @@ class Icrl private constructor() {
     /**
      * Revokes the serial number from the list
      */
-    fun revoke(serial: Long) {
+    override fun revoke(serial: Long) {
         // TODO: commit pending serials
         serials.remove(serial)
     }
@@ -69,23 +69,40 @@ class Icrl private constructor() {
     /**
      * Validates whether the serial is contained in the valid list of serial numbers
      */
-    operator fun contains(serial: Long): Boolean {
+    override operator fun contains(serial: Long): Boolean {
         return serials.contains(serial)
     }
 
     companion object {
         private val ICRL_FILE = File("./src/main/resources/icrl.db")
 
-        // If init() is called before getting the Icrl, then the it is reset
+        /**
+         * If init() is called before getting the Icrl, then it is reset
+         * Note: reset can only be called once here
+         */
         private var reset: Boolean = false
-        val icrl: Icrl by lazy {
-            if (reset) { Files.deleteIfExists(ICRL_FILE.toPath()) }
-            Icrl()
+
+        /**
+         * Supply a NullIcrl if set to true
+         */
+        private var debug: Boolean = false
+
+        val icrl: AbstractIcrl by lazy {
+            if (debug) {
+                return@lazy NullIcrl()
+            } else if (reset) {
+                Files.deleteIfExists(ICRL_FILE.toPath())
+            }
+            return@lazy Icrl()
         }
 
-        fun init(): Icrl {
+        fun init(): AbstractIcrl {
             reset = true
             return icrl
+        }
+
+        fun debug(d: Boolean) {
+            debug = d
         }
     }
 

@@ -20,4 +20,5 @@ public class ConfigArgs {
     public AlgorithmType algorithm;
     public String macKey;
     public String rsaKeyFile;
+    public boolean validateIcrl;
 }

@@ -2,6 +2,7 @@ package io;
 
 import crypto.CodeGen;
 import org.apache.commons.lang3.ArrayUtils;
+import verify.serial.AbstractIcrl;
 import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
@@ -19,7 +20,7 @@ public class DataConverter {
     /**
      * Given some data, this method generates codes (svc + serial) from it
      */
-    public DataConverter(byte[] data, CodeGen codeGen, Icrl icrl) {
+    public DataConverter(byte[] data, CodeGen codeGen, AbstractIcrl icrl) {
         serial = icrl.addNext();
 
         final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
