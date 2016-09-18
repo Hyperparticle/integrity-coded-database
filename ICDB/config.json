@@ -8,7 +8,7 @@
   "algorithm": "SHA",
   "granularity": "TUPLE",
   "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
-  "rsaKeyFile": "key.pem"
+  "rsaKeyFile": "key.pem",
   "validateIcrl": "true" 
 }
  
