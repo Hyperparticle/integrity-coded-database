@@ -1,0 +1,3 @@
+System: Onyx
+Date: 04/09/16
+Query: SELECT * FROM salaries

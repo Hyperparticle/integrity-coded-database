@@ -55,12 +55,14 @@ public class OCTQuery extends ICDBQuery {
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         List<SelectItem> selectItems = plainSelect.getSelectItems();
 
-//check for the aggregate query
-        List<String> aggregateFxnColumn=new ArrayList<>();
+        // Check for the aggregate query
+        List<String> aggregateFxnColumn = new ArrayList<>();
 
-        for (SelectItem item:selectItems) {
+        for (SelectItem item : selectItems) {
+            if (!(item instanceof  SelectExpressionItem)) { continue; }
+
             if (((SelectExpressionItem) item).getExpression() instanceof Function){
-                Function function=(Function) ((SelectExpressionItem) item).getExpression();
+                Function function = (Function) ((SelectExpressionItem) item).getExpression();
                 if (function!=null ){
                     if (function.getParameters()!=null){
                         isAggregateQuery=true;

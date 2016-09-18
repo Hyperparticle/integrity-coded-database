@@ -15,6 +15,7 @@ import org.jooq.*;
 import parse.ICDBQuery;
 import stats.RunStatistics;
 import stats.Statistics;
+import verify.serial.AbstractIcrl;
 import verify.serial.Icrl;
 
 import java.nio.ByteBuffer;
@@ -39,7 +40,7 @@ public abstract class QueryVerifier {
     private final DBConnection icdb;
     private final CodeGen codeGen;
 
-    private final Icrl icrl = Icrl.Companion.getIcrl();
+    private final AbstractIcrl icrl = Icrl.Companion.getIcrl();
 
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();

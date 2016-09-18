@@ -21,6 +21,7 @@ import crypto.CodeGen;
 import crypto.Convert;
 import main.args.option.Granularity;
 import io.source.FileSource;
+import verify.serial.AbstractIcrl;
 import verify.serial.Icrl;
 
 /**
@@ -35,7 +36,7 @@ public class FileConverter {
 	private final CodeGen codeGen;
 	private final Granularity granularity;
 
-    private final Icrl icrl = Icrl.Companion.init();
+    private final AbstractIcrl icrl = Icrl.Companion.init();
 
 	private static final Logger logger = LogManager.getLogger();
 
@@ -101,7 +102,7 @@ public class FileConverter {
 	 * 
 	 * @param collector the list to collect the codes
 	 */
-	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, Icrl icrl) {
+	private static void convertLine(final List<String> collector, byte[] data, CodeGen codeGen, AbstractIcrl icrl) {
         final long serial = icrl.addNext();
         final String serialString = Long.toString(serial);
 
