@@ -16,9 +16,9 @@ data class StatisticsMetadata(
     val algorithm: AlgorithmType,
     val granularity: Granularity,
     val schemaName: String,
-    val dbQuery: String,
     val fetchType: DataSource.Fetch,
-    val threads: Int
+    val threads: Int,
+    val dbQuery: String = ""
 ) {
     private val date: String
         get() {
@@ -28,6 +28,6 @@ data class StatisticsMetadata(
         }
 
     fun list(): List<String> = listOf(
-        algorithm.toString(), granularity.toString(), schemaName, dbQuery, fetchType.toString(), threads.toString(), date
+        algorithm.toString(), granularity.toString(), schemaName, fetchType.toString(), threads.toString(), date, dbQuery
     )
 }

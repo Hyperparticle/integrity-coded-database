@@ -8,7 +8,9 @@ import org.jooq.*;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
+import javax.naming.Reference;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,17 +24,19 @@ import java.util.stream.Collectors;
  */
 public class DBConnection {
 
-    private static final MysqlDataSource dataSource = new MysqlDataSource();
+//    private static final MysqlDataSource dataSource = new MysqlDataSource();
     private static final Logger logger = LogManager.getLogger();
+    private static UserConfig userConfig;
 
     /**
      * Configure a connection to a MySQL server
      */
     public static void configure(UserConfig dbConfig) {
-        dataSource.setServerName(dbConfig.ip);
-        dataSource.setPortNumber(dbConfig.port);
-        dataSource.setUser(dbConfig.user);
-        dataSource.setPassword(dbConfig.password);
+        userConfig = dbConfig;
+//        dataSource.setServerName(dbConfig.ip);
+//        dataSource.setPortNumber(dbConfig.port);
+//        dataSource.setUser(dbConfig.user);
+//        dataSource.setPassword(dbConfig.password);
     }
 
     public static DBConnection connect(String dbName, UserConfig dbConfig) {
@@ -59,9 +63,15 @@ public class DBConnection {
 
     private DBConnection(String dbName) throws SQLException, DataAccessException {
         this.dbName = dbName;
-        dataSource.setDatabaseName(dbName);
+//        dataSource.setDatabaseName(dbName);
 
-        connection = dataSource.getConnection();
+        final String url = "jdbc:mysql://" + userConfig.ip + ":" + userConfig.port + "/" + dbName + "?" +
+                "user=" + userConfig.user + "&password=" + userConfig.password +
+                "&maxAllowedPacket=1000000000&autoReconnect=true&useSSL=false";
+
+//        connection = dataSource.getConnection();
+        connection = DriverManager.getConnection(url);
+
         dbCreate = DSL.using(connection, SQLDialect.MYSQL);
 
         // Get schema metadata

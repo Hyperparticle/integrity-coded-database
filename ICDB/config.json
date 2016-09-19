@@ -1,14 +1,14 @@
 {
   "ip": "localhost",
-  "port": 3333,
+  "port": 3306,
   "user": "root",
-  "password": "spidermonkey",
+  "password": "",
   "schema": "employees",
-  "icdbSchema": "employees_icdb_sha_field",
+  "icdbSchema": "employees_icdb",
   "algorithm": "SHA",
   "granularity": "TUPLE",
   "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
   "rsaKeyFile": "key.pem",
-  "validateIcrl": "true" 
+  "validateIcrl": "true"
 }
  
