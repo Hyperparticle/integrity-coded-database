@@ -252,7 +252,9 @@ public class ICDBTool {
             Stopwatch executionTime = Stopwatch.createStarted();
             executeQueryRun(insertQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, insertRun, true);
             executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
-            logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+            logger.debug("Run time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+
+            insertRun.setQueryFetchSize(deleteRun.getQueryFetchSize());
         }
 
         deleteStatistics.outputRuns();
