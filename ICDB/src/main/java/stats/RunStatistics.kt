@@ -12,7 +12,15 @@ data class RunStatistics(
     var queryConversionTime: Long = 0,
     var dataFetchTime: Long = 0,
     var verificationTime: Long = 0,
+    var executionTime: Long = 0,
     var aggregateOperationTime: Long = 0
 ) {
-    fun list(): List<Long> = listOf(queryFetchSize, queryConversionTime, dataFetchTime, verificationTime, aggregateOperationTime)
+    fun list(): List<Long> = listOf(
+        queryFetchSize,
+        queryConversionTime,
+        dataFetchTime,
+        verificationTime,
+        executionTime,
+        aggregateOperationTime
+    )
 }

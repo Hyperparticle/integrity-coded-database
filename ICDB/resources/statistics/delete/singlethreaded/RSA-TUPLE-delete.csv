@@ -1,0 +1,8 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+RSA,TUPLE,employees_icdb_rsa_tuple,EAGER,1,20/09/16 10:11:43,delete
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time,Aggregate operation Time
+12500,0,110,728,101,0
+25000,0,104,1479,124,0
+50000,0,169,2800,243,0
+100000,2,411,5765,628,0
+200000,0,628,11531,916,0
