@@ -67,7 +67,8 @@ public class DBConnection {
 
         final String url = "jdbc:mysql://" + userConfig.ip + ":" + userConfig.port + "/" + dbName + "?" +
                 "user=" + userConfig.user + "&password=" + userConfig.password +
-                "&maxAllowedPacket=1000000000&autoReconnect=true&useSSL=false";
+                "&maxAllowedPacket=1000000000&autoReconnect=true&useSSL=false" +
+                "&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=America/Denver";
 
 //        connection = dataSource.getConnection();
         connection = DriverManager.getConnection(url);
