@@ -1,7 +1,9 @@
 package crypto
 
 import crypto.signer.MacSigner
+import crypto.signer.RSASHA1Signer
 import crypto.signer.RsaSigner
+import main.args.config.UserConfig
 
 
 /**
@@ -14,10 +16,18 @@ import crypto.signer.RsaSigner
 enum class AlgorithmType {
     RSA {
         override fun generateSignature(data: ByteArray, key: Key) =
-            RsaSigner.generate(data, key.publicRsaKey)
+         RsaSigner.generate(data, key.publicRsaKey)
 
         override fun verify(data: ByteArray, key: Key, signature: ByteArray) =
             RsaSigner.verify(data, key.privateRsaKey, signature)
+    },
+    RSA_AGGREGATE {
+        override fun generateSignature(data: ByteArray, key: Key) =
+                RSASHA1Signer(key.modulus,key.exponent).computeSHA1RSA(data)
+
+
+        override fun verify(data: ByteArray, key: Key, signature: ByteArray) =
+                RsaSigner.verify(data, key.privateRsaKey, signature)
     },
     AES {
         override fun generateSignature(data: ByteArray, key: Key) =

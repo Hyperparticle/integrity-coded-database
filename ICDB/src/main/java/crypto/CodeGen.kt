@@ -16,4 +16,7 @@ class CodeGen(var algorithm: AlgorithmType, private val key: Key) {
         return algorithm.verify(data, key, signature)
     }
 
+    fun getKey(): Key{
+        return key
+    }
 }

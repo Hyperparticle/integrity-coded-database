@@ -4,11 +4,12 @@
   "user": "root",
   "password": "",
   "schema": "employees",
-  "icdbSchema": "employees_icdb",
-  "algorithm": "SHA",
+  "icdbSchema": "employees_icdb_RSA",
+  "algorithm": "RSA_AGGREGATE",
   "granularity": "TUPLE",
   "macKey": "qyPTqFrPGUpxcIo9sz2MdQ==",
   "rsaKeyFile": "key.pem",
-  "validateIcrl": "true"
+  "validateIcrl": "true",
+  "aggregateSignature": "false"
 }
  

@@ -1,14 +1,22 @@
 package verify;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Stopwatch;
+import crypto.signer.RSASHA1Signer;
 import io.DBConnection;
 import io.Format;
 import io.source.DataSource;
+import main.ICDBTool;
 import main.args.config.UserConfig;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jooq.Field;
 import org.jooq.Record;
 import stats.RunStatistics;
 
 import parse.ICDBQuery;
+
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 /**
  * Executes an OCT query and verifies data integrity.
@@ -94,10 +102,77 @@ public class OCTQueryVerifier extends QueryVerifier {
         }
 
         if (icdbQuery.isAggregateQuery) {
+            Stopwatch aggregateOperationTime = Stopwatch.createStarted();
             computeAggregateOperation(icdbQuery, record);
+            statistics.setAggregateOperationTime( statistics.getAggregateOperationTime()+aggregateOperationTime.elapsed(ICDBTool.TIME_UNIT));
         }
 
         return verified;
     }
+
+    @Override
+    protected boolean aggregateVerifyRecord(Record record, ICDBQuery icdbQuery) {
+
+        final StringBuilder builder = new StringBuilder();
+
+        int index = 0;
+        boolean isSkip = false;
+        for (Field<?> attr : record.fields()) {
+
+            if (!attr.getName().equals("ic") && !attr.getName().equals("serial")) {
+                final Object value = record.get(index);
+                builder.append(value);
+
+                index++;
+                if (isSkip)
+                    isSkip = false;
+
+            } else {
+                if (isSkip)
+                    continue;
+
+                final byte[] signature = (byte[]) record.get(index);
+                final long serial = (long) record.get(index + 1);
+                final byte[] serialBytes = ByteBuffer.allocate(8).putLong(serial).array();
+
+                final String data = builder.toString();
+                final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
+
+                //check the ICRL
+                if (!icrl.contains(serial)) {
+                    return false;
+                }
+
+                final byte[] allData = ArrayUtils.addAll(dataBytes, serialBytes);
+
+
+
+
+
+                RSASHA1Signer signer=new RSASHA1Signer(key.getModulus(),key.getExponent());
+                message = message.multiply(new BigInteger(signer.computehash(allData))).mod(key.getModulus());
+                sig = sig.multiply(new BigInteger(signature)).mod(key.getModulus());
+
+
+
+
+                if (record.size() == index + 2)
+                    break;
+                else {
+                    isSkip = true;
+                    index += 2;
+                }
+            }
+
+        }
+
+
+
+        // final boolean verified = codeGen.verify(message.toByteArray(), sig.toByteArray());
+
+
+        return  true;
+    }
+
 
 }

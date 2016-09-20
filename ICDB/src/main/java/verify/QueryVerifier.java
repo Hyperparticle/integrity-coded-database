@@ -1,8 +1,10 @@
 package verify;
 
+import crypto.AlgorithmType;
 import crypto.CodeGen;
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
+import crypto.signer.RSASHA1Signer;
 import io.DBConnection;
 import io.source.DBSource;
 import io.source.DataSource;
@@ -18,6 +20,7 @@ import stats.Statistics;
 import verify.serial.AbstractIcrl;
 import verify.serial.Icrl;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,9 +41,11 @@ import java.util.stream.Stream;
 public abstract class QueryVerifier {
 
     private final DBConnection icdb;
-    private final CodeGen codeGen;
+    private final  UserConfig userConfig;
+    protected final CodeGen codeGen;
+    protected crypto.Key key;
 
-    private final AbstractIcrl icrl = Icrl.Companion.getIcrl();
+    public final AbstractIcrl icrl = Icrl.Companion.getIcrl();
 
     protected final DSLContext icdbCreate;
     protected final StringBuilder errorStatus = new StringBuilder();
@@ -55,13 +60,17 @@ public abstract class QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
+    protected BigInteger message = BigInteger.valueOf(1);
+    protected BigInteger sig = BigInteger.valueOf(1);
+
     public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
         this.icdb = icdb;
+        this.userConfig=dbConfig;
         this.codeGen = dbConfig.codeGen;
         this.threads = threads;
         this.fetch = fetch;
         this.statistics = statistics;
-
+        key=codeGen.getKey();
         this.icdbCreate = icdb.getCreate();
     }
 
@@ -90,6 +99,19 @@ public abstract class QueryVerifier {
         logger.debug("Data verification time: {}", statistics.getVerificationTime());
         logger.debug("Total query verification time: {}", totalQueryVerificationTime.elapsed(ICDBTool.TIME_UNIT));
 
+        if (codeGen.getAlgorithm()== AlgorithmType.RSA_AGGREGATE && verified){
+
+                RSASHA1Signer signer=new RSASHA1Signer(key.getModulus(),key.getExponent());
+                BigInteger newsig= new BigInteger(signer.computeRSA(message.toByteArray()));
+                if (newsig.equals(sig)){
+                    logger.info("ICDB aggregate sign verified");
+                    return true;
+                }else
+                    return false;
+
+        }
+
+
         return verified;
     }
 
@@ -98,7 +120,7 @@ public abstract class QueryVerifier {
 
         if (icdbQuery.isAggregateQuery) {
             //compute aggregate average operation if any
-            Stopwatch aggregateOperationTime = Stopwatch.createStarted();
+            Stopwatch aggregateQueryExecutionTime = Stopwatch.createStarted();
             if (avgOperationCount.size()!=0){
                 avgOperationCount.entrySet().forEach(entry-> {
                     columnComputedValue.put(entry.getKey(),columnComputedValue.get(entry.getKey())/entry.getValue());
@@ -109,8 +131,8 @@ public abstract class QueryVerifier {
            if (icdbQuery.executeandmatch(icdbCreate,columnComputedValue)){
             logger.info("aggregate operation matched");
            }
-            statistics.setAggregateOperationTime(aggregateOperationTime.elapsed(ICDBTool.TIME_UNIT));
-            logger.debug("Aggregate query execution and Operation Time: {}", statistics.getAggregateOperationTime());
+            logger.debug("Total Aggregate Operation time: {}", statistics.getAggregateOperationTime());
+            logger.debug("Aggregate query execution and match Time: {}", aggregateQueryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
         }else{
 
             Stopwatch queryExecutionTime =Stopwatch.createStarted();
@@ -132,9 +154,16 @@ public abstract class QueryVerifier {
 
         logger.debug("Using {} thread(s)", threadPool.getParallelism());
         verifyCount = 0;
+        List<CompletableFuture<Boolean>> futures;
+        if (codeGen.getAlgorithm()== AlgorithmType.RSA_AGGREGATE){
+            futures = records.map(record -> CompletableFuture.supplyAsync(() -> aggregateVerifyRecord(record, icdbQuery), threadPool))
+                    .collect(Collectors.toList());
+        }else {
+            futures = records.map(record -> CompletableFuture.supplyAsync(() -> verifyRecord(record, icdbQuery), threadPool))
+                    .collect(Collectors.toList());
+        }
 
-        List<CompletableFuture<Boolean>> futures = records.map(record -> CompletableFuture.supplyAsync(() -> verifyRecord(record, icdbQuery), threadPool))
-                .collect(Collectors.toList());
+
 
         // Asynchronously verify all signatures
         return futures.stream()
@@ -149,6 +178,9 @@ public abstract class QueryVerifier {
     }
 
     protected abstract boolean verifyRecord(Record record, ICDBQuery icdbQuery);
+
+    //verification by using RSA homomorphic multiplication
+    protected abstract boolean aggregateVerifyRecord(Record record, ICDBQuery icdbQuery) ;
 
     /**
      * Verifies data and serial number by regenerating the signature
