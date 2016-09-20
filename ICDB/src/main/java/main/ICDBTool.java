@@ -72,7 +72,7 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.BENCHMARK)) {
             if (cmd.benchmarkCommand.selectPath != null) {
                 benchmarkSelect(cmd, dbConfig);
-            } else if (cmd.benchmarkCommand.deletePath != null && cmd.benchmarkCommand.insert != null) {
+            } else if (cmd.benchmarkCommand.deletePath != null && cmd.benchmarkCommand.insertPath != null) {
                 benchmarkDeleteInsert(cmd, dbConfig);
             }
 		} else { // TODO: add revoke serial command
@@ -206,8 +206,8 @@ public class ICDBTool {
         final AlgorithmType algorithm = dbConfig.codeGen.getAlgorithm();
         final Granularity granularity = dbConfig.granularity;
 
-        File[] insertFiles = new File(benchmarkCommand.insert).listFiles();
-        File[] deleteFiles = new File(benchmarkCommand.insert).listFiles();
+        File[] insertFiles = new File(benchmarkCommand.insertPath).listFiles();
+        File[] deleteFiles = new File(benchmarkCommand.deletePath).listFiles();
         if (insertFiles == null || deleteFiles == null) {
             return;
         }
@@ -248,9 +248,10 @@ public class ICDBTool {
             deleteStatistics.addRun(deleteRun);
             insertStatistics.addRun(insertRun);
 
+            // Insert values, then delete
             Stopwatch executionTime = Stopwatch.createStarted();
-            executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
             executeQueryRun(insertQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, insertRun, true);
+            executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
             logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
         }
 

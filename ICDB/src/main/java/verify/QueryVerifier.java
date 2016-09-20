@@ -113,9 +113,12 @@ public abstract class QueryVerifier {
             logger.debug("Aggregate query execution and Operation Time: {}", statistics.getAggregateOperationTime());
         }else{
 
-            Stopwatch queryExecutionTime =Stopwatch.createStarted();
+            Stopwatch queryExecutionTime = Stopwatch.createStarted();
+
             icdbQuery.execute(icdbCreate);
-            logger.debug("Total query execution time: {}", queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
+
+            statistics.setExecutionTime(queryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
+            logger.debug("Total query execution time: {}", statistics.getExecutionTime());
         }
 
 

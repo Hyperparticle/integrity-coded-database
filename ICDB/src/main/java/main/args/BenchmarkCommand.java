@@ -29,9 +29,9 @@ public class BenchmarkCommand {
     public String deletePath;
 
     @Parameter(names = { "-i", "--insert" }, description = "Specify a path for all insert queries")
-    public String insert;
+    public String insertPath;
 
     @Parameter(names = { "-u", "--update" }, description = "Specify a path for all update queries")
-    public String update;
+    public String updatePath;
 
 }
