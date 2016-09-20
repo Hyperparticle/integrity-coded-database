@@ -1,0 +1,8 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+AES,TUPLE,employees_icdb_aes_tuple,EAGER,1,20/09/16 10:03:22,delete
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time,Aggregate operation Time
+12500,0,84,34,87,0
+25000,0,68,99,254,0
+50000,0,136,300,245,0
+100000,3,389,452,486,0
+200000,0,512,860,1000,0

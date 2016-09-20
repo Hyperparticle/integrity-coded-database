@@ -1,0 +1,8 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+RSA,FIELD,employees_icdb_rsa_field,EAGER,1,20/09/16 10:40:14,insert
+Query Fetch Size,Query Conversion Time,Execution Time
+0,52247,3096
+0,104737,5532
+0,208111,10266
+0,410525,27961
+0,830856,47146
