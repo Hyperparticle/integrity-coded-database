@@ -1,8 +1,8 @@
 Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
-SHA,FIELD,employees_icdb_sha_field,EAGER,1,20/09/16 10:02:49,delete
-Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time,Aggregate operation Time
-0,0,0,0,71,0
-0,0,0,0,144,0
-0,0,0,0,292,0
-0,1,0,0,534,0
-0,0,0,0,1101,0
+SHA,FIELD,employees_icdb_sha_field,EAGER,1,21/09/16 08:07:06,delete
+Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time
+12500,0,111,198,78
+25000,0,99,287,148
+50000,0,191,645,258
+100000,2,505,1364,639
+200000,0,756,3265,1121
