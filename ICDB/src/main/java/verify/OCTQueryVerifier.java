@@ -2,6 +2,7 @@ package verify;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
+import com.google.common.math.BigIntegerMath;
 import crypto.signer.RSASHA1Signer;
 import io.DBConnection;
 import io.Format;
@@ -145,16 +146,9 @@ public class OCTQueryVerifier extends QueryVerifier {
 
                 final byte[] allData = ArrayUtils.addAll(dataBytes, serialBytes);
 
-
-
-
-
                 RSASHA1Signer signer=new RSASHA1Signer(key.getModulus(),key.getExponent());
                 message = message.multiply(new BigInteger(signer.computehash(allData))).mod(key.getModulus());
                 sig = sig.multiply(new BigInteger(signature)).mod(key.getModulus());
-
-
-
 
                 if (record.size() == index + 2)
                     break;

@@ -11,11 +11,13 @@ import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.statement.update.Update;
+import net.sf.jsqlparser.util.SelectUtils;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.jooq.Field;
 import stats.RunStatistics;
@@ -27,10 +29,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * </p>
- * Created on 7/18/2016
+ * Parses Field Queries
  *
+ * Created on 7/18/2016
  * @author Dan Kondratyuk
  */
 public class OCFQuery extends ICDBQuery {
@@ -144,7 +145,20 @@ public class OCFQuery extends ICDBQuery {
 
     @Override
     protected Statement parseVerifyQuery(Delete delete) {
-        return null; // TODO: verify serials
+        // We verify delete so that we can revoke all deleted serial numbers
+        Table table = delete.getTable();
+
+        // Get all columns, because we are deleting the entire row
+        Select select = SelectUtils.buildSelectFromTableAndSelectItems(table, new AllColumns());
+
+        // Apply the where clause to the SELECT
+        PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
+        plainSelect.setWhere(delete.getWhere());
+
+        plainSelect.setLimit(delete.getLimit());
+        plainSelect.setOrderByElements(delete.getOrderByElements());
+
+        return select;
     }
 
     ////////////

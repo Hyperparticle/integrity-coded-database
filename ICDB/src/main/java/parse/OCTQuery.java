@@ -26,10 +26,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * </p>
- * Created on 7/18/2016
+ * Parses Tuple Queries
  *
+ * Created on 7/18/2016
  * @author Dan Kondratyuk
  */
 public class OCTQuery extends ICDBQuery {
@@ -136,6 +135,9 @@ public class OCTQuery extends ICDBQuery {
         // Apply the where clause to the SELECT
         PlainSelect plainSelect = (PlainSelect) select.getSelectBody();
         plainSelect.setWhere(delete.getWhere());
+
+        plainSelect.setLimit(delete.getLimit());
+        plainSelect.setOrderByElements(delete.getOrderByElements());
 
         return select;
     }
