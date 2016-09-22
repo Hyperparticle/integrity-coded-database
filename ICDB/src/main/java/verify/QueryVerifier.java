@@ -124,6 +124,7 @@ public abstract class QueryVerifier {
             if (avgOperationCount.size()!=0){
                 avgOperationCount.entrySet().forEach(entry-> {
                     columnComputedValue.put(entry.getKey(),columnComputedValue.get(entry.getKey())/entry.getValue());
+                    logger.info("aggregate operation value",columnComputedValue.get(entry.getKey()) );
                         }
                 );
             }
