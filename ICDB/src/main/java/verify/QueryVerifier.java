@@ -124,7 +124,7 @@ public abstract class QueryVerifier {
             Stopwatch aggregateQueryExecutionTime = Stopwatch.createStarted();
             if (avgOperationCount.size()!=0){
                 avgOperationCount.entrySet().forEach(entry-> {
-                    DecimalFormat df = new DecimalFormat("#.####");
+                    DecimalFormat df = new DecimalFormat("#.0000");
                     columnComputedValue.put(entry.getKey(),Double.valueOf(df.format(columnComputedValue.get(entry.getKey())/entry.getValue())));
                     logger.debug("aggregate operation value: {}",columnComputedValue.get(entry.getKey()) );
                         }
