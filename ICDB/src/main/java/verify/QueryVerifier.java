@@ -22,6 +22,7 @@ import verify.serial.Icrl;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
@@ -123,7 +124,8 @@ public abstract class QueryVerifier {
             Stopwatch aggregateQueryExecutionTime = Stopwatch.createStarted();
             if (avgOperationCount.size()!=0){
                 avgOperationCount.entrySet().forEach(entry-> {
-                    columnComputedValue.put(entry.getKey(),columnComputedValue.get(entry.getKey())/entry.getValue());
+                    DecimalFormat df = new DecimalFormat("#.####");
+                    columnComputedValue.put(entry.getKey(),Double.valueOf(df.format(columnComputedValue.get(entry.getKey())/entry.getValue())));
                     logger.debug("aggregate operation value: {}",columnComputedValue.get(entry.getKey()) );
                         }
                 );
