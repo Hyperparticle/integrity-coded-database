@@ -50,7 +50,7 @@ public class OCFQueryVerifier extends QueryVerifier {
                 return false;
             }
 
-            if (icdbQuery.isAggregateQuery) {
+            if (icdbQuery.isAggregateQuery && i==dataSize-1) {
                 Stopwatch aggregateOperationTime = Stopwatch.createStarted();
                 computeAggregateOperation(icdbQuery, record);
                 statistics.setAggregateOperationTime( statistics.getAggregateOperationTime()+aggregateOperationTime.elapsed(ICDBTool.TIME_UNIT));
