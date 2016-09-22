@@ -130,9 +130,10 @@ public abstract class QueryVerifier {
 
            if (icdbQuery.executeandmatch(icdbCreate,columnComputedValue)){
             logger.info("aggregate operation matched");
+               logger.debug("Total Aggregate Operation time: {}", statistics.getAggregateOperationTime());
+               logger.debug("Aggregate query execution and match Time: {}", aggregateQueryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
+
            }
-            logger.debug("Total Aggregate Operation time: {}", statistics.getAggregateOperationTime());
-            logger.debug("Aggregate query execution and match Time: {}", aggregateQueryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
         }else{
 
             Stopwatch queryExecutionTime = Stopwatch.createStarted();

@@ -1,7 +1,9 @@
 package verify;
 
+import com.google.common.base.Stopwatch;
 import io.DBConnection;
 import io.source.DataSource;
+import main.ICDBTool;
 import main.args.config.UserConfig;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -49,7 +51,9 @@ public class OCFQueryVerifier extends QueryVerifier {
             }
 
             if (icdbQuery.isAggregateQuery) {
+                Stopwatch aggregateOperationTime = Stopwatch.createStarted();
                 computeAggregateOperation(icdbQuery, record);
+                statistics.setAggregateOperationTime( statistics.getAggregateOperationTime()+aggregateOperationTime.elapsed(ICDBTool.TIME_UNIT));
             }
         }
 
