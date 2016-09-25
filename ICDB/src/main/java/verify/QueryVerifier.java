@@ -23,6 +23,7 @@ import verify.serial.Icrl;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
@@ -124,16 +125,19 @@ public abstract class QueryVerifier {
             Stopwatch aggregateQueryExecutionTime = Stopwatch.createStarted();
             if (avgOperationCount.size()!=0){
                 avgOperationCount.entrySet().forEach(entry-> {
-                    columnComputedValue.put(entry.getKey(),columnComputedValue.get(entry.getKey())/entry.getValue());
+                    DecimalFormat df = new DecimalFormat("#.0000");
+                    columnComputedValue.put(entry.getKey(),Double.valueOf(df.format(columnComputedValue.get(entry.getKey())/entry.getValue())));
+                    logger.debug("aggregate operation value: {}",columnComputedValue.get(entry.getKey()) );
                         }
                 );
             }
 
            if (icdbQuery.executeandmatch(icdbCreate,columnComputedValue)){
             logger.info("aggregate operation matched");
+               logger.debug("Total Aggregate Operation time: {}", statistics.getAggregateOperationTime());
+               logger.debug("Aggregate query execution and match Time: {}", aggregateQueryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
+
            }
-            logger.debug("Total Aggregate Operation time: {}", statistics.getAggregateOperationTime());
-            logger.debug("Aggregate query execution and match Time: {}", aggregateQueryExecutionTime.elapsed(ICDBTool.TIME_UNIT));
         }else{
 
             Stopwatch queryExecutionTime = Stopwatch.createStarted();
