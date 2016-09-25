@@ -8,6 +8,7 @@ package stats
  */
 data class RunStatistics(
     // Data collected as the run progresses
+    var run: Long = 0,
     var queryFetchSize: Long = 0,
     var queryConversionTime: Long = 0,
     var dataFetchTime: Long = 0,
@@ -16,6 +17,7 @@ data class RunStatistics(
     var aggregateOperationTime: Long = 0
 ) {
     fun list(): List<Long> = listOf(
+        run,
         queryFetchSize,
         queryConversionTime,
         dataFetchTime,

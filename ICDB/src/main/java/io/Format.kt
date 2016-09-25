@@ -1,5 +1,6 @@
 package io
 
+import org.apache.commons.lang3.StringUtils
 import java.io.File
 import java.nio.file.Paths
 
@@ -33,5 +34,8 @@ object Format {
     @JvmStatic fun getCsvFile(dataPath: String, tableName: String): File =
         Paths.get(dataPath, tableName + Format.DATA_FILE_EXTENSION)
             .toAbsolutePath().toFile()
+
+    @JvmStatic fun limit(query: String): String =
+            StringUtils.substring(query, 0, 100)
 
 }

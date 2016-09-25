@@ -3,22 +3,21 @@ package main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.google.common.base.Charsets;
 import crypto.AlgorithmType;
+import io.Format;
 import io.source.DataSource;
 import main.args.*;
 import main.args.config.UserConfig;
 import main.args.option.Granularity;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,11 +69,7 @@ public class ICDBTool {
 		} else if (cmd.isCommand(CommandLineArgs.EXECUTE_QUERY)) {
 			executeQuery(cmd, dbConfig);
 		} else if (cmd.isCommand(CommandLineArgs.BENCHMARK)) {
-            if (cmd.benchmarkCommand.selectPath != null) {
-                benchmarkSelect(cmd, dbConfig);
-            } else if (cmd.benchmarkCommand.deletePath != null && cmd.benchmarkCommand.insertPath != null) {
-                benchmarkDeleteInsert(cmd, dbConfig);
-            }
+            benchmark(cmd, dbConfig);
 		} else { // TODO: add revoke serial command
 			cmd.jCommander.usage();
 			System.exit(0);
@@ -115,10 +110,10 @@ public class ICDBTool {
             ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen, new RunStatistics());
 
             logger.info("Verify query:");
-            logger.info(icdbQuery.getVerifyQuery());
+            logger.info(Format.limit(icdbQuery.getVerifyQuery()));
 
             logger.info("Converted query:");
-            logger.info(icdbQuery.getConvertedQuery());
+            logger.info(Format.limit(icdbQuery.getConvertedQuery()));
         });
     }
 
@@ -159,14 +154,6 @@ public class ICDBTool {
             return;
         }
 
-//        try {
-//            File statisticsFile = new File("./src/main/resources/statistics/");
-//            statisticsFile.mkdirs();
-//            FileUtils.cleanDirectory(statisticsFile);
-//        } catch (IOException e) {
-//            logger.error("Failed to clean statistics folder");
-//        }
-
         Statistics statistics = new Statistics(
             new StatisticsMetadata(
                 algorithm, granularity, dbSchema, benchmarkCommand.fetch, benchmarkCommand.threads, "select"
@@ -184,22 +171,27 @@ public class ICDBTool {
             .forEach(query -> {
                 logger.debug("Running: {}", query);
 
-                RunStatistics run = new RunStatistics();
-                statistics.addRun(run);
+                final int numRuns = 5; // Number of the same run
 
-                Stopwatch executionTime = Stopwatch.createStarted();
-                executeQueryRun(query, benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, run, false);
-                logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+                for (int j = 0; j < numRuns; j++) {
+                    RunStatistics run = new RunStatistics();
+                    run.setRun(j+1);
+                    statistics.addRun(run);
+
+                    Stopwatch executionTime = Stopwatch.createStarted();
+                    executeQueryRun(query, benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, run, false);
+                    logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+                }
             });
 
         statistics.outputRuns();
     }
 
     /**
-     * Benchmarks select queries from stdin
+     * Benchmarks insert, select, and delete queries from stdin
      * Note: VERY hacky (I was so frustrated I wanted it to work)
      */
-    private static void benchmarkDeleteInsert(CommandLineArgs cmd, UserConfig dbConfig) {
+    private static void benchmark(CommandLineArgs cmd, UserConfig dbConfig) {
         final BenchmarkCommand benchmarkCommand = cmd.benchmarkCommand;
         final String dbSchema = benchmarkCommand.schemaName != null ? benchmarkCommand.schemaName : dbConfig.icdbSchema;
 
@@ -207,23 +199,31 @@ public class ICDBTool {
         final Granularity granularity = dbConfig.granularity;
 
         File[] insertFiles = new File(benchmarkCommand.insertPath).listFiles();
+        File[] selectFiles = new File(benchmarkCommand.selectPath).listFiles();
         File[] deleteFiles = new File(benchmarkCommand.deletePath).listFiles();
-        if (insertFiles == null || deleteFiles == null) {
+        if (insertFiles == null || selectFiles == null || deleteFiles == null) {
             return;
         }
 
-        Statistics deleteStatistics = new Statistics(
-            new StatisticsMetadata(
-                    algorithm, granularity, dbSchema, benchmarkCommand.fetch, benchmarkCommand.threads, "delete"
-            ),
-            new File("./src/main/resources/statistics/" + algorithm + "-" + granularity + "-delete.csv")
-        );
         Statistics insertStatistics = new Statistics(
             new StatisticsMetadata(
                     algorithm, granularity, dbSchema, benchmarkCommand.fetch, benchmarkCommand.threads, "insert"
             ),
             new File("./src/main/resources/statistics/" + algorithm + "-" + granularity + "-insert.csv")
         );
+        Statistics selectStatistics = new Statistics(
+                new StatisticsMetadata(
+                        algorithm, granularity, dbSchema, benchmarkCommand.fetch, benchmarkCommand.threads, "select"
+                ),
+                new File("./src/main/resources/statistics/" + algorithm + "-" + granularity + "-select.csv")
+        );
+        Statistics deleteStatistics = new Statistics(
+                new StatisticsMetadata(
+                        algorithm, granularity, dbSchema, benchmarkCommand.fetch, benchmarkCommand.threads, "delete"
+                ),
+                new File("./src/main/resources/statistics/" + algorithm + "-" + granularity + "-delete.csv")
+        );
+
 
         List<String> insertQueries = Arrays.stream(insertFiles)
             .sorted((f1, f2) -> f1.toString().compareTo(f2.toString()))
@@ -241,23 +241,44 @@ public class ICDBTool {
             })
             .filter(s -> s != null)
             .collect(Collectors.toList());
+        List<String> selectQueries = Arrays.stream(selectFiles)
+                .sorted((f1, f2) -> f1.toString().compareTo(f2.toString()))
+                .map(file -> {
+                    try { return FileUtils.readFileToString(file, Charsets.UTF_8); }
+                    catch (IOException e) { return null; }
+                })
+                .filter(s -> s != null)
+                .collect(Collectors.toList());
+
 
         for (int i = 0; i < insertQueries.size(); i++) {
-            RunStatistics deleteRun = new RunStatistics();
-            RunStatistics insertRun = new RunStatistics();
-            deleteStatistics.addRun(deleteRun);
-            insertStatistics.addRun(insertRun);
+            final int numRuns = 5; // Number of the same run
 
-            // Insert values, then delete
-            Stopwatch executionTime = Stopwatch.createStarted();
-            executeQueryRun(insertQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, insertRun, true);
-            executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
-            logger.debug("Run time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+            for (int j = 0; j < numRuns; j++) {
+                RunStatistics insertRun = new RunStatistics();
+                RunStatistics selectRun = new RunStatistics();
+                RunStatistics deleteRun = new RunStatistics();
+                insertRun.setRun(j+1);
+                selectRun.setRun(j+1);
+                deleteRun.setRun(j+1);
 
-            insertRun.setQueryFetchSize(deleteRun.getQueryFetchSize());
+                // Insert values, then delete
+                Stopwatch executionTime = Stopwatch.createStarted();
+                executeQueryRun(insertQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, insertRun, true);
+                executeQueryRun(selectQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, selectRun, true);
+                executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
+                logger.debug("Run time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
+
+                insertRun.setQueryFetchSize(deleteRun.getQueryFetchSize());
+
+                deleteStatistics.addRun(deleteRun);
+                selectStatistics.addRun(selectRun);
+                insertStatistics.addRun(insertRun);
+            }
         }
 
         deleteStatistics.outputRuns();
+        selectStatistics.outputRuns();
         insertStatistics.outputRuns();
     }
 
@@ -268,7 +289,7 @@ public class ICDBTool {
         DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
         ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen, run);
 
-        logger.info("Original Query: {}", query);
+        logger.info("Original Query: {}", Format.limit(query));
 
         QueryVerifier verifier = dbConfig.granularity.getVerifier(icdb, dbConfig, threads, fetch, run);
 
@@ -278,7 +299,7 @@ public class ICDBTool {
             logger.info("Query verified");
             if (execute) { verifier.execute(icdbQuery); }
         } else {
-            logger.info(icdbQuery.getVerifyQuery());
+            logger.info(Format.limit(icdbQuery.getVerifyQuery()));
             logger.info("Query failed to verify");
             logger.error(verifier.getError());
         }

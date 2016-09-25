@@ -6,6 +6,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Stopwatch;
 import crypto.signer.RSASHA1Signer;
 import io.DBConnection;
+import io.Format;
 import io.source.DBSource;
 import io.source.DataSource;
 import main.ICDBTool;
@@ -83,7 +84,7 @@ public abstract class QueryVerifier {
 
         Stopwatch totalQueryVerificationTime = Stopwatch.createStarted();
 
-        logger.info("Verify Query: {}", icdbQuery.getVerifyQuery());
+        logger.info("Verify Query: {}", Format.limit(icdbQuery.getVerifyQuery()));
 
         Stopwatch queryFetchTime = Stopwatch.createStarted();
         Stream<Record> records = DBSource.stream(icdb, icdbQuery.getVerifyQuery(), fetch);

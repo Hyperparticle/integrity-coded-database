@@ -3,6 +3,7 @@ package parse;
 import com.google.common.base.Stopwatch;
 import crypto.CodeGen;
 import io.DBConnection;
+import io.Format;
 import main.ICDBTool;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
@@ -145,7 +146,7 @@ public abstract class ICDBQuery {
         }
 
         String result = icdbCreate.fetch(convertedQuery).toString();
-        logger.info("{}\n{}", convertedQuery, result);
+        logger.info("{}\n{}", Format.limit(convertedQuery), result);
 
         // Add all pending serials
         icrl.commit();
@@ -183,7 +184,7 @@ public abstract class ICDBQuery {
         }
 
         String resultstr = result.toString();
-        logger.info("{}\n{}", convertedQuery, resultstr);
+        logger.info("{}\n{}", Format.limit(convertedQuery), resultstr);
 
         // Add all pending serials
         icrl.commit();
