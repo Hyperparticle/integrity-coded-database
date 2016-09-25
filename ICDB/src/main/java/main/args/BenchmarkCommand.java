@@ -34,4 +34,7 @@ public class BenchmarkCommand {
     @Parameter(names = { "-u", "--update" }, description = "Specify a path for all update queries")
     public String updatePath;
 
+    @Parameter(names = { "-b", "--baseline" }, description = "Do baseline queries")
+    public Boolean baseline = false;
+
 }

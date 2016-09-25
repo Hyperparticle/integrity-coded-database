@@ -140,54 +140,6 @@ public class ICDBTool {
     }
 
     /**
-     * Benchmarks select queries from a path
-     */
-    private static void benchmarkSelect(CommandLineArgs cmd, UserConfig dbConfig) {
-        final BenchmarkCommand benchmarkCommand = cmd.benchmarkCommand;
-        final String dbSchema = benchmarkCommand.schemaName != null ? benchmarkCommand.schemaName : dbConfig.icdbSchema;
-
-        final AlgorithmType algorithm = dbConfig.codeGen.getAlgorithm();
-        final Granularity granularity = dbConfig.granularity;
-
-        File[] files = new File(benchmarkCommand.selectPath).listFiles();
-        if (files == null) {
-            return;
-        }
-
-        Statistics statistics = new Statistics(
-            new StatisticsMetadata(
-                algorithm, granularity, dbSchema, benchmarkCommand.fetch, benchmarkCommand.threads, "select"
-            ),
-            new File("./src/main/resources/statistics/" + algorithm + "-" + granularity + "-select.csv")
-        );
-
-        Arrays.stream(files)
-            .map(file -> {
-                try { return FileUtils.readFileToString(file, Charsets.UTF_8); }
-                catch (IOException e) { return null; }
-            })
-            .filter(s -> s != null)
-            .sorted()
-            .forEach(query -> {
-                logger.debug("Running: {}", query);
-
-                final int numRuns = 5; // Number of the same run
-
-                for (int j = 0; j < numRuns; j++) {
-                    RunStatistics run = new RunStatistics();
-                    run.setRun(j+1);
-                    statistics.addRun(run);
-
-                    Stopwatch executionTime = Stopwatch.createStarted();
-                    executeQueryRun(query, benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, run, false);
-                    logger.debug("Total query execution time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
-                }
-            });
-
-        statistics.outputRuns();
-    }
-
-    /**
      * Benchmarks insert, select, and delete queries from stdin
      * Note: VERY hacky (I was so frustrated I wanted it to work)
      */
@@ -264,9 +216,17 @@ public class ICDBTool {
 
                 // Insert values, then delete
                 Stopwatch executionTime = Stopwatch.createStarted();
-                executeQueryRun(insertQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, insertRun, true);
-                executeQueryRun(selectQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, selectRun, true);
-                executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
+
+                if (benchmarkCommand.baseline) {
+                    executeBaselineRun(insertQueries.get(i), dbConfig, insertRun);
+                    executeBaselineRun(selectQueries.get(i), dbConfig, selectRun);
+                    executeBaselineRun(deleteQueries.get(i), dbConfig, deleteRun);
+                } else {
+                    executeQueryRun(insertQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, insertRun, true);
+                    executeQueryRun(selectQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, selectRun, true);
+                    executeQueryRun(deleteQueries.get(i), benchmarkCommand.fetch, benchmarkCommand.threads, dbConfig, deleteRun, true);
+                }
+
                 logger.debug("Run time: {}", executionTime.elapsed(ICDBTool.TIME_UNIT));
 
                 insertRun.setQueryFetchSize(deleteRun.getQueryFetchSize());
@@ -303,6 +263,20 @@ public class ICDBTool {
             logger.info("Query failed to verify");
             logger.error(verifier.getError());
         }
+    }
+
+    /**
+     * Executes a query (baseline)
+     */
+    private static void executeBaselineRun(String query, UserConfig dbConfig, RunStatistics run) {
+        DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
+        logger.info("Query: {}", Format.limit(query));
+
+        Stopwatch executeTime = Stopwatch.createStarted();
+        icdb.getCreate().execute(query);
+        run.setExecutionTime(executeTime.elapsed(TIME_UNIT));
+
+        logger.info("Execution time: {}", run.getExecutionTime());
     }
 
 	static {

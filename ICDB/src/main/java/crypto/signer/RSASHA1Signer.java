@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.Arrays;
 
 
 /**
@@ -33,9 +34,6 @@ public class RSASHA1Signer {
             hash.update(data);
 
             hashedData=hash.digest();
-
-
-
         }
         catch (NoSuchAlgorithmException e)
         {
@@ -52,6 +50,10 @@ public class RSASHA1Signer {
 
     public byte[] computeRSA(byte[] hash){
         return new BigInteger(hash).modPow(exponent, modulus).toByteArray();
+    }
+
+    public boolean verify(byte[] data, byte[] signature) {
+        return Arrays.equals(computeSHA1RSA(data), signature);
     }
 
 }
