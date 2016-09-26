@@ -1,0 +1,23 @@
+Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
+SHA,TUPLE,employees_baseline,EAGER,1,25/09/16 17:58:50,delete
+run,Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time,Aggregate operation Time
+1,0,0,0,0,541,0
+2,0,0,0,0,464,0
+3,0,0,0,0,475,0
+4,0,0,0,0,513,0
+5,0,0,0,0,431,0
+1,0,0,0,0,690,0
+2,0,0,0,0,777,0
+3,0,0,0,0,688,0
+4,0,0,0,0,766,0
+5,0,0,0,0,665,0
+1,0,0,0,0,906,0
+2,0,0,0,0,869,0
+3,0,0,0,0,1004,0
+4,0,0,0,0,983,0
+5,0,0,0,0,869,0
+1,0,0,0,0,467,0
+2,0,0,0,0,240,0
+3,0,0,0,0,222,0
+4,0,0,0,0,260,0
+5,0,0,0,0,252,0

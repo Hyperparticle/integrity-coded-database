@@ -1,8 +1,23 @@
 Algorithm,Granularity,Schema Name,DB Query,Fetch Type,Threads,Date
-SHA,TUPLE,employees_icdb_sha_tuple,EAGER,1,20/09/16 10:01:54,delete
-Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time,Aggregate operation Time
-12500,0,85,106,109,0
-25000,0,79,146,169,0
-50000,0,123,185,258,0
-100000,4,393,621,534,0
-200000,0,578,875,911,0
+SHA,TUPLE,employees_icdb_sha_tuple,EAGER,1,25/09/16 18:07:46,delete
+run,Query Fetch Size,Query Conversion Time,Data Fetch Time,Verification Time,Execution Time,Aggregate operation Time
+1,100000,1,275,486,475,0
+2,100000,0,248,524,468,0
+3,100000,0,310,406,472,0
+4,100000,0,255,539,460,0
+5,100000,0,252,468,473,0
+1,150000,0,357,591,687,0
+2,150000,0,344,630,679,0
+3,150000,0,452,693,786,0
+4,150000,0,366,513,800,0
+5,150000,0,415,559,669,0
+1,200000,0,465,1215,1002,0
+2,200000,0,448,739,904,0
+3,200000,0,452,720,927,0
+4,200000,0,481,723,907,0
+5,200000,0,486,911,945,0
+1,50000,0,124,284,236,0
+2,50000,0,122,288,230,0
+3,50000,0,123,275,236,0
+4,50000,0,160,289,235,0
+5,50000,0,130,289,231,0
