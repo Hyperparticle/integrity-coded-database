@@ -227,6 +227,8 @@ public abstract class QueryVerifier {
                 operateMin(record,entry,ColumnName);
             }else if (entry.getValue().equalsIgnoreCase("AVG")){
                 operateAvg(record,entry,ColumnName);
+            }else if (entry.getValue().equalsIgnoreCase("COUNT")){
+                operateCount((String)entry.getKey());
             }
         });
     }
@@ -282,6 +284,12 @@ public abstract class QueryVerifier {
             avgOperationCount.put((String)entry.getKey(),avgOperationCount.get((String)entry.getKey())+1);
     }
 
-
+    protected void operateCount(String computedkey){
+        if (columnComputedValue.get(computedkey)!=null){
+            columnComputedValue.put(computedkey, columnComputedValue.get(computedkey) + 1.0);
+        }else {
+            columnComputedValue.put(computedkey, 1.0);
+        }
+    }
 
 }
