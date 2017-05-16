@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.google.common.base.Charsets;
 import crypto.AlgorithmType;
 import io.Format;
+import io.result.Fetch;
 import io.source.DataSource;
 import main.args.*;
 import main.args.config.UserConfig;
@@ -245,7 +246,7 @@ public class ICDBTool {
     /**
      * Executes a query
      */
-    private static void executeQueryRun(String query, DataSource.Fetch fetch, int threads, UserConfig dbConfig, RunStatistics run, boolean execute) {
+    private static void executeQueryRun(String query, Fetch fetch, int threads, UserConfig dbConfig, RunStatistics run, boolean execute) {
         DBConnection icdb = DBConnection.connect(dbConfig.icdbSchema, dbConfig);
         ICDBQuery icdbQuery = dbConfig.granularity.getQuery(query, icdb, dbConfig.codeGen, run);
 

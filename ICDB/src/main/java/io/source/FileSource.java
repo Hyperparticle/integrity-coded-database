@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * Created on 7/24/2016
  * @author Dan Kondratyuk
  */
-public class FileSource implements DataSource {
+public class FileSource {
 
     /**
      * @return a stream that gets the data line by line
@@ -34,7 +34,6 @@ public class FileSource implements DataSource {
         this.dataFile = dataFile;
     }
 
-    @Override
     public Stream<List<String>> stream() {
         try {
             final Reader reader = new FileReader(dataFile);

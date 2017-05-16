@@ -6,6 +6,7 @@ import com.google.common.math.BigIntegerMath;
 import crypto.signer.RSASHA1Signer;
 import io.DBConnection;
 import io.Format;
+import io.result.Fetch;
 import io.source.DataSource;
 import main.ICDBTool;
 import main.args.config.UserConfig;
@@ -27,7 +28,7 @@ import java.nio.ByteBuffer;
  */
 public class OCTQueryVerifier extends QueryVerifier {
 
-    public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+    public OCTQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, Fetch fetch, RunStatistics statistics) {
         super(icdb, dbConfig, threads, fetch, statistics);
     }
 

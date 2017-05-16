@@ -1,6 +1,7 @@
 package stats
 
 import crypto.AlgorithmType
+import io.result.Fetch
 import io.source.DataSource
 import main.args.option.Granularity
 import java.text.SimpleDateFormat
@@ -16,7 +17,7 @@ data class StatisticsMetadata(
     val algorithm: AlgorithmType,
     val granularity: Granularity,
     val schemaName: String,
-    val fetchType: DataSource.Fetch,
+    val fetchType: Fetch,
     val threads: Int,
     val dbQuery: String = ""
 ) {

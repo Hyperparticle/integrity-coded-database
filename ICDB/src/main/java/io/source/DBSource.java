@@ -1,6 +1,7 @@
 package io.source;
 
 import io.DBConnection;
+import io.result.Fetch;
 import org.jooq.Record;
 import java.util.stream.Stream;
 
@@ -10,7 +11,7 @@ import java.util.stream.Stream;
  * Created on 7/24/2016
  * @author Dan Kondratyuk
  */
-public class DBSource implements DataSource {
+public class DBSource {
 
     public static Stream<Record> stream(DBConnection icdb, String fetchQuery, Fetch strategy) {
         return new DBSource(icdb, fetchQuery, strategy).stream();
@@ -26,7 +27,6 @@ public class DBSource implements DataSource {
         this.strategy = strategy;
     }
 
-    @Override
     public Stream<Record> stream() {
         switch (strategy) {
             case EAGER: return icdb.getCreate()

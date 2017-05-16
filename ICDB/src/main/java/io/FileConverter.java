@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.google.common.io.Files;
 import io.destination.FileDestination;
 import main.ICDBTool;
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,18 +36,22 @@ public class FileConverter {
 
 	private final CodeGen codeGen;
 	private final Granularity granularity;
+	private final DBConnection dbConnection;
 
     private final AbstractIcrl icrl = Icrl.Companion.init();
 
 	private static final Logger logger = LogManager.getLogger();
 
-	public FileConverter(CodeGen codeGen, Granularity granularity) {
+	public FileConverter(CodeGen codeGen, Granularity granularity, DBConnection dbConnection) {
 		this.codeGen = codeGen;
 		this.granularity = granularity;
+		this.dbConnection = dbConnection;
 	}
 
 	public void convertFile(final File input, final File output) {
 		Stopwatch convertTime = Stopwatch.createStarted();
+
+		String tableName = Files.getNameWithoutExtension(input.getName());
 
 		try {
 			// Parse the csv
@@ -55,11 +60,11 @@ public class FileConverter {
 
 			switch (granularity) {
                 case TUPLE:
-                    csvOutput.write(convertLineOCT(csvInput));
+                    csvOutput.write(convertLineOCT(csvInput, tableName));
                     csvInput.close();
                     break;
                 case FIELD:
-                    csvOutput.write(convertLineOCF(csvInput));
+                    csvOutput.write(convertLineOCF(csvInput, tableName));
                     csvInput.close();
                     break;
 			}
@@ -70,25 +75,28 @@ public class FileConverter {
 		logger.debug("Converted table {} in {}", input.getName(), convertTime.elapsed(ICDBTool.TIME_UNIT));
 	}
 
-	private Stream<List<String>> convertLineOCT(Stream<List<String>> csvInput) throws IOException {
+	private Stream<List<String>> convertLineOCT(Stream<List<String>> csvInput, String tableName) throws IOException {
         return csvInput.map(line -> {
             // Combine the list into a string
-            final String data = StringUtils.join(line.toArray());
+            final String data = StringUtils.join(line.toArray(), tableName);
             final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
             convertLine(line, dataBytes, codeGen, icrl);
-
             return line;
         });
 	}
 
-	private Stream<List<String>> convertLineOCF(Stream<List<String>> csvInput) throws IOException {
+	private Stream<List<String>> convertLineOCF(Stream<List<String>> csvInput, String tableName) throws IOException {
         List<String> collector = new ArrayList<>();
 
 	    return csvInput.map(line -> {
             collector.clear();
             collector.addAll(line);
             for (String field : line) {
-                final byte[] dataBytes = field.getBytes(Charsets.UTF_8);
+				// Obtain metadata from ICDB, and add it to the data array
+				// TODO: get attribute names
+				List<String> primaryKeys = dbConnection.getPrimaryKeys(tableName);
+				final String data = StringUtils.join(field, tableName, primaryKeys);
+				final byte[] dataBytes = data.getBytes(Charsets.UTF_8);
                 convertLine(collector, dataBytes, codeGen, icrl);
             }
 

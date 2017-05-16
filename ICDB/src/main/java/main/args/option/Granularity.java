@@ -2,6 +2,7 @@ package main.args.option;
 
 import crypto.CodeGen;
 import io.DBConnection;
+import io.result.Fetch;
 import io.source.DataSource;
 import main.args.config.UserConfig;
 import parse.ICDBQuery;
@@ -28,7 +29,7 @@ public enum Granularity {
         }
 
         @Override
-        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, Fetch fetch, RunStatistics statistics) {
             return new OCTQueryVerifier(icdb, dbConfig, threads, fetch, statistics);
         }
     },
@@ -39,11 +40,11 @@ public enum Granularity {
         }
 
         @Override
-        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+        public QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, Fetch fetch, RunStatistics statistics) {
             return new OCFQueryVerifier(icdb, dbConfig, threads, fetch, statistics);
         }
     };
 
     public abstract ICDBQuery getQuery(String query, DBConnection icdb, CodeGen codeGen, RunStatistics statistics);
-    public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics);
+    public abstract QueryVerifier getVerifier(DBConnection icdb, UserConfig dbConfig, int threads, Fetch fetch, RunStatistics statistics);
 }

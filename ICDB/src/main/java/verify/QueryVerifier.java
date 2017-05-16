@@ -7,6 +7,7 @@ import com.google.common.base.Stopwatch;
 import crypto.signer.RSASHA1Signer;
 import io.DBConnection;
 import io.Format;
+import io.result.Fetch;
 import io.source.DBSource;
 import io.source.DataSource;
 import main.ICDBTool;
@@ -57,7 +58,7 @@ public abstract class QueryVerifier {
 
     protected final List<Integer> testTotal= new ArrayList<>();
     protected final int threads;
-    private final DataSource.Fetch fetch;
+    private final Fetch fetch;
     protected final RunStatistics statistics;
 
     private static final Logger logger = LogManager.getLogger();
@@ -65,7 +66,7 @@ public abstract class QueryVerifier {
     protected BigInteger message = BigInteger.valueOf(1);
     protected BigInteger sig = BigInteger.valueOf(1);
 
-    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+    public QueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, Fetch fetch, RunStatistics statistics) {
         this.icdb = icdb;
         this.userConfig=dbConfig;
         this.codeGen = dbConfig.codeGen;

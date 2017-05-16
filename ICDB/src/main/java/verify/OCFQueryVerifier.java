@@ -2,6 +2,7 @@ package verify;
 
 import com.google.common.base.Stopwatch;
 import io.DBConnection;
+import io.result.Fetch;
 import io.source.DataSource;
 import main.ICDBTool;
 import main.args.config.UserConfig;
@@ -27,7 +28,7 @@ public class OCFQueryVerifier extends QueryVerifier {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public OCFQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, DataSource.Fetch fetch, RunStatistics statistics) {
+    public OCFQueryVerifier(DBConnection icdb, UserConfig dbConfig, int threads, Fetch fetch, RunStatistics statistics) {
         super(icdb, dbConfig, threads, fetch, statistics);
     }
 

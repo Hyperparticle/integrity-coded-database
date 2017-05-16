@@ -160,7 +160,7 @@ public class DBConverter {
 
         FileUtils.cleanDirectory(convertedDataPath.toFile());
 
-        FileConverter converter = new FileConverter(codeGen, granularity);
+        FileConverter converter = new FileConverter(codeGen, granularity, db);
 
         // Find all files in the data path
         // TODO: parallelize even more by fetching each table into a stream
